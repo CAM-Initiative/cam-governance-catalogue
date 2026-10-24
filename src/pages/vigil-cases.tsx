@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -11,10 +11,14 @@ import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from 
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
 import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
-import VigilCasesDashboard, { countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
+import VigilCasesDashboard, { countryDisplayName, countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
 import { failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
 import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
-import { countryLookupFromProjection } from "@/lib/vigilDashboardGeography.mjs";
+import { countryLookupFromProjection, matchesSelectedCountries, toggleSelectedCountry } from "@/lib/vigilDashboardGeography.mjs";
+import { matchesClassificationSelection, toggleClassificationSelection } from "@/lib/vigilClassificationFilter.mjs";
+import { INDEX_FACETS, NOT_INDEXED, facetOptionLabel, indexFacetOptions, matchesIndexFacets, toggleIndexFacetSelection } from "@/lib/vigilIndexFacets.mjs";
+import { hasEvidencedHarmType, reconcileHarmSidecar } from "@/lib/vigilHarmDimensions.mjs";
+import { harmDimensions } from "@/lib/vigilHarmReference";
 
 type PageState =
   | { status: "loading" }
@@ -26,7 +30,6 @@ type SortDirection = "asc" | "desc";
 type SortState = { key: SortKey; direction: SortDirection };
 
 type ClassificationStatusCount = { key: string; label: string; count: number };
-type SeverityCount = { key: string; label: string; count: number };
 
 const PAGE_SIZE = 18;
 const SEVERITY_ORDER: Record<string, number> = { S1: 1, S2: 2, S3: 3, S4: 4, S5: 5, SU: 6 };
@@ -72,17 +75,6 @@ function severityLabel(code: string) {
     SU: "SU · Unassessed",
   };
   return labels[code] ?? code;
-}
-
-function severityCounts(records: VigilIndexRecord[]): SeverityCount[] {
-  const counts = new Map<string, SeverityCount>();
-  for (const record of records) {
-    const key = severityCode(record);
-    const existing = counts.get(key);
-    if (existing) existing.count += 1;
-    else counts.set(key, { key, label: severityLabel(key), count: 1 });
-  }
-  return [...counts.values()].sort((a, b) => (SEVERITY_ORDER[a.key] ?? 99) - (SEVERITY_ORDER[b.key] ?? 99));
 }
 
 function severityRank(record: VigilIndexRecord) {
@@ -143,20 +135,133 @@ function SortHeading({ label, sortKey, sort, onSort }: { label: string; sortKey:
   </button>;
 }
 
+// The indexed metadata facets share the Classification disclosure affordance.
+// "All" clears that one facet; its checked state does not imply every individual
+// value was explicitly selected. Counts describe the loaded complete corpus.
+function IndexFacet({ id, title, options, total, selected, onToggle, onClear }: {
+  id: string; title: string; options: ClassificationStatusCount[]; total: number;
+  selected: string[]; onToggle: (id: string, value: string) => void; onClear: (id: string) => void;
+}) {
+  const isVendor = id === "vendor";
+  const [vendorQuery, setVendorQuery] = useState("");
+  const [vendorExpanded, setVendorExpanded] = useState(false);
+  const vendorListRef = useRef<HTMLDivElement | null>(null);
+  const [vendorScroll, setVendorScroll] = useState({ up: false, down: false });
+  const refreshVendorScroll = () => {
+    const element = vendorListRef.current;
+    if (!element) return;
+    setVendorScroll({
+      up: element.scrollTop > 2,
+      down: element.scrollTop + element.clientHeight < element.scrollHeight - 2,
+    });
+  };
+  const query = vendorQuery.trim().toLocaleLowerCase();
+  const matchingOptions = isVendor
+    ? options.filter(option => !query || option.label.toLocaleLowerCase().includes(query))
+      .sort((a,b) => Number(selected.includes(b.key)) - Number(selected.includes(a.key)))
+    : options;
+  useEffect(() => {
+    if (!isVendor || !vendorListRef.current) return;
+    vendorListRef.current.scrollTop = 0;
+    // Re-evaluate after the browser lays out the clipped option list.
+    const frame = window.requestAnimationFrame(refreshVendorScroll);
+    return () => window.cancelAnimationFrame(frame);
+  }, [isVendor, vendorQuery, vendorExpanded, matchingOptions.length, options.length]);
+  const scrollVendors = (direction: -1 | 1) => {
+    const element = vendorListRef.current;
+    if (!element) return;
+    element.scrollBy({ top: direction * Math.max(115, Math.floor(element.clientHeight * .75)), behavior: "smooth" });
+  };
+  const facetClass = [
+    "vigil-dashboard-index-facet",
+    isVendor ? "is-vendor" : "",
+    vendorExpanded ? "is-expanded" : "",
+    query ? "has-query" : "",
+  ].filter(Boolean).join(" ");
+  return <details className={facetClass} aria-label={`${title} filters`}>
+    <summary className="vigil-dashboard-facet-heading">
+      <span>{title}</span>
+      <span className="vigil-dashboard-facet-state">
+        {selected.length > 0 && <span>{selected.length} selected</span>}
+        <ChevronDown size={15} aria-hidden="true"/>
+      </span>
+    </summary>
+    {isVendor && <label className="vigil-dashboard-vendor-search">
+      <Search size={15} aria-hidden="true"/>
+      <span className="sr-only">Find a platform or vendor</span>
+      <input type="search" value={vendorQuery} onChange={event => setVendorQuery(event.target.value)}
+        placeholder="Find a vendor…" aria-label="Search platform and vendor options"/>
+    </label>}
+    <div className="vigil-dashboard-facet-options" role="group" aria-label={`Filter by ${title}`}
+      ref={isVendor ? vendorListRef : undefined} onScroll={isVendor ? refreshVendorScroll : undefined}
+      tabIndex={isVendor ? 0 : undefined}>
+      <label className="vigil-dashboard-facet-option">
+        <input type="checkbox" checked={selected.length === 0} onChange={() => onClear(id)}/>
+        <span className="vigil-dashboard-facet-option-name">All {title.toLowerCase()}</span>
+        <span className="vigil-dashboard-facet-count">{total}</span>
+      </label>
+      {matchingOptions.map(option => <label
+        className={`vigil-dashboard-facet-option${selected.includes(option.key) ? " is-selected" : ""}`} key={option.key}>
+        <input type="checkbox" checked={selected.includes(option.key)}
+          onChange={() => onToggle(id, option.key)}/>
+        <span className="vigil-dashboard-facet-option-name">{option.label}</span>
+        <span className="vigil-dashboard-facet-count">{option.count}</span>
+      </label>)}
+      {isVendor && matchingOptions.length === 0 && <p className="vigil-dashboard-facet-no-results">No matching vendors.</p>}
+    </div>
+    {isVendor && options.length > 6 && <div className="vigil-dashboard-vendor-controls">
+      <span className="vigil-dashboard-vendor-scroll-caption" aria-live="polite">
+        {matchingOptions.length} {query ? "matching " : ""}vendors · scroll list
+      </span>
+      <div className="vigil-dashboard-vendor-scroll-buttons">
+        <button type="button" onClick={() => scrollVendors(-1)} disabled={!vendorScroll.up}
+          aria-label="Scroll vendor list up" title="Previous vendors"><ChevronUp size={17} aria-hidden="true"/></button>
+        <button type="button" onClick={() => scrollVendors(1)} disabled={!vendorScroll.down}
+          aria-label="Scroll vendor list down" title="More vendors"><ChevronDown size={17} aria-hidden="true"/></button>
+      </div>
+    </div>}
+    {isVendor && !query && options.length > 6 && <button type="button"
+      className="vigil-dashboard-vendor-show-more" aria-expanded={vendorExpanded}
+      onClick={() => setVendorExpanded(value => !value)}>
+      {vendorExpanded ? "Show fewer vendors" : `Show all ${options.length} vendors`}
+    </button>}
+  </details>;
+}
+
 export default function VigilCases() {
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [search, setSearch] = useState("");
-  const [classification, setClassification] = useState("");
+  // Multiple classification outcomes combine as OR, while search, country,
+  // severity and taxonomy filters remain intersections with that set.
+  const [classifications, setClassifications] = useState<string[]>([]);
+  const toggleClassification = (key: string) => {
+    setClassifications(current => toggleClassificationSelection(current, key));
+  };
   const [severity, setSeverity] = useState("");
-  const [jurisdiction, setJurisdiction] = useState("");
+  const [jurisdictions, setJurisdictions] = useState<string[]>([]);
+  const toggleJurisdiction = (code: string) => setJurisdictions(current => toggleSelectedCountry(current, code));
   const [failureClass, setFailureClass] = useState("");
-  // The result-toolbar and globe reset share a single source of truth.
+  const [harmType, setHarmType] = useState("");
+  const [harmProjection, setHarmProjection] = useState<ReturnType<typeof reconcileHarmSidecar> | null>(null);
+  const [harmLoadNote, setHarmLoadNote] = useState("Loading assessed harm dimensions…");
+  const [indexFacets, setIndexFacets] = useState<Record<string, string[]>>({});
+  const toggleIndexFacet = (id: string, key: string) =>
+    setIndexFacets(current => toggleIndexFacetSelection(current, id, key));
+  const clearIndexFacet = (id: string) =>
+    setIndexFacets(current => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
+  // All filters can be cleared in the left rail; chips remove individual selections.
   const clearFilters = () => {
     setSearch("");
-    setClassification("");
+    setClassifications([]);
     setSeverity("");
-    setJurisdiction("");
+    setHarmType("");
+    setJurisdictions([]);
     setFailureClass("");
+    setIndexFacets({});
   };
   const [countryByCase, setCountryByCase] = useState<Map<string, string[]>>(new Map());
   const [geographyAvailable, setGeographyAvailable] = useState(false);
@@ -229,36 +334,100 @@ export default function VigilCases() {
     return () => { active = false; };
   }, [state]);
 
+  useEffect(() => {
+    if (state.status !== "ready") return;
+    let active = true;
+    const records = state.records;
+    async function loadHarmProjection() {
+      const selectedBranch = getSelectedVigilBranch();
+      let data: unknown;
+      let cached = false;
+      try {
+        const url = await vigilRawUrl("vigil/VIGIL.Harm.Dimensions.Index.json");
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error("VIGIL harm index unavailable");
+        data = await response.json();
+      } catch {
+        if (selectedBranch !== VIGIL_DEFAULT_BRANCH) {
+          if (active) { setHarmProjection(null); setHarmLoadNote("No harm index on this selected VIGIL branch."); }
+          return;
+        }
+        try {
+          const response = await fetch(`${import.meta.env.BASE_URL}data/vigil-harm-dimensions.json`);
+          if (!response.ok) throw new Error("Cached harm index unavailable");
+          data = await response.json();
+          cached = true;
+        } catch {
+          if (active) { setHarmProjection(null); setHarmLoadNote("Assessed harm dimensions are unavailable."); }
+          return;
+        }
+      }
+      try {
+        const result = reconcileHarmSidecar(data, records);
+        if (!active) return;
+        setHarmProjection(result);
+        setHarmLoadNote(result.partial
+          ? "Partial coverage: Incident record versions differ or index counts have changed."
+          : cached ? "Cached deterministic harm data; the upstream index is not yet on main." : "");
+      } catch {
+        if (active) { setHarmProjection(null); setHarmLoadNote("Harm index failed version/structure validation."); }
+      }
+    }
+    void loadHarmProjection();
+    return () => { active = false; };
+  }, [state]);
+
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
-  const severityStates = useMemo(() => severityCounts(records), [records]);
+  const indexedFacetCatalog = useMemo(() => INDEX_FACETS.map(facet => ({
+    ...facet,
+    options: indexFacetOptions(records, facet.id),
+  })).filter(facet => facet.options.some(option => option.key !== NOT_INDEXED)), [records]);
   const updated = useMemo(() => {
     const dates = values(records, (record) => record.record_last_updated ?? record.publicDisplay.dates.lastUpdated ?? record.date_recorded).sort();
     return dates.length ? dates[dates.length - 1] : undefined;
   }, [records]);
 
-  // Scope each instrument independently of the facet it selects.
-  const baseCases = useMemo(() => records.filter((record) => {
+  // Independent instruments exclude only the filter they themselves control.
+  // Keep the taxonomy ranking's cohort independent of the selected taxonomy class:
+  // selecting a failure must not promote it to first place or replace the top six.
+  const rankingBaseCases = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
-    if (classification && canonicalComparisonKey(classificationStatusLabel(record)) !== classification) return false;
-    if (failureClass && !failureClassIds(record.raw).includes(failureClass)) return false;
+    if (!matchesClassificationSelection(canonicalComparisonKey(classificationStatusLabel(record)), classifications)) return false;
+    if (!matchesIndexFacets(record, indexFacets)) return false;
     return true;
-  }), [classification, failureClass, records, search]);
-
+  }), [classifications, indexFacets, records, search]);
+  const baseCases = useMemo(() => rankingBaseCases.filter(record =>
+    !failureClass || failureClassIds(record.raw).includes(failureClass)
+  ), [rankingBaseCases, failureClass]);
+  const harmById = useMemo(() => harmProjection?.byId ?? new Map(), [harmProjection]);
+  const matchesHarm = (record: VigilIndexRecord) =>
+    !harmType || hasEvidencedHarmType(harmById, record.id, harmType);
+  // Own selected harm-type filter is deliberately excluded from this ranking.
+  const harmRecords = useMemo(() => baseCases.filter(record =>
+    matchesSelectedCountries(countryByCase.get(record.id), jurisdictions)
+    && (!severity || severityCode(record) === severity)
+  ), [baseCases, countryByCase, jurisdictions, severity]);
+  const taxonomyRecords = useMemo(() => rankingBaseCases.filter(record =>
+    matchesSelectedCountries(countryByCase.get(record.id), jurisdictions)
+    && (!severity || severityCode(record) === severity)
+    && matchesHarm(record)
+  ), [rankingBaseCases, countryByCase, jurisdictions, severity, harmType, harmById]);
   const mapRecords = useMemo(() => baseCases.filter(record => {
     if (severity && severityCode(record) !== severity) return false;
-    return true;
-  }), [baseCases, severity]);
+    return matchesHarm(record);
+  }), [baseCases, severity, harmType, harmById]);
   const distributionRecords = useMemo(() => baseCases.filter(record =>
-    !jurisdiction || countryByCase.get(record.id)?.includes(jurisdiction)
-  ), [baseCases, countryByCase, jurisdiction]);
+    matchesSelectedCountries(countryByCase.get(record.id), jurisdictions) && matchesHarm(record)
+  ), [baseCases, countryByCase, jurisdictions, harmType, harmById]);
   const filtered = useMemo(() => distributionRecords.filter(record =>
     !severity || severityCode(record) === severity
   ), [distributionRecords, severity]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, classification, severity, jurisdiction, failureClass, sort]);
+  useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, harmType, indexFacets, sort]);
+  const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass || harmType || Object.keys(indexFacets).length);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -311,47 +480,84 @@ export default function VigilCases() {
               ]}
             />
 
+            <div className="vigil-dashboard-workspace">
+              <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-filter-heading">
+              <div className="vigil-dashboard-filter-hub-header">
+                <div>
+                  <h2 id="case-filter-heading">Filters</h2>
+                </div>
+                {hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>}
+              </div>
+              <div className="vigil-dashboard-filter-controls">
+              <div className="vigil-result-summary vigil-dashboard-shared-selection">
+                {hasActiveFilters && <div className="vigil-dashboard-selection-chips">
+                  {search && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSearch("")} aria-label="Remove search filter">Search: {search}<X aria-hidden="true" size={13} /></button>}
+                  {classifications.map(key => <button type="button" key={key} className="vigil-dashboard-selection-chip" onClick={() => toggleClassification(key)} aria-label={`Remove ${classificationStates.find(entry => entry.key === key)?.label ?? key} classification filter`}>Classification: {classificationStates.find(entry => entry.key === key)?.label ?? key}<X aria-hidden="true" size={13} /></button>)}
+                  {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
+                  {jurisdictions.map(code => <button type="button" key={code} className="vigil-dashboard-selection-chip" onClick={() => toggleJurisdiction(code)} aria-label={`Remove ${countryDisplayName(code)} jurisdiction filter`}>Jurisdiction: {countryDisplayName(code)}<X aria-hidden="true" size={13} /></button>)}
+                  {failureClass && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setFailureClass("")} aria-label="Remove fidelity class filter">{failureClass.replace("VIGIL-FC-", "FC-")}<X aria-hidden="true" size={13} /></button>}
+                   {harmType && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setHarmType("")} aria-label="Remove assessed harm type filter">Harm: {harmDimensions.find(d => d.dimension_id === harmType)?.label ?? harmType}<X aria-hidden="true" size={13} /></button>}
+                  {Object.entries(indexFacets).flatMap(([id, keys]) => keys.map(key =>
+                    <button type="button" key={`${id}:${key}`} className="vigil-dashboard-selection-chip"
+                      onClick={() => toggleIndexFacet(id, key)} aria-label={`Remove ${INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: ${facetOptionLabel(id,key)} filter`}>
+                      {INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: {facetOptionLabel(id, key)}<X aria-hidden="true" size={13}/>
+                    </button>
+                  ))}
+                 </div>}
+                 <p className="vigil-dashboard-filter-match-count" aria-live="polite" aria-atomic="true"><strong>{sorted.length} matching {sorted.length === 1 ? "case file" : "case files"}</strong></p>
+                 {hasActiveFilters && <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>}
+               </div>
+                <div className="vigil-dashboard-metadata-facets">
+                <details className="vigil-dashboard-classification-facet" aria-label="Classification filters">
+                  <summary className="vigil-dashboard-facet-heading">
+                    <span>Classification</span>
+                    <span className="vigil-dashboard-facet-state">
+                      {classifications.length > 0 && <span>{classifications.length} selected</span>}
+                      <ChevronDown size={15} aria-hidden="true" />
+                    </span>
+                  </summary>
+                  <div className="vigil-dashboard-facet-options" role="group" aria-label="Choose classification outcomes">
+                    <label className="vigil-dashboard-facet-option">
+                      <input type="checkbox" checked={classifications.length === 0}
+                        onChange={() => setClassifications([])} />
+                      <span className="vigil-dashboard-facet-option-name">All classifications</span>
+                      <span className="vigil-dashboard-facet-count">{records.length}</span>
+                    </label>
+                    {classificationStates.map(entry =>
+                      <label className="vigil-dashboard-facet-option" key={entry.key}>
+                        <input type="checkbox" checked={classifications.includes(entry.key)}
+                          onChange={() => toggleClassification(entry.key)} />
+                        <span className="vigil-dashboard-facet-option-name">{entry.label}</span>
+                        <span className="vigil-dashboard-facet-count">{entry.count}</span>
+                      </label>
+                    )}
+                  </div>
+                </details>
+                {indexedFacetCatalog.map(facet => <IndexFacet key={facet.id} id={facet.id} title={facet.title}
+                  options={facet.options} total={records.length} selected={indexFacets[facet.id] ?? []}
+                  onToggle={toggleIndexFacet} onClear={clearIndexFacet}/>)}
+                </div>
+              </div>
+              {!hasActiveFilters && <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>}
+            </section>
+
             <div className="vigil-dashboard-layout">
               <div className="vigil-dashboard-case-column">
-            <section className="vigil-library-toolbar" aria-labelledby="case-search-heading">
-              <h2 id="case-search-heading" className="sr-only">Search and filter Case Files</h2>
-              <div className="vigil-search-row vigil-case-table-search">
-                <label className="vigil-search-control">
+                <div className="vigil-library-toolbar vigil-dashboard-case-search" role="search" aria-label="Search Case Files">
+                   <label className="vigil-search-control">
                   <Search aria-hidden="true" />
                   <span className="sr-only">Describe the behaviour you’re seeing…</span>
                   <input
                     type="search"
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Describe the behaviour you’re seeing…"
+                    placeholder="Search Case Files…"
                   />
                   {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
                 </label>
+                 </div>
 
-                <label className="vigil-family-select">
-                  <span>Classification</span>
-                  <select value={classification} onChange={(event) => setClassification(event.target.value)}>
-                    <option value="">All classifications ({records.length})</option>
-                    {classificationStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
-                  </select>
-                </label>
-
-                <label className="vigil-family-select">
-                  <span>Severity</span>
-                  <select value={severity} onChange={(event) => setSeverity(event.target.value)}>
-                    <option value="">All severities ({records.length})</option>
-                    {severityStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
-                  </select>
-                </label>
-              </div>
-              <div className="vigil-result-summary">
-                <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
-                <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
-                {(search || classification || severity || jurisdiction || failureClass) && <button type="button" onClick={clearFilters}>Clear filters</button>}
-              </div>
-            </section>
-
-            {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
+             {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
             {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
             {state.status === "ready" && state.notice && <div className="vigil-registry-notice">{state.notice}</div>}
 
@@ -442,18 +648,24 @@ export default function VigilCases() {
               <VigilCasesDashboard
                 mapRecords={mapRecords}
                 distributionRecords={distributionRecords}
-                filteredRecords={filtered}
+                taxonomyRecords={taxonomyRecords}
+                harmRecords={harmRecords}
+                harmById={harmById}
+                harmAvailable={Boolean(harmProjection)}
+                harmNote={harmLoadNote}
+                harmType={harmType}
+                onHarmType={setHarmType}
                 severity={severity}
-                jurisdiction={jurisdiction}
+                jurisdictions={jurisdictions}
                 failureClass={failureClass}
                 onSeverity={setSeverity}
-                onJurisdiction={setJurisdiction}
+                onJurisdiction={toggleJurisdiction}
                 onFailureClass={setFailureClass}
-                onClearFilters={clearFilters}
                 countryByCase={countryByCase}
                 geographyAvailable={geographyAvailable}
                 geographyNote={geographyNote}
               />
+            </div>
             </div>
           </section>
         </div>

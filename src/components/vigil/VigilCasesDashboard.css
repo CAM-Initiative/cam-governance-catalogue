@@ -231,10 +231,14 @@
 .vigil-case-library-page .vigil-dashboard-donut-caption { fill: var(--vd-muted); }
 .vigil-dashboard-severity-callout { cursor: pointer; transition: opacity .15s ease; }
 .vigil-dashboard-severity-callout:hover { opacity: .78; }
-.vigil-dashboard-severity-label { font: 750 12px var(--app-font-sans), sans-serif; letter-spacing: .01em; }
+.vigil-dashboard-severity-label {
+  font: 480 19px var(--app-font-sans), sans-serif;
+  letter-spacing: 0;
+  fill: var(--vd-muted);
+}
 .vigil-case-library-page .vigil-dashboard-severity-name {
-  font: 500 10.5px var(--app-font-sans), sans-serif;
-  fill: var(--vd-ink);
+  font: 460 17px var(--app-font-sans), sans-serif;
+  fill: var(--vd-muted);
 }
 .vigil-dashboard-chart-instruction { justify-content: center; text-align: center; margin-top: -.1rem; }
 .vigil-case-library-page .vigil-dashboard-failure-list button {
@@ -476,11 +480,18 @@
 .vigil-dashboard-donut-segment[aria-pressed="true"] {
   filter: drop-shadow(0 2px 5px rgba(7, 34, 49, .4));
 }
-.vigil-dashboard-severity-callout.is-muted { opacity: .56; }
+.vigil-dashboard-severity-callout.is-muted { opacity: .76; }
 .vigil-dashboard-severity-callout.is-muted:hover,
 .vigil-dashboard-severity-callout.is-muted:focus-visible { opacity: 1; }
-.vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-label { font-weight: 850; }
-.vigil-case-library-page .vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-name { font-weight: 750; }
+.vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-label {
+  font-size: 20.5px;
+  font-weight: 750;
+}
+.vigil-case-library-page .vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-name {
+  font-size: 18px;
+  font-weight: 730;
+  fill: var(--vd-ink);
+}
 
 /* Preserve a generous visual globe on narrow screens without reintroducing
    visible country statistics or instructions. */
@@ -590,4 +601,332 @@
   .vigil-case-library-page .vigil-dashboard-case-column > .vigil-library-toolbar {
     padding: 0.9rem 0.85rem 0.8rem;
   }
+}
+
+/* Compact dashboard insight panels: remove explanatory copy without
+   shrinking the interactive labels, and recover header-to-chart space. */
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-donut { margin-top: -.15rem; }
+.vigil-case-library-page .vigil-dashboard-failures-panel .vigil-dashboard-failure-list { margin-top: .5rem; }
+
+/* A single information-control contract across globe, harm and taxonomy cards.
+   The positioned wrapper aligns all three icons at the identical top-right inset;
+   opening a disclosure lifts its panel above neighbouring dashboard content. */
+.vigil-case-library-page .vigil-dashboard-panel-info {
+  position: absolute;
+  z-index: 8;
+  top: .55rem;
+  right: .55rem;
+  color: var(--vd-muted);
+}
+.vigil-case-library-page .vigil-dashboard-panel-info > summary {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  list-style: none;
+  border-radius: 50%;
+  border: 1px solid var(--vd-rule);
+  background: hsl(var(--card) / .96);
+  color: var(--vd-muted);
+  font: 700 .86rem/1 Georgia, "Times New Roman", serif;
+  text-transform: lowercase;
+  cursor: pointer;
+  box-shadow: 0 1px 6px hsl(var(--foreground) / .1);
+}
+.vigil-case-library-page .vigil-dashboard-panel-info > summary::-webkit-details-marker { display: none; }
+.vigil-case-library-page .vigil-dashboard-panel-info > summary:hover,
+.vigil-case-library-page .vigil-dashboard-panel-info > summary:focus-visible {
+  color: var(--vd-ink);
+  border-color: var(--vd-accent);
+}
+.vigil-case-library-page .vigil-dashboard-panel-info > summary:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.vigil-case-library-page .vigil-dashboard-panel-info-body {
+  position: absolute;
+  top: 31px;
+  right: 0;
+  box-sizing: border-box;
+  width: min(270px, 75vw);
+  padding: .8rem .9rem;
+  border: 1px solid var(--vd-rule);
+  border-radius: 10px;
+  color: var(--vd-ink);
+  background: hsl(var(--card));
+  box-shadow: 0 9px 25px hsl(var(--foreground) / .16);
+  font-size: .77rem;
+  line-height: 1.55;
+}
+.vigil-case-library-page .vigil-dashboard-panel-info-body p { margin: 0; }
+.vigil-case-library-page .vigil-dashboard-panel-info-body p + p { margin-top: .6rem; }
+.vigil-case-library-page .vigil-dashboard-panel-info[open] { z-index: 15; }
+.vigil-case-library-page .vigil-dashboard-panel:has(> .vigil-dashboard-panel-info[open]) {
+  overflow: visible;
+  z-index: 12;
+}
+.vigil-case-library-page .vigil-dashboard-panel-heading { padding-right: 2rem; }
+
+/* SEVERITY CHART COMPARISON — a temporary experiment based on ready PR #170.
+   Switch between a flat categorical bar chart and the unchanged original donut. */
+.vigil-case-library-page .vigil-dashboard-severity-view-switch {
+  display: inline-flex;
+  gap: 0;
+  align-items: center;
+  margin: .15rem 0 .1rem;
+  padding: 2px;
+  border: 1px solid var(--vd-rule);
+  border-radius: 7px;
+  background: var(--vd-raised);
+}
+.vigil-case-library-page .vigil-dashboard-severity-view-switch button {
+  border: 0;
+  border-radius: 5px;
+  padding: .25rem .55rem;
+  background: transparent;
+  color: var(--vd-ink);
+  font: 600 .69rem/1.35 var(--app-font-sans), sans-serif;
+  cursor: pointer;
+}
+.vigil-case-library-page .vigil-dashboard-severity-view-switch button.is-selected,
+.vigil-case-library-page .vigil-dashboard-severity-view-switch button[aria-pressed="true"] {
+  background: hsl(var(--card));
+  box-shadow: 0 1px 3px hsl(var(--foreground) / .12);
+}
+.vigil-case-library-page .vigil-dashboard-severity-view-switch button:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.vigil-case-library-page .vigil-dashboard-severity-chart-area { min-height: 228px; }
+/* Fixed category order S1–S5 followed by a visibly separated SU, not a
+   seventh or continuous harm severity. Count labels sit above the bars. */
+.vigil-case-library-page .vigil-dashboard-severity-bars {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.18fr);
+  gap: .18rem;
+  align-items: end;
+  width: 100%;
+  margin: .65rem auto .1rem;
+  min-width: 0;
+}
+.vigil-case-library-page .vigil-dashboard-bar-choice {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  min-height: 192px;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  padding: .15rem 0 .22rem;
+  color: var(--vd-ink);
+  cursor: pointer;
+  font-family: var(--app-font-sans), sans-serif;
+}
+.vigil-case-library-page .vigil-dashboard-bar-choice:hover:not(:disabled),
+.vigil-case-library-page .vigil-dashboard-bar-choice.is-selected {
+  border-color: var(--vd-accent);
+  background: hsl(var(--primary) / .065);
+}
+.vigil-case-library-page .vigil-dashboard-bar-choice:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.vigil-case-library-page .vigil-dashboard-bar-choice:disabled {
+  cursor: default;
+}
+.vigil-case-library-page .vigil-dashboard-bar-choice.is-muted .vigil-dashboard-bar-fill {
+  opacity: .44;
+}
+.vigil-case-library-page .vigil-dashboard-bar-choice.is-unassessed {
+  border-left: 1px solid var(--vd-rule);
+  border-radius: 0 7px 7px 0;
+  margin-left: .07rem;
+  padding-left: .13rem;
+}
+.vigil-case-library-page .vigil-dashboard-bar-plot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 150px;
+  margin-bottom: .12rem;
+  border-bottom: 1px solid var(--vd-chart-line);
+}
+.vigil-case-library-page .vigil-dashboard-bar-fill {
+  position: relative;
+  display: block;
+  width: min(69%, 30px);
+  min-height: 0;
+  border-radius: 3px 3px 0 0;
+  transition: height .2s ease, opacity .15s ease;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / .3);
+}
+.vigil-case-library-page .vigil-dashboard-bar-value {
+  position: absolute;
+  bottom: calc(100% + .28rem);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--vd-ink);
+  font: 700 .78rem/1.2 var(--app-font-sans), sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.vigil-case-library-page .vigil-dashboard-bar-code {
+  margin-top: .35rem;
+  font: 750 .93rem/1.25 var(--app-font-mono), monospace;
+  letter-spacing: .018em;
+  color: var(--vd-ink);
+  font-variant-numeric: tabular-nums;
+}
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-choice {
+  color: hsl(0 0% 9%);
+}
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-value,
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-code {
+  color: hsl(0 0% 9%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vigil-case-library-page .vigil-dashboard-bar-fill { transition: none; }
+}
+
+/* Long severity words now live in the existing accessible info disclosure.
+   Bar codes are deliberately larger and more legible in the narrow widget. */
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend {
+  display: grid;
+  gap: .35rem;
+  margin: .7rem 0;
+  font-family: var(--app-font-sans), sans-serif;
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend > div {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  gap: .55rem;
+  align-items: baseline;
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend dt {
+  display: inline-flex;
+  gap: .35rem;
+  align-items: center;
+  font: 700 .77rem/1.35 var(--app-font-mono), monospace;
+  color: var(--vd-ink);
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend dd {
+  margin: 0;
+  font: 500 .77rem/1.35 var(--app-font-sans), sans-serif;
+  color: var(--vd-ink);
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend-dot {
+  width: .58rem;
+  height: .58rem;
+  flex: 0 0 .58rem;
+  border-radius: 2px;
+}
+
+/* Harm Types: compact ranked categories driven only by assessed S2–S5 HIM.
+   Render counts, selectable category and measured bar on each row. */
+.vigil-case-library-page .vigil-dashboard-harm-types-body { margin-top: .6rem; min-width: 0; }
+.vigil-case-library-page .vigil-dashboard-harm-types-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: .38rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.vigil-case-library-page .vigil-dashboard-harm-types-ranking li { min-width: 0; }
+.vigil-case-library-page .vigil-dashboard-harm-type-choice {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .32rem .45rem;
+  align-items: start;
+  width: 100%;
+  padding: .48rem .42rem;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--vd-ink);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--app-font-sans), sans-serif;
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-choice:hover,
+.vigil-case-library-page .vigil-dashboard-harm-type-choice.is-selected {
+  background: var(--vd-raised);
+  border-color: var(--vd-rule);
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-choice.is-selected {
+  outline: 1px solid var(--vd-accent);
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-choice:focus-visible,
+.vigil-case-library-page .vigil-dashboard-harm-types-expand:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-label {
+  min-width: 0;
+  font-size: .78rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-count {
+  font: 750 .83rem/1.4 var(--app-font-sans), sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-meter {
+  display: block;
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: hsl(var(--foreground) / .12);
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-fill {
+  position: relative;
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 8px;
+  background: var(--vd-accent);
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-modelled {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, var(--vd-ink) 0 2px, var(--vd-raised) 2px 4px);
+  border-radius: 0 8px 8px 0;
+}
+.vigil-case-library-page .vigil-dashboard-harm-types-expand {
+  display: block;
+  margin: .65rem 0 0;
+  padding: .3rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--vd-ink);
+  font: 600 .74rem/1.4 var(--app-font-sans), sans-serif;
+  text-decoration: underline;
+  text-underline-offset: .2rem;
+  cursor: pointer;
+}
+.vigil-case-library-page .vigil-dashboard-harm-types-note {
+  margin: .48rem 0 0;
+  color: var(--vd-muted);
+  font: 500 .7rem/1.45 var(--app-font-sans), sans-serif;
+}
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-label,
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-count {
+  color: hsl(0 0% 9%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vigil-case-library-page .vigil-dashboard-harm-type-choice { transition: none; }
 }

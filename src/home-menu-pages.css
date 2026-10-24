@@ -1961,3 +1961,71 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
     width: 100%;
   }
 }
+
+/* Harm severity is its own reader-facing key, not an extra row in the
+   evidence-state ledger. Keep the chips readable across desktop and mobile. */
+.vigil-severity-methodology-page .vigil-severity-band-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  list-style: none;
+  margin: 1.2rem 0 1rem;
+  padding: 0;
+}
+.vigil-severity-methodology-page .vigil-severity-band-list li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 0.8rem 0.5rem 0.8rem 0;
+  border-top: 1px solid hsl(var(--border) / .8);
+  color: hsl(var(--foreground));
+  font: 550 .88rem/1.45 var(--app-font-sans), sans-serif;
+}
+.vigil-severity-methodology-page .vigil-severity-unassessed {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.95rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid hsl(var(--border) / .8);
+  border-bottom: 1px solid hsl(var(--border) / .8);
+}
+.vigil-severity-methodology-page .vigil-severity-unassessed > .vigil-status-chip {
+  flex: 0 0 auto;
+  margin-top: .14rem;
+}
+.vigil-severity-methodology-page .vigil-severity-unassessed p {
+  margin: 0;
+}
+.vigil-severity-methodology-page .vigil-harm-pathway-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin: 1.1rem 0 1.25rem;
+}
+.vigil-severity-methodology-page .vigil-harm-pathway-comparison > div {
+  min-width: 0;
+  padding-top: .85rem;
+  border-top: 2px solid hsl(var(--primary) / .48);
+}
+.vigil-severity-methodology-page .vigil-harm-pathway-comparison h3 {
+  margin: 0 0 .5rem;
+  font: 700 1rem/1.4 var(--app-font-sans), sans-serif;
+}
+@media (max-width: 1000px) {
+  .vigil-severity-methodology-page .vigil-severity-band-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 650px) {
+  .vigil-severity-methodology-page .vigil-severity-band-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .vigil-severity-methodology-page .vigil-harm-pathway-comparison {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vigil-severity-methodology-page .vigil-severity-unassessed {
+    gap: .65rem;
+  }
+}
