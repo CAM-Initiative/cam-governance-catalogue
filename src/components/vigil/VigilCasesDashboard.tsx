@@ -4,6 +4,7 @@ import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
 import { donutSegmentAppearance } from "@/lib/vigilDonutSelection.mjs";
+import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "@/lib/vigilDonutCallouts.mjs";
 import { countryFromJurisdictionString } from "@/lib/vigilCountryMatching.mjs";
 import { AdSenseRail } from "@/components/advertising/AdSenseRail";
 import "./VigilCasesDashboard.css";
@@ -222,20 +223,25 @@ const SEVERITIES = [
   { code: "S5", label: "Critical", color: "#e75c6e" },
   { code: "SU", label: "Unassessed", color: "#8b9cad" },
 ];
-// Labels use a dedicated accessible key instead of SVG leader lines:
-// fixed SVG coordinates overlap as the card contracts or a slice expands.
+// Editorial leader lines return to the donut, with deterministic spacing so
+// even adjacent tiny severity slices never overlap labels in a narrow rail.
 function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRecord[]; selected: string; onSelect: (code: string) => void }) {
   const distribution = severityDistribution(records);
   const total = distribution.reduce((sum, item) => sum + item.count, 0);
+  const labels = layoutSeverityCallouts(distribution.map(item => ({
+    ...item, label: SEVERITIES.find(definition => definition.code === item.code)?.label ?? item.code,
+    color: SEVERITIES.find(definition => definition.code === item.code)?.color ?? "#8b9cad",
+  })), total);
   const selectedCount = distribution.find(item => item.code === selected)?.count;
+  const { centerX: cx, centerY: cy, labelLeftX, labelRightX } = CALLOUT_GEOMETRY;
   let elapsed = 0;
   const activate = (code: string) => onSelect(selected === code ? "" : code);
   return <div className="vigil-dashboard-outcomes">
     <div className="vigil-dashboard-donut">
-      <svg viewBox="52 0 256 256" role="group" aria-label={`Harm severity for ${total} case files. Select a ring segment or the adjacent severity key to filter.`}>
+      <svg viewBox="0 0 440 306" role="group" aria-label={`Harm severity for ${total} Case Files. Select a donut segment or its connected label to filter.`}>
         <defs>
           <filter id="vigil-donut-dimensional-shadow" x="-35%" y="-35%" width="170%" height="170%">
-            <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#001927" floodOpacity=".35"/>
+            <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#001927" floodOpacity=".29"/>
           </filter>
           <radialGradient id="vigil-donut-face" cx="38%" cy="27%" r="85%">
             <stop offset="0%" stopColor="#ffffff" stopOpacity=".07"/>
@@ -249,8 +255,8 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           </linearGradient>)}
         </defs>
         <g filter="url(#vigil-donut-dimensional-shadow)">
-          <circle cx="180" cy="128" r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="28"/>
-          <circle cx="180" cy="128" r="57" fill="url(#vigil-donut-face)"/>
+          <circle cx={cx} cy={cy} r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="28"/>
+          <circle cx={cx} cy={cy} r="57" fill="url(#vigil-donut-face)"/>
         </g>
         {distribution.map(item => {
           const start = elapsed; elapsed += item.count;
@@ -258,36 +264,45 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           const appearance = donutSegmentAppearance(start, item.count, total, isSelected, Boolean(selected));
           const circumference = 2 * Math.PI * appearance.radius;
           return total && item.count ? <g key={item.code} className="vigil-dashboard-donut-slice" transform={isSelected ? `translate(${appearance.offsetX} ${appearance.offsetY})` : undefined}>
-            <circle cx="180" cy="128" r={appearance.radius} fill="none" stroke={`url(#vigil-donut-shade-${item.code})`}
+            <circle cx={cx} cy={cy} r={appearance.radius} fill="none" stroke={`url(#vigil-donut-shade-${item.code})`}
               strokeWidth={appearance.strokeWidth} opacity={appearance.opacity}
               strokeDasharray={`${(item.count / total) * circumference} ${circumference}`}
-              strokeDashoffset={-(start / total) * circumference} transform="rotate(-90 180 128)"
+              strokeDashoffset={-(start / total) * circumference} transform={`rotate(-90 ${cx} ${cy})`}
               onClick={() => activate(item.code)} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(item.code); } }}
-              tabIndex={0} role="button" aria-label={`${item.code}: ${item.count} case files; ${isSelected ? "clear filter" : "filter"}`}
-              aria-pressed={isSelected} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} case files</title>
+              tabIndex={0} role="button" aria-label={`${item.code}: ${item.count} Case Files; ${isSelected ? "clear filter" : "filter"}`}
+              aria-pressed={isSelected} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} Case Files</title>
             </circle>
           </g> : null;
         })}
-        <circle cx="180" cy="128" r="57.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
-        <circle cx="180" cy="128" r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
-        <text x="180" y="124" textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
-        <text x="180" y="143" textAnchor="middle" className="vigil-dashboard-donut-caption">{selected ? `${selected} SELECTED` : "CASE FILES"}</text>
-
+        <circle cx={cx} cy={cy} r="57.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
+        <circle cx={cx} cy={cy} r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
+        <text x={cx} y={cy-4} textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
+        <text x={cx} y={cy+15} textAnchor="middle" className="vigil-dashboard-donut-caption">{selected ? `${selected} SELECTED` : "CASE FILES"}</text>
+        {labels.map(item => {
+          const active = selected === item.code;
+          const dim = selected && !active;
+          const dx = Math.cos(item.midAngle), dy = Math.sin(item.midAngle);
+          const x0 = cx + dx * (active ? 100 : 85);
+          const y0 = cy + dy * (active ? 100 : 85);
+          const left = item.side === "left";
+          const joinX = left ? 112 : 328;
+          const endX = left ? 106 : 334;
+          const textX = left ? labelLeftX : labelRightX;
+          const anchor = left ? "end" : "start";
+          return <g key={item.code} className={`vigil-dashboard-severity-callout${active ? " is-selected" : dim ? " is-muted" : ""}`}
+              role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} Case Files`}
+              aria-pressed={active} onClick={() => activate(item.code)}
+              onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(item.code); } }}>
+            <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${joinX},${item.y.toFixed(1)} L${endX},${item.y.toFixed(1)}`}
+              stroke={active ? item.color : "var(--vd-chart-line, #a6a3a2)"}
+              strokeWidth={active ? 2.6 : 1.6} fill="none" strokeLinejoin="round" pointerEvents="none"/>
+            <circle cx={x0} cy={y0} r="2.6" fill={active ? item.color : "var(--vd-chart-line, #a6a3a2)"} pointerEvents="none"/>
+            <text x={textX} y={item.y-7} textAnchor={anchor} className="vigil-dashboard-severity-label">{item.code} ({item.count})</text>
+            <text x={textX} y={item.y+15} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
+            <rect x={left ? 0 : 328} y={item.y-29} width="112" height="48" fill="transparent" pointerEvents="all"/>
+          </g>;
+        })}
       </svg>
-    </div>
-    <div className="vigil-dashboard-severity-key" role="group" aria-label="Select harm severity">
-      {SEVERITIES.map(definition => {
-        const count = distribution.find(item => item.code === definition.code)?.count ?? 0;
-        const active = selected === definition.code;
-        return <button type="button" key={definition.code}
-          className={`vigil-dashboard-severity-item${active ? " is-selected" : selected ? " is-muted" : ""}`}
-          onClick={() => activate(definition.code)} disabled={!count}
-          aria-pressed={active} aria-label={`${definition.code} ${definition.label}: ${count} case files; ${active ? "clear severity filter" : "filter"}`}>
-          <span className="vigil-dashboard-severity-swatch" style={{ backgroundColor: definition.color }} aria-hidden="true" />
-          <span className="vigil-dashboard-severity-copy"><strong>{definition.code}</strong><span>{definition.label}</span></span>
-          <span className="vigil-dashboard-severity-quantity">{count}</span>
-        </button>;
-      })}
     </div>
   </div>;
 }
