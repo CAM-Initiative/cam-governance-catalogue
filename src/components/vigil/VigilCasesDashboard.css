@@ -718,7 +718,7 @@
   flex-direction: column;
   min-width: 0;
   width: 100%;
-  min-height: 218px;
+  min-height: 192px;
   box-sizing: border-box;
   border: 1px solid transparent;
   border-radius: 7px;
@@ -755,8 +755,8 @@
   justify-content: center;
   box-sizing: border-box;
   width: 100%;
-  height: 158px;
-  margin-bottom: .4rem;
+  height: 150px;
+  margin-bottom: .12rem;
   border-bottom: 1px solid var(--vd-chart-line);
 }
 .vigil-case-library-page .vigil-dashboard-bar-fill {
@@ -779,26 +779,52 @@
   font-variant-numeric: tabular-nums;
 }
 .vigil-case-library-page .vigil-dashboard-bar-code {
-  font: 700 .74rem/1.2 var(--app-font-mono), monospace;
+  margin-top: .35rem;
+  font: 750 .93rem/1.25 var(--app-font-mono), monospace;
+  letter-spacing: .018em;
   color: var(--vd-ink);
-}
-.vigil-case-library-page .vigil-dashboard-bar-name {
-  width: 100%;
-  min-height: 2.4em;
-  margin-top: .15rem;
-  color: var(--vd-ink);
-  font: 500 .61rem/1.2 var(--app-font-sans), sans-serif;
-  text-align: center;
-  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-choice {
   color: hsl(0 0% 9%);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-value,
-html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-code,
-html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-name {
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-code {
   color: hsl(0 0% 9%);
 }
 @media (prefers-reduced-motion: reduce) {
   .vigil-case-library-page .vigil-dashboard-bar-fill { transition: none; }
+}
+
+/* Long severity words now live in the existing accessible info disclosure.
+   Bar codes are deliberately larger and more legible in the narrow widget. */
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend {
+  display: grid;
+  gap: .35rem;
+  margin: .7rem 0;
+  font-family: var(--app-font-sans), sans-serif;
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend > div {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  gap: .55rem;
+  align-items: baseline;
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend dt {
+  display: inline-flex;
+  gap: .35rem;
+  align-items: center;
+  font: 700 .77rem/1.35 var(--app-font-mono), monospace;
+  color: var(--vd-ink);
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend dd {
+  margin: 0;
+  font: 500 .77rem/1.35 var(--app-font-sans), sans-serif;
+  color: var(--vd-ink);
+}
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-legend-dot {
+  width: .58rem;
+  height: .58rem;
+  flex: 0 0 .58rem;
+  border-radius: 2px;
 }

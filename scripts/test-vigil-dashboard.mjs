@@ -757,7 +757,23 @@ test("Bar and donut share the exact same distribution and filter handler with ba
   assert.match(dashboard, /aria-pressed=\{severityChart === "donut"\}/);
   assert.match(dashboard, /<SeverityBars records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
   assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
-  assert.match(dashboard, /SU means unassessed; it must not be treated as S1/);
+  assert.match(dashboard, /SU is unassessed, not another severity band or evidence of minimal harm/);
+});
+
+test("Severity bar labels display only legible codes; full category meanings move into info disclosure", async () => {
+  const [dashboard, css] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+  ]);
+  const bars = dashboard.slice(dashboard.indexOf("function SeverityBars("), dashboard.indexOf("export default function VigilCasesDashboard("));
+  assert.match(bars, /vigil-dashboard-bar-code/);
+  assert.doesNotMatch(bars, /vigil-dashboard-bar-name|\{entry\.label\}<\/span>/);
+  assert.match(bars, /aria-label=\{\x60\$\{entry\.code\} \$\{entry\.label\}:/);
+  assert.match(dashboard, /<dl className="vigil-dashboard-severity-legend">/);
+  assert.match(dashboard, /SEVERITIES\.map\(entry => <div key=\{entry\.code\}>/);
+  assert.match(dashboard, /<dd>\{entry\.label\}<\/dd>/);
+  assert.match(css, /\.vigil-dashboard-bar-code \{[\s\S]*?\.93rem/);
+  assert.match(css, /\.vigil-dashboard-severity-panel \.vigil-dashboard-severity-legend/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.

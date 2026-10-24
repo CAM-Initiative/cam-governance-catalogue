@@ -333,7 +333,6 @@ function SeverityBars({ records, selected, onSelect }: { records: VigilIndexReco
             </span>
           </span>
           <span className="vigil-dashboard-bar-code">{entry.code}</span>
-          <span className="vigil-dashboard-bar-name">{entry.label}</span>
         </button>;
       })}
     </div>
@@ -396,7 +395,14 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Harm severity chart information" title="Harm severity information">i</summary>
           <div className="vigil-dashboard-panel-info-body">
-            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a bar, donut segment, or connected label to filter the list. SU means unassessed; it must not be treated as S1.</p>
+            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a bar, donut segment, or connected label to filter. The codes and colours mean:</p>
+            <dl className="vigil-dashboard-severity-legend">
+              {SEVERITIES.map(entry => <div key={entry.code}>
+                <dt><span className="vigil-dashboard-severity-legend-dot" style={{ backgroundColor: entry.color }} aria-hidden="true" />{entry.code}</dt>
+                <dd>{entry.label}</dd>
+              </div>)}
+            </dl>
+            <p>SU is unassessed, not another severity band or evidence of minimal harm. Counts represent distinct Case Files.</p>
           </div>
         </details>
         <div className="vigil-dashboard-severity-view-switch" role="group" aria-label="Severity chart view">
