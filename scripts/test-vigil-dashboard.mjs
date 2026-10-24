@@ -62,25 +62,20 @@ test("Donut restores connected two-sided severity labels and keyboard selection"
   assert.match(dashboard, /onKeyDown=\{event\s*=>/, "Interactive chart remains keyboard operable");
 });
 
-test("Globe reset clears the same dashboard filters as the toolbar in both rendering modes", async () => {
+test("Globe reset button is absent; selected countries still clear from the left rail", async () => {
   const [page, dashboard, globe] = await Promise.all([
     source("src/pages/vigil-cases.tsx"),
     source("src/components/vigil/VigilCasesDashboard.tsx"),
     source("src/components/vigil/EarthGlobe3D.tsx"),
   ]);
-  const clear = page.match(/const clearFilters = \(\) => \{([\s\S]*?)\};/)?.[1] ?? "";
-  for (const setter of ["setSearch", "setSeverity", "setFailureClass"]) {
-    assert.ok(clear.includes(setter + '("");'), setter + " is cleared by the globe and toolbar");
+  assert.ok(page.includes("onClick={clearFilters}>Clear filters"));
+  assert.ok(dashboard.includes("<GlobeView locations="));
+  assert.ok(globe.includes("callbackRef.current(hit.id)"));
+  for (const x of [dashboard, globe]) {
+    assert.ok(!x.includes("vigil-dashboard-reset-rotation"));
+    assert.ok(!x.includes("onClearFilters"));
+    assert.ok(!x.includes("RotateCcw"));
   }
-  assert.ok(clear.includes("setJurisdictions([]);"), "globe reset clears all selected jurisdictions");
-  assert.ok(clear.includes("setClassifications([]);"), "reset clears all classification checkboxes");
-  assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
-  assert.match(page, /onClearFilters=\{clearFilters\}/);
-  assert.match(dashboard, /<EarthGlobe3D[^>]*onClearFilters=\{onClearFilters\}/);
-  assert.match(dashboard, /setRotation\(15\); onClearFilters\(\)/);
-  assert.match(dashboard, /Reset globe view and clear filters/);
-  assert.match(globe, /const reset = useCallback\(\(\) => \{\s*onClearFilters\(\)/);
-  assert.match(globe, /onClick=\{reset\} aria-label="Reset globe view and clear filters"/);
 });
 
 test("Donut selection physically separates the chosen severity and keeps angular proportions", async () => {
@@ -105,7 +100,7 @@ test("Donut selection physically separates the chosen severity and keeps angular
   assert.ok(dashboard.includes("const circumference = 2 * Math.PI * appearance.radius;"), "Arc share must use actual selected radius");
   assert.match(dashboard, /className="vigil-dashboard-donut-slice" transform=/);
   assert.match(dashboard, /selectedCount \?\? total/);
-  assert.match(dashboard, /SELECTED/);
+  assert.ok(!dashboard.includes("vigil-dashboard-donut-caption"));
   assert.ok(dashboard.includes("vigil-dashboard-severity-callout"));
   assert.ok(dashboard.includes("aria-pressed={active}"));
 });
@@ -558,12 +553,12 @@ test("Collapsed facets hide All, and vendor list is searchable, scrollable and m
   assert.match(css, /max-height: none;\s*overflow-y: visible/);
 });
 
-test("Experimental Case Files Playfair filter rail stays distinct from Case File typography", async () => {
+test("Case Files mono sidebar title and sans navigation retain other typography boundaries", async () => {
   const [css, dossier] = await Promise.all([
     source("src/vigil-dashboard-workspace-experiment.css"),
     source("src/vigil-observatory-instrument-experiment.css"),
   ]);
-  assert.match(css, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 660 \.85rem\/1\.45 var\(--app-font-serif\)/);
+  assert.ok(css.includes("font: 600 .77rem/1.5 var(--app-font-sans), sans-serif;"));
   assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-dashboard-case-search input \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-family: var\(--app-font-sans\)/);
@@ -597,7 +592,7 @@ test("Matching-case title, conditional clear action, chips and live total occupy
     source("src/pages/vigil-cases.tsx"),
     source("src/vigil-dashboard-workspace-experiment.css"),
   ]);
-  const heading = page.indexOf('className="vigil-dashboard-selection-header"');
+  const heading = page.indexOf('id="case-filter-heading"');
   const chips = page.indexOf('className="vigil-dashboard-selection-chips"');
   const count = page.indexOf('className="vigil-dashboard-filter-match-count"');
   const facets = page.indexOf('className="vigil-dashboard-metadata-facets"');
@@ -605,11 +600,11 @@ test("Matching-case title, conditional clear action, chips and live total occupy
   const search = page.indexOf('className="vigil-library-toolbar vigil-dashboard-case-search"');
   assert.ok(heading > 0 && chips > heading && count > chips && facets > count);
   assert.ok(cases > facets && search > cases, "Wider case column owns the search field");
-  assert.match(page, /Matching case files<\/span>/);
+  assert.ok(page.includes('<h2 id="case-filter-heading">Case File Filters</h2>'));
   assert.match(page, /\{hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all"/);
   assert.match(page, /\{hasActiveFilters && <div className="vigil-dashboard-selection-chips">/);
   assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-dashboard-filter-controls/);
-  assert.doesNotMatch(page, /Current view|<h2>Matching Case Files<\/h2>/);
+  assert.ok(!page.includes("Current view") && !page.includes("Matching case files</span>"));
 });
 
 test("Filter rail removes counts tooltip and retains sans dropdown choices", async () => {
@@ -620,7 +615,7 @@ test("Filter rail removes counts tooltip and retains sans dropdown choices", asy
   assert.doesNotMatch(page, /vigil-dashboard-facet-help|About filter counts|Counts reflect the full loaded index/);
   assert.doesNotMatch(css, /vigil-dashboard-facet-help|vigil-dashboard-facet-guidance/);
   assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-sans\)/);
-  assert.match(css, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 660 \.85rem\/1\.45 var\(--app-font-serif\)/);
+  assert.ok(css.includes("font: 600 .77rem/1.5 var(--app-font-sans), sans-serif;"));
   assert.match(css, /\.vigil-dashboard-vendor-search input \{[\s\S]*?var\(--app-font-sans\)/);
 });
 
@@ -676,6 +671,27 @@ test("Narrow desktop search rail uses concise placeholder without losing the acc
   assert.match(css, /grid-template-columns: clamp\(225px, 17\.5vw, 250px\)/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-dashboard-case-search input \{[\s\S]*?min-width: 0;[\s\S]*?width: 0;[\s\S]*?flex: 1 1 0%/);
   assert.match(page, /onClick=\{\(\) => setSearch\(""\)\} aria-label="Clear search"/);
+});
+
+test("Dashboard calm pass unifies case typography and compacts darker light-theme instruments", async () => {
+  const [page, dashboard, globe, css] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/EarthGlobe3D.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  assert.ok(page.includes('<h2 id="case-filter-heading">Case File Filters</h2>'));
+  assert.equal((page.match(/className="vigil-dashboard-clear-all"/g) ?? []).length, 1);
+  assert.ok(css.includes("font-family: var(--app-font-mono), monospace;"));
+  assert.ok(css.includes("font-weight: 700;"));
+  assert.ok(css.includes("font-weight: 400;"));
+  assert.ok(css.includes("hsl(29 19% 86%)"));
+  assert.ok(css.includes("hsl(27 16% 79%)"));
+  assert.ok(css.includes("padding: .58rem .64rem .46rem;"));
+  assert.ok(css.includes("width: min(100%, 222px)"));
+  assert.ok(!dashboard.includes("vigil-dashboard-donut-caption"));
+  assert.ok(!dashboard.includes("vigil-dashboard-reset-rotation"));
+  assert.ok(!globe.includes("vigil-dashboard-reset-rotation"));
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
