@@ -8,6 +8,7 @@ import { donutSegmentAppearance } from "../src/lib/vigilDonutSelection.mjs";
 import { matchesClassificationSelection, toggleClassificationSelection } from "../src/lib/vigilClassificationFilter.mjs";
 import { INDEX_FACETS, NOT_INDEXED, indexFacetValues, indexFacetOptions, matchesIndexFacets, toggleIndexFacetSelection, facetOptionLabel } from "../src/lib/vigilIndexFacets.mjs";
 import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "../src/lib/vigilDonutCallouts.mjs";
+import { reconcileHarmSidecar, hasEvidencedHarmType, harmTypeCounts } from "../src/lib/vigilHarmDimensions.mjs";
 
 test("counts only explicitly failure-role mappings, once per Incident", () => {
   const raw = {
@@ -239,7 +240,7 @@ test("All three insight panels retain disclosures and selected leader-line label
     source("src/components/vigil/VigilCasesDashboard.tsx"),
     source("src/components/vigil/VigilCasesDashboard.css"),
   ]);
-  assert.equal((dashboard.match(/<details className="vigil-dashboard-[^"]*panel-info"/g) ?? []).length, 3);
+  assert.equal((dashboard.match(/<details className="vigil-dashboard-[^"]*panel-info"/g) ?? []).length, 4);
   assert.match(dashboard, /<summary aria-label="Globe data and imagery information"/);
   assert.match(dashboard, /<summary aria-label="Harm severity chart information"/);
   assert.match(dashboard, /<summary aria-label="Taxonomy intelligence counts information"/);
@@ -777,3 +778,65 @@ test("Severity bar labels display only legible codes; full category meanings mov
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
+
+
+test("Sparse HIM join honours record versions and excludes S1/unreported from positive harm totals", () => {
+  const records = [
+    { id: "VIGIL-INC-000001", record_version: "1.0" },
+    { id: "VIGIL-INC-000002", record_version: "1.0" },
+    { id: "VIGIL-INC-000003", record_version: "2.0" },
+  ];
+  const payload = { registry_type: "vigil_harm_dimensions", version: 1, record_count: 3, assessed_record_count: 3, entries: [
+    { id: records[0].id, v: "1.0", p: "specific_consequence", d: [["privacy-confidentiality", "S3"], ["physical-health-safety", "S1"]] },
+    { id: records[1].id, v: "1.0", p: "generic_deployed_evaluation", d: [["privacy-confidentiality", "S2"], ["rights-liberty", "S4"]] },
+    { id: records[2].id, v: "OLD", p: "specific_consequence", d: [["privacy-confidentiality", "S5"]] },
+  ]};
+  const joined = reconcileHarmSidecar(payload, records);
+  assert.equal(joined.stale, 1);
+  assert.equal(joined.partial, true);
+  assert.equal(joined.byId.size, 2);
+  assert.equal(hasEvidencedHarmType(joined.byId, records[0].id, "privacy-confidentiality"), true);
+  assert.equal(hasEvidencedHarmType(joined.byId, records[0].id, "physical-health-safety"), false);
+  assert.equal(hasEvidencedHarmType(joined.byId, records[2].id, "privacy-confidentiality"), false);
+  const definitions = [
+    { dimension_id: "privacy-confidentiality", label: "Privacy and confidentiality" },
+    { dimension_id: "physical-health-safety", label: "Physical health and safety" },
+    { dimension_id: "rights-liberty", label: "Rights and liberty" },
+  ];
+  const counts = harmTypeCounts([...records, records[0]], joined.byId, definitions);
+  assert.deepEqual(counts.map(x => [x.id, x.count]), [
+    ["privacy-confidentiality", 2], ["rights-liberty", 1],
+  ]);
+  assert.equal(counts[0].specific, 1);
+  assert.equal(counts[0].modelled, 1);
+});
+
+test("Real sparse harm sidecar remains tiny and joins current canonical index entries", async () => {
+  const projection = JSON.parse(await source("docs/data/vigil-harm-dimensions.json"));
+  assert.equal(projection.registry_type, "vigil_harm_dimensions");
+  assert.equal(projection.record_count, 200);
+  assert.equal(projection.assessed_record_count, 137);
+  assert.ok(projection.entries.every(x => /^VIGIL-INC-\d{6}$/.test(x.id) && x.d.every(row => row.length === 2 && /^S[1-5]$/.test(row[1]))));
+  assert.ok((await source("docs/data/vigil-harm-dimensions.json")).length < 60_000);
+});
+
+test("Harm Types cross-filter every existing instrument but preserves its own ranking order", async () => {
+  const [page, dashboard, styles] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+  ]);
+  assert.match(page, /const harmRecords = useMemo\(\(\) => baseCases\.filter/);
+  assert.match(page, /const taxonomyRecords = useMemo\(\(\) => rankingBaseCases\.filter/);
+  assert.match(page, /const mapRecords = useMemo\(\(\) => baseCases\.filter/);
+  assert.match(page, /const distributionRecords = useMemo\(\(\) => baseCases\.filter/);
+  assert.match(page, /&& matchesHarm\(record\)/);
+  assert.match(page, /const matchesHarm = \(record: VigilIndexRecord\)/);
+  assert.match(page, /onHarmType=\{setHarmType\}/);
+  assert.match(page, /Harm: \{harmDimensions\.find\(/);
+  assert.match(dashboard, /vigil-dashboard-harm-types-panel/);
+  assert.match(dashboard, /aria-pressed=\{harmType === entry\.id\}/);
+  assert.match(dashboard, /onHarmType\(harmType === entry\.id \? "" : entry\.id\)/);
+  assert.match(dashboard, /S1 assessments are retained in the sparse index but excluded/);
+  assert.match(styles, /\.vigil-dashboard-harm-type-choice:focus-visible/);
+});

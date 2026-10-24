@@ -17,6 +17,8 @@ import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib
 import { countryLookupFromProjection, matchesSelectedCountries, toggleSelectedCountry } from "@/lib/vigilDashboardGeography.mjs";
 import { matchesClassificationSelection, toggleClassificationSelection } from "@/lib/vigilClassificationFilter.mjs";
 import { INDEX_FACETS, NOT_INDEXED, facetOptionLabel, indexFacetOptions, matchesIndexFacets, toggleIndexFacetSelection } from "@/lib/vigilIndexFacets.mjs";
+import { hasEvidencedHarmType, reconcileHarmSidecar } from "@/lib/vigilHarmDimensions.mjs";
+import { harmDimensions } from "@/lib/vigilHarmReference";
 
 type PageState =
   | { status: "loading" }
@@ -239,6 +241,9 @@ export default function VigilCases() {
   const [jurisdictions, setJurisdictions] = useState<string[]>([]);
   const toggleJurisdiction = (code: string) => setJurisdictions(current => toggleSelectedCountry(current, code));
   const [failureClass, setFailureClass] = useState("");
+  const [harmType, setHarmType] = useState("");
+  const [harmProjection, setHarmProjection] = useState<ReturnType<typeof reconcileHarmSidecar> | null>(null);
+  const [harmLoadNote, setHarmLoadNote] = useState("Loading assessed harm dimensions…");
   const [indexFacets, setIndexFacets] = useState<Record<string, string[]>>({});
   const toggleIndexFacet = (id: string, key: string) =>
     setIndexFacets(current => toggleIndexFacetSelection(current, id, key));
@@ -253,6 +258,7 @@ export default function VigilCases() {
     setSearch("");
     setClassifications([]);
     setSeverity("");
+    setHarmType("");
     setJurisdictions([]);
     setFailureClass("");
     setIndexFacets({});
@@ -328,6 +334,49 @@ export default function VigilCases() {
     return () => { active = false; };
   }, [state]);
 
+  useEffect(() => {
+    if (state.status !== "ready") return;
+    let active = true;
+    const records = state.records;
+    async function loadHarmProjection() {
+      const selectedBranch = getSelectedVigilBranch();
+      let data: unknown;
+      let cached = false;
+      try {
+        const url = await vigilRawUrl("vigil/VIGIL.Harm.Dimensions.Index.json");
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error("VIGIL harm index unavailable");
+        data = await response.json();
+      } catch {
+        if (selectedBranch !== VIGIL_DEFAULT_BRANCH) {
+          if (active) { setHarmProjection(null); setHarmLoadNote("No harm index on this selected VIGIL branch."); }
+          return;
+        }
+        try {
+          const response = await fetch(`${import.meta.env.BASE_URL}data/vigil-harm-dimensions.json`);
+          if (!response.ok) throw new Error("Cached harm index unavailable");
+          data = await response.json();
+          cached = true;
+        } catch {
+          if (active) { setHarmProjection(null); setHarmLoadNote("Assessed harm dimensions are unavailable."); }
+          return;
+        }
+      }
+      try {
+        const result = reconcileHarmSidecar(data, records);
+        if (!active) return;
+        setHarmProjection(result);
+        setHarmLoadNote(result.partial
+          ? "Partial coverage: Incident record versions differ or index counts have changed."
+          : cached ? "Cached deterministic harm data; the upstream index is not yet on main." : "");
+      } catch {
+        if (active) { setHarmProjection(null); setHarmLoadNote("Harm index failed version/structure validation."); }
+      }
+    }
+    void loadHarmProjection();
+    return () => { active = false; };
+  }, [state]);
+
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
   const indexedFacetCatalog = useMemo(() => INDEX_FACETS.map(facet => ({
@@ -351,26 +400,34 @@ export default function VigilCases() {
   const baseCases = useMemo(() => rankingBaseCases.filter(record =>
     !failureClass || failureClassIds(record.raw).includes(failureClass)
   ), [rankingBaseCases, failureClass]);
+  const harmById = useMemo(() => harmProjection?.byId ?? new Map(), [harmProjection]);
+  const matchesHarm = (record: VigilIndexRecord) =>
+    !harmType || hasEvidencedHarmType(harmById, record.id, harmType);
+  // Own selected harm-type filter is deliberately excluded from this ranking.
+  const harmRecords = useMemo(() => baseCases.filter(record =>
+    matchesSelectedCountries(countryByCase.get(record.id), jurisdictions)
+    && (!severity || severityCode(record) === severity)
+  ), [baseCases, countryByCase, jurisdictions, severity]);
   const taxonomyRecords = useMemo(() => rankingBaseCases.filter(record =>
     matchesSelectedCountries(countryByCase.get(record.id), jurisdictions)
     && (!severity || severityCode(record) === severity)
-  ), [rankingBaseCases, countryByCase, jurisdictions, severity]);
-
+    && matchesHarm(record)
+  ), [rankingBaseCases, countryByCase, jurisdictions, severity, harmType, harmById]);
   const mapRecords = useMemo(() => baseCases.filter(record => {
     if (severity && severityCode(record) !== severity) return false;
-    return true;
-  }), [baseCases, severity]);
+    return matchesHarm(record);
+  }), [baseCases, severity, harmType, harmById]);
   const distributionRecords = useMemo(() => baseCases.filter(record =>
-    matchesSelectedCountries(countryByCase.get(record.id), jurisdictions)
-  ), [baseCases, countryByCase, jurisdictions]);
+    matchesSelectedCountries(countryByCase.get(record.id), jurisdictions) && matchesHarm(record)
+  ), [baseCases, countryByCase, jurisdictions, harmType, harmById]);
   const filtered = useMemo(() => distributionRecords.filter(record =>
     !severity || severityCode(record) === severity
   ), [distributionRecords, severity]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, indexFacets, sort]);
-  const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass || Object.keys(indexFacets).length);
+  useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, harmType, indexFacets, sort]);
+  const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass || harmType || Object.keys(indexFacets).length);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -439,6 +496,7 @@ export default function VigilCases() {
                   {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
                   {jurisdictions.map(code => <button type="button" key={code} className="vigil-dashboard-selection-chip" onClick={() => toggleJurisdiction(code)} aria-label={`Remove ${countryDisplayName(code)} jurisdiction filter`}>Jurisdiction: {countryDisplayName(code)}<X aria-hidden="true" size={13} /></button>)}
                   {failureClass && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setFailureClass("")} aria-label="Remove fidelity class filter">{failureClass.replace("VIGIL-FC-", "FC-")}<X aria-hidden="true" size={13} /></button>}
+                   {harmType && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setHarmType("")} aria-label="Remove assessed harm type filter">Harm: {harmDimensions.find(d => d.dimension_id === harmType)?.label ?? harmType}<X aria-hidden="true" size={13} /></button>}
                   {Object.entries(indexFacets).flatMap(([id, keys]) => keys.map(key =>
                     <button type="button" key={`${id}:${key}`} className="vigil-dashboard-selection-chip"
                       onClick={() => toggleIndexFacet(id, key)} aria-label={`Remove ${INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: ${facetOptionLabel(id,key)} filter`}>
@@ -591,6 +649,12 @@ export default function VigilCases() {
                 mapRecords={mapRecords}
                 distributionRecords={distributionRecords}
                 taxonomyRecords={taxonomyRecords}
+                harmRecords={harmRecords}
+                harmById={harmById}
+                harmAvailable={Boolean(harmProjection)}
+                harmNote={harmLoadNote}
+                harmType={harmType}
+                onHarmType={setHarmType}
                 severity={severity}
                 jurisdictions={jurisdictions}
                 failureClass={failureClass}
