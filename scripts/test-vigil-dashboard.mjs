@@ -6,6 +6,7 @@ import { globePosition, globeRotationForLongitude } from "../src/lib/vigilGlobeC
 import { failureClassIds, topFailureClasses, severityDistribution } from "../src/lib/vigilDashboardMetrics.mjs";
 import { donutSegmentAppearance } from "../src/lib/vigilDonutSelection.mjs";
 import { matchesClassificationSelection, toggleClassificationSelection } from "../src/lib/vigilClassificationFilter.mjs";
+import { INDEX_FACETS, NOT_INDEXED, indexFacetValues, indexFacetOptions, matchesIndexFacets, toggleIndexFacetSelection, facetOptionLabel } from "../src/lib/vigilIndexFacets.mjs";
 import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "../src/lib/vigilDonutCallouts.mjs";
 
 test("counts only explicitly failure-role mappings, once per Incident", () => {
@@ -415,6 +416,93 @@ test("Classification checklist combines outcomes by union and supports independe
   assert.match(styles, /\.vigil-dashboard-classification-facet \{/);
   assert.match(styles, /\.vigil-dashboard-facet-option input\[type="checkbox"\]/);
   assert.match(styles, /background: transparent;\s*box-shadow: none;/);
+});
+
+test("Index-backed facets preserve year provenance, explicit unknowns and absence of inferred compliance", () => {
+  const a = { raw: {
+    occurred_from: "2026-06-18", date_recorded: "2026-10-24",
+    platform_or_vendor: "OpenAI",
+    agent_context: { agentic_status: "agentic" },
+    occurrence_environment: {
+      deployment_state: "pre-deployment", external_reach: "real-world",
+      activity_contexts: ["evaluation", "research", "evaluation"],
+    },
+    adjudication_coverage: { status: "complete" },
+    source_roles: ["incident-evidence", "harm-evidence", "incident-evidence"],
+    external_requirement_assessment_count: 3,
+    external_assessment_count: 0,
+    primary_classification: { class_id: "VIGIL-FC-000042", classification_role: "failure-occurrence" },
+    secondary_classifications: [
+      { class_id: "VIGIL-FC-000042", classification_role: "successful-invariant" },
+      { class_id: "VIGIL-FC-000075", classification_role: "ambiguous-boundary" },
+      { class_id: "VIGIL-FC-000083" },
+    ],
+  }};
+  const b = { raw: { occurred_from: null, date_recorded: "2026-10-24",
+    agent_context: { agentic_status: "non-agentic" },
+    external_requirement_assessment_count: 0,
+  }};
+  const c = { raw: { occurred_from: "2025-02-30", date_recorded: "2026-05-01",
+    agent_context: { agentic_status: "agentic" },
+  }};
+  assert.deepEqual(indexFacetValues(a, "year"), ["2026"]);
+  assert.deepEqual(indexFacetValues(b, "year"), [NOT_INDEXED], "recorded date must not substitute for occurrence date");
+  assert.deepEqual(indexFacetValues(c, "year"), [NOT_INDEXED], "invalid dates must not be silently interpreted");
+  assert.deepEqual(indexFacetValues(a, "activity"), ["evaluation", "research"]);
+  assert.deepEqual(indexFacetValues(a, "sourceRole"), ["incident-evidence", "harm-evidence"]);
+  assert.deepEqual(indexFacetValues(a, "mappedClass"), ["VIGIL-FC-000042", "VIGIL-FC-000075"]);
+  assert.deepEqual(indexFacetValues(a, "requirements"), ["present"]);
+  assert.deepEqual(indexFacetValues(a, "externalAssessments"), ["none"]);
+  assert.deepEqual(indexFacetValues(b, "requirements"), ["none"]);
+  assert.deepEqual(indexFacetValues(c, "requirements"), [NOT_INDEXED]);
+  assert.equal(facetOptionLabel("requirements","present"),"One or more assessments");
+  assert.equal(facetOptionLabel("year",NOT_INDEXED),"Not established in index");
+  assert.deepEqual(indexFacetOptions([a,b,c], "agentic").map(x => x.count), [2,1]);
+  assert.deepEqual(indexFacetOptions([a,b,c], "year").map(x => [x.key,x.count]), [["2026",1],[NOT_INDEXED,2]]);
+  assert.equal(indexFacetOptions([a,b,c], "activity").find(x=>x.key==="evaluation")?.count, 1);
+});
+
+test("Indexed metadata multiple choices use union within facets and intersection across facets", () => {
+  const records = [
+    { raw: {occurred_from:"2025-02", agent_context:{agentic_status:"agentic"}, platform_or_vendor:"Vendor A"} },
+    { raw: {occurred_from:"2026", agent_context:{agentic_status:"agentic"}, platform_or_vendor:"Vendor B"} },
+    { raw: {occurred_from:"2026", agent_context:{agentic_status:"non-agentic"}, platform_or_vendor:"Vendor C"} },
+    { raw: {occurred_from:null, agent_context:{agentic_status:"agentic"}, platform_or_vendor:"Vendor A"} },
+  ];
+  let selected = {};
+  selected = toggleIndexFacetSelection(selected,"year","2025");
+  selected = toggleIndexFacetSelection(selected,"year","2026");
+  selected = toggleIndexFacetSelection(selected,"agentic","agentic");
+  assert.deepEqual(records.filter(r=>matchesIndexFacets(r,selected)).map(r=>r.raw.platform_or_vendor),["Vendor A","Vendor B"]);
+  selected = toggleIndexFacetSelection(selected,"year","2025");
+  assert.deepEqual(records.filter(r=>matchesIndexFacets(r,selected)).map(r=>r.raw.platform_or_vendor),["Vendor B"]);
+  selected = toggleIndexFacetSelection(selected,"year",NOT_INDEXED);
+  assert.deepEqual(records.filter(r=>matchesIndexFacets(r,selected)).map(r=>r.raw.platform_or_vendor),["Vendor B","Vendor A"]);
+  selected = toggleIndexFacetSelection(selected,"year","2026");
+  selected = toggleIndexFacetSelection(selected,"year",NOT_INDEXED);
+  assert.equal("year" in selected,false);
+  assert.equal(records.filter(r=>matchesIndexFacets(r,selected)).length,3);
+});
+
+test("Indexed facet UI is disclosure-based, resettable, and uses only the published projection", async () => {
+  const [page, css] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  for (const id of ["year","agentic","deployment","externalReach","activity","vendor",
+    "adjudication","sourceRole","requirements","externalAssessments","mappedClass"]) {
+    assert.ok(INDEX_FACETS.some(f=>f.id===id), `${id} exists in index facet registry`);
+  }
+  assert.match(page, /indexFacetOptions\(records, facet\.id\)/);
+  assert.match(page, /matchesIndexFacets\(record, indexFacets\)/);
+  assert.match(page, /indexedFacetCatalog\.map\(facet => <IndexFacet/);
+  assert.match(page, /setIndexFacets\(\{\}\)/);
+  assert.match(page, /toggleIndexFacet\(id, key\)/);
+  assert.match(page, /type="checkbox" checked=\{selected\.includes\(option\.key\)\}/);
+  assert.match(page, /Object\.entries\(indexFacets\)\.flatMap/);
+  assert.match(css, /max-height: calc\(100dvh - 6\.2rem\)/);
+  assert.match(css, /\.vigil-dashboard-index-facet\[open\]/);
+  assert.match(css, /\.vigil-dashboard-metadata-facets \{/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
