@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -143,11 +143,33 @@ function IndexFacet({ id, title, options, total, selected, onToggle, onClear }: 
   const isVendor = id === "vendor";
   const [vendorQuery, setVendorQuery] = useState("");
   const [vendorExpanded, setVendorExpanded] = useState(false);
+  const vendorListRef = useRef<HTMLDivElement | null>(null);
+  const [vendorScroll, setVendorScroll] = useState({ up: false, down: false });
+  const refreshVendorScroll = () => {
+    const element = vendorListRef.current;
+    if (!element) return;
+    setVendorScroll({
+      up: element.scrollTop > 2,
+      down: element.scrollTop + element.clientHeight < element.scrollHeight - 2,
+    });
+  };
   const query = vendorQuery.trim().toLocaleLowerCase();
   const matchingOptions = isVendor
     ? options.filter(option => !query || option.label.toLocaleLowerCase().includes(query))
       .sort((a,b) => Number(selected.includes(b.key)) - Number(selected.includes(a.key)))
     : options;
+  useEffect(() => {
+    if (!isVendor || !vendorListRef.current) return;
+    vendorListRef.current.scrollTop = 0;
+    // Re-evaluate after the browser lays out the clipped option list.
+    const frame = window.requestAnimationFrame(refreshVendorScroll);
+    return () => window.cancelAnimationFrame(frame);
+  }, [isVendor, vendorQuery, vendorExpanded, matchingOptions.length, options.length]);
+  const scrollVendors = (direction: -1 | 1) => {
+    const element = vendorListRef.current;
+    if (!element) return;
+    element.scrollBy({ top: direction * Math.max(115, Math.floor(element.clientHeight * .75)), behavior: "smooth" });
+  };
   const facetClass = [
     "vigil-dashboard-index-facet",
     isVendor ? "is-vendor" : "",
@@ -169,6 +191,7 @@ function IndexFacet({ id, title, options, total, selected, onToggle, onClear }: 
         placeholder="Find a vendor…" aria-label="Search platform and vendor options"/>
     </label>}
     <div className="vigil-dashboard-facet-options" role="group" aria-label={`Filter by ${title}`}
+      ref={isVendor ? vendorListRef : undefined} onScroll={isVendor ? refreshVendorScroll : undefined}
       tabIndex={isVendor ? 0 : undefined}>
       <label className="vigil-dashboard-facet-option">
         <input type="checkbox" checked={selected.length === 0} onChange={() => onClear(id)}/>
@@ -184,6 +207,17 @@ function IndexFacet({ id, title, options, total, selected, onToggle, onClear }: 
       </label>)}
       {isVendor && matchingOptions.length === 0 && <p className="vigil-dashboard-facet-no-results">No matching vendors.</p>}
     </div>
+    {isVendor && options.length > 6 && <div className="vigil-dashboard-vendor-controls">
+      <span className="vigil-dashboard-vendor-scroll-caption" aria-live="polite">
+        {matchingOptions.length} {query ? "matching " : ""}vendors · scroll list
+      </span>
+      <div className="vigil-dashboard-vendor-scroll-buttons">
+        <button type="button" onClick={() => scrollVendors(-1)} disabled={!vendorScroll.up}
+          aria-label="Scroll vendor list up" title="Previous vendors"><ChevronUp size={17} aria-hidden="true"/></button>
+        <button type="button" onClick={() => scrollVendors(1)} disabled={!vendorScroll.down}
+          aria-label="Scroll vendor list down" title="More vendors"><ChevronDown size={17} aria-hidden="true"/></button>
+      </div>
+    </div>}
     {isVendor && !query && options.length > 6 && <button type="button"
       className="vigil-dashboard-vendor-show-more" aria-expanded={vendorExpanded}
       onClick={() => setVendorExpanded(value => !value)}>
