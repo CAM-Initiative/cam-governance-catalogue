@@ -1,4 +1,4 @@
-import{r as yt,j as On,R as ol}from"./index-DaZVYO_P.js";/**
+import{r as yt,j as On,R as ol}from"./index-Bkv4QHue.js";/**
  * @license
  * Copyright 2010-2025 Three.js Authors
  * SPDX-License-Identifier: MIT
