@@ -1,8 +1,10 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { Globe2, Layers3, ShieldAlert } from "lucide-react";
+import { Globe2, HeartPulse, Layers3, ShieldAlert } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
+import { harmTypeCounts } from "@/lib/vigilHarmDimensions.mjs";
+import { harmDimensions } from "@/lib/vigilHarmReference";
 import { donutSegmentAppearance } from "@/lib/vigilDonutSelection.mjs";
 import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "@/lib/vigilDonutCallouts.mjs";
 import { countryFromJurisdictionString } from "@/lib/vigilCountryMatching.mjs";
@@ -20,6 +22,12 @@ type Props = {
   distributionRecords: VigilIndexRecord[];
   /** Failure rankings respect all filters except their own selected class. */
   taxonomyRecords: VigilIndexRecord[];
+  harmRecords: VigilIndexRecord[];
+  harmById: Map<string, { pathway: string | null; dimensions: [string, string][] }>;
+  harmAvailable: boolean;
+  harmNote: string;
+  harmType: string;
+  onHarmType: (id: string) => void;
   severity: string;
   jurisdictions: string[];
   failureClass: string;
@@ -339,9 +347,10 @@ function SeverityBars({ records, selected, onSelect }: { records: VigilIndexReco
   </div>;
 }
 
-export default function VigilCasesDashboard({mapRecords,distributionRecords,taxonomyRecords,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,countryByCase,geographyAvailable,geographyNote}: Props) {
+export default function VigilCasesDashboard({mapRecords,distributionRecords,taxonomyRecords,harmRecords,harmById,harmAvailable,harmNote,harmType,onHarmType,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
   const [severityChart, setSeverityChart] = useState<"bars" | "donut">("bars");
+  const [showAllHarmTypes, setShowAllHarmTypes] = useState(false);
   useEffect(() => {
     let active = true;
     loadFailureTaxonomy().then(result => {
@@ -368,6 +377,9 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
     return {regions,unmapped,mapped:mapRecords.length-unmapped};
   }, [mapRecords,jurisdictionById]);
   const failures = useMemo(()=>topFailureClasses(taxonomyRecords),[taxonomyRecords]);
+  const harmTypes = useMemo(() => harmTypeCounts(harmRecords, harmById, harmDimensions), [harmRecords, harmById]);
+  const visibleHarmTypes = showAllHarmTypes ? harmTypes : harmTypes.slice(0, 6);
+  const topHarmCount = harmTypes[0]?.count ?? 1;
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
@@ -416,6 +428,44 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
             ? <SeverityBars records={distributionRecords} selected={severity} onSelect={onSeverity}/>
             : <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>}
         </div>
+      </section>
+      <section className="vigil-dashboard-panel vigil-dashboard-harm-types-panel" aria-labelledby="vigil-dashboard-harm-types">
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-harm-types"><HeartPulse size={19} aria-hidden="true" /> Harm Types</h2></div>
+        <details className="vigil-dashboard-panel-info">
+          <summary aria-label="Harm type count information" title="Harm type information">i</summary>
+          <div className="vigil-dashboard-panel-info-body">
+            <p>Counts represent distinct matching incidents with an explicitly assessed S2–S5 band in each Harm Impact dimension. They are not numbers of victims or severities summed together. An incident may have several evidenced harm types.</p>
+            <p>S1 assessments are retained in the sparse index but excluded from evidenced materialised harm counts. Unreported and insufficient-evidence dimensions are not findings of no harm.</p>
+            <p>Solid bars denote assessed specific consequences; the striped portion represents separately modelled Aggregate Harm. Aggregate exposure is not a confirmed individual injury. Select a type to filter the other charts and Case Files without reordering this ranking.</p>
+            {harmNote && <p>{harmNote}</p>}
+          </div>
+        </details>
+        {!harmAvailable ? <p className="vigil-dashboard-empty">{harmNote}</p> :
+          <div className="vigil-dashboard-harm-types-body">
+            <ol className="vigil-dashboard-harm-types-ranking">
+              {visibleHarmTypes.map(entry => <li key={entry.id}>
+                <button type="button"
+                  className={`vigil-dashboard-harm-type-choice${harmType === entry.id ? " is-selected" : ""}`}
+                  aria-pressed={harmType === entry.id}
+                  aria-label={`Filter ${entry.label}: ${entry.count} distinct Case Files with assessed S2–S5 harm; ${entry.specific} specific, ${entry.modelled} modelled aggregate, ${entry.unspecified} unspecified pathway`}
+                  onClick={() => onHarmType(harmType === entry.id ? "" : entry.id)}>
+                  <span className="vigil-dashboard-harm-type-label">{entry.label}</span>
+                  <strong className="vigil-dashboard-harm-type-count">{entry.count}</strong>
+                  <span className="vigil-dashboard-harm-type-meter" aria-hidden="true">
+                    <span className="vigil-dashboard-harm-type-fill" style={{ width: `${100 * entry.count / topHarmCount}%` }}>
+                      {entry.modelled > 0 && <span className="vigil-dashboard-harm-type-modelled" style={{ width: `${100 * entry.modelled / entry.count}%` }}/>}
+                    </span>
+                  </span>
+                </button>
+              </li>)}
+              {!harmTypes.length && <li className="vigil-dashboard-empty">No assessed S2–S5 harm type recorded in this selection; this is not evidence of no harm.</li>}
+            </ol>
+            {harmTypes.length > 6 && <button type="button" className="vigil-dashboard-harm-types-expand"
+              aria-expanded={showAllHarmTypes} onClick={() => setShowAllHarmTypes(value => !value)}>
+              {showAllHarmTypes ? "Show top six" : `Show all ${harmTypes.length} harm types`}
+            </button>}
+            {harmNote && <p className="vigil-dashboard-harm-types-note">{harmNote}</p>}
+          </div>}
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-failures-panel" aria-labelledby="vigil-dashboard-failures">
         <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-failures"><Layers3 size={19} aria-hidden="true" /> Taxonomy Frequent Failures</h2></div>
