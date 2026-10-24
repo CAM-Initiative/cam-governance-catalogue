@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
-import { RotateCcw } from "lucide-react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import * as THREE from "three";
 import { globePosition, globeRotationForLongitude } from "@/lib/vigilGlobeCoordinates.mjs";
 
@@ -8,7 +7,6 @@ type GlobeProps = {
   locations: Location[];
   selected: string[];
   onSelect: (country: string) => void;
-  onClearFilters: () => void;
   onUnavailable: () => void;
 };
 
@@ -54,7 +52,7 @@ type SceneState = {
   texture?: THREE.Texture;
 };
 
-export default function EarthGlobe3D({ locations, selected, onSelect, onClearFilters, onUnavailable }: GlobeProps) {
+export default function EarthGlobe3D({ locations, selected, onSelect, onUnavailable }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<SceneState | null>(null);
@@ -68,15 +66,6 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
   callbackRef.current = onSelect;
   selectedRef.current = selected;
   unavailableRef.current = onUnavailable;
-
-  const reset = useCallback(() => {
-    onClearFilters();
-    const state = sceneRef.current;
-    if (!state) return;
-    state.targetSpin = nearestAngle(state.earth.rotation.y, globeRotationForLongitude(START_LONGITUDE));
-    state.targetTilt = 0.19;
-    state.lastInteraction = Date.now();
-  }, [onClearFilters]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -384,7 +373,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
         onContextMenu={event => event.preventDefault()}
       />
       {!ready && <div className="vigil-dashboard-three-loading" role="status">Loading satellite view…</div>}
-      <button type="button" className="vigil-dashboard-reset-rotation" onClick={reset} aria-label="Reset globe view and clear filters" title="Reset globe and clear filters"><RotateCcw size={15} /></button>
+
       {hoverLabel && <span className="vigil-dashboard-globe-tooltip" role="status">{hoverLabel}</span>}
     </div>
   );
