@@ -21,7 +21,12 @@ export function layoutSeverityCallouts(entries, total) {
     const side = Math.cos(midAngle) < 0 ? "left" : "right";
     labels.push({
       ...item, midAngle, side,
-      idealY: centerY + Math.sin(midAngle) * 100,
+      // S4 sits on the left in the observed corpus; bring its callout down to
+      // the open lower-left area, mirroring the long S3 leader line. Only
+      // position it this way when its arc is actually in that quadrant.
+      idealY: item.code === "S4" && side === "left" && Math.sin(midAngle) > 0
+        ? Math.max(centerY + Math.sin(midAngle) * 100, 251)
+        : centerY + Math.sin(midAngle) * 100,
       y: 0,
     });
   }
