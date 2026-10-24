@@ -305,8 +305,44 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
   </div>;
 }
 
+/* Experimental alternative: a simple categorical bar chart shares the exact
+   incident distribution and selected-severity callback with the donut.
+   SU remains a distinct *unassessed* category, never another harm rating. */
+function SeverityBars({ records, selected, onSelect }: { records: VigilIndexRecord[]; selected: string; onSelect: (code: string) => void }) {
+  const distribution = severityDistribution(records);
+  const total = distribution.reduce((sum, item) => sum + item.count, 0);
+  const maxCount = Math.max(1, ...distribution.map(item => item.count));
+  return <div className="vigil-dashboard-outcomes">
+    <div className="vigil-dashboard-severity-bars" role="group" aria-label={`Harm severity for ${total} Case Files, six bar categories; SU is unassessed. Select a bar to filter.`}>
+      {SEVERITIES.map(entry => {
+        const count = distribution.find(item => item.code === entry.code)?.count ?? 0;
+        const isSelected = selected === entry.code;
+        return <button
+          type="button"
+          key={entry.code}
+          className={`vigil-dashboard-bar-choice${entry.code === "SU" ? " is-unassessed" : ""}${isSelected ? " is-selected" : selected ? " is-muted" : ""}`}
+          onClick={() => onSelect(isSelected ? "" : entry.code)}
+          aria-pressed={isSelected}
+          aria-label={`${entry.code} ${entry.label}: ${count} Case Files; ${isSelected ? "clear filter" : "filter"}`}
+          title={`${entry.code} — ${entry.label}: ${count} Case Files`}
+          disabled={count === 0 && !isSelected}>
+          <span className="vigil-dashboard-bar-plot" aria-hidden="true">
+            <span className="vigil-dashboard-bar-fill"
+              style={{ height: `${(count / maxCount) * 82}%`, backgroundColor: entry.color }}>
+              <span className="vigil-dashboard-bar-value">{count}</span>
+            </span>
+          </span>
+          <span className="vigil-dashboard-bar-code">{entry.code}</span>
+          <span className="vigil-dashboard-bar-name">{entry.label}</span>
+        </button>;
+      })}
+    </div>
+  </div>;
+}
+
 export default function VigilCasesDashboard({mapRecords,distributionRecords,taxonomyRecords,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
+  const [severityChart, setSeverityChart] = useState<"bars" | "donut">("bars");
   useEffect(() => {
     let active = true;
     loadFailureTaxonomy().then(result => {
@@ -360,10 +396,20 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Harm severity chart information" title="Harm severity information">i</summary>
           <div className="vigil-dashboard-panel-info-body">
-            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a segment or connected label to filter the list. SU means unassessed; it must not be treated as S1.</p>
+            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a bar, donut segment, or connected label to filter the list. SU means unassessed; it must not be treated as S1.</p>
           </div>
         </details>
-        <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>
+        <div className="vigil-dashboard-severity-view-switch" role="group" aria-label="Severity chart view">
+          <button type="button" aria-pressed={severityChart === "bars"} className={severityChart === "bars" ? "is-selected" : ""}
+            onClick={() => setSeverityChart("bars")}>Bars</button>
+          <button type="button" aria-pressed={severityChart === "donut"} className={severityChart === "donut" ? "is-selected" : ""}
+            onClick={() => setSeverityChart("donut")}>Donut</button>
+        </div>
+        <div className="vigil-dashboard-severity-chart-area">
+          {severityChart === "bars"
+            ? <SeverityBars records={distributionRecords} selected={severity} onSelect={onSeverity}/>
+            : <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>}
+        </div>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-failures-panel" aria-labelledby="vigil-dashboard-failures">
         <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-failures"><Layers3 size={19} aria-hidden="true" /> Taxonomy Frequent Failures</h2></div>

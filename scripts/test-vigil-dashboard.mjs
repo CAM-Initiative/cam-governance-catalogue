@@ -730,4 +730,34 @@ test("Filter Year label and matching count visual weight are concise while index
   assert.match(page, /\{sorted.length\} matching \{sorted.length === 1 \? "case file" : "case files"\}/);
 });
 
+test("Six-column severity bar comparison preserves ordinal classes and separates SU", async () => {
+  const [dashboard, css] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+  ]);
+  assert.match(dashboard, /function SeverityBars\(\{ records, selected, onSelect \}/);
+  assert.match(dashboard, /const distribution = severityDistribution\(records\)/);
+  assert.match(dashboard, /const maxCount = Math\.max\(1, \.\.\.distribution\.map\(item => item\.count\)\)/);
+  assert.match(dashboard, /SEVERITIES\.map\(entry =>/);
+  assert.match(dashboard, /entry\.code === "SU" \? " is-unassessed"/);
+  assert.match(dashboard, /aria-pressed=\{isSelected\}/);
+  assert.match(dashboard, /disabled=\{count === 0 && !isSelected\}/);
+  assert.match(dashboard, /onSelect\(isSelected \? "" : entry\.code\)/);
+  assert.match(dashboard, /height: `\$\{\(count \/ maxCount\) \* 82\}%`/);
+  assert.match(css, /grid-template-columns: repeat\(5, minmax\(0, 1fr\)\) minmax\(0, 1\.18fr\)/);
+  assert.match(css, /\.vigil-dashboard-bar-choice\.is-unassessed/);
+  assert.match(css, /\.vigil-dashboard-bar-choice:focus-visible/);
+});
+
+test("Bar and donut share the exact same distribution and filter handler with bars default", async () => {
+  const dashboard = await source("src/components/vigil/VigilCasesDashboard.tsx");
+  assert.match(dashboard, /useState<"bars" \| "donut">\("bars"\)/);
+  assert.match(dashboard, /aria-label="Severity chart view"/);
+  assert.match(dashboard, /aria-pressed=\{severityChart === "bars"\}/);
+  assert.match(dashboard, /aria-pressed=\{severityChart === "donut"\}/);
+  assert.match(dashboard, /<SeverityBars records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
+  assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
+  assert.match(dashboard, /SU means unassessed; it must not be treated as S1/);
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.
