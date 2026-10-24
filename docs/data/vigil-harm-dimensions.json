@@ -1,0 +1,1768 @@
+{
+  "assessed_record_count": 137,
+  "entries": [
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S3"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000001",
+      "p": "specific_consequence",
+      "v": "1.4.10"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ],
+        [
+          "property-asset-damage",
+          "S4"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000003",
+      "p": "specific_consequence",
+      "v": "0.8.13"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000004",
+      "p": "specific_consequence",
+      "v": "1.4.10"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S2"
+        ],
+        [
+          "psychological-wellbeing",
+          "S3"
+        ],
+        [
+          "rights-liberty",
+          "S3"
+        ],
+        [
+          "financial-economic",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000005",
+      "p": "specific_consequence",
+      "v": "1.4.10"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S3"
+        ],
+        [
+          "rights-liberty",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000006",
+      "p": "specific_consequence",
+      "v": "1.3.10"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S3"
+        ],
+        [
+          "rights-liberty",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000007",
+      "p": "specific_consequence",
+      "v": "1.3.10"
+    },
+    {
+      "d": [
+        [
+          "rights-liberty",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000008",
+      "p": "specific_consequence",
+      "v": "1.3.12"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000009",
+      "p": "specific_consequence",
+      "v": "1.5.11"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000010",
+      "p": "specific_consequence",
+      "v": "1.2.10"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000013",
+      "p": "specific_consequence",
+      "v": "1.2.9"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000014",
+      "p": "specific_consequence",
+      "v": "1.3.10"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000015",
+      "p": "specific_consequence",
+      "v": "1.4.9"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000016",
+      "p": "specific_consequence",
+      "v": "1.3.9"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000018",
+      "p": "specific_consequence",
+      "v": "1.3.11"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000019",
+      "p": "specific_consequence",
+      "v": "1.3.6"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000020",
+      "p": "specific_consequence",
+      "v": "1.3.7"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000021",
+      "p": "specific_consequence",
+      "v": "1.3.10"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000022",
+      "p": "specific_consequence",
+      "v": "1.3.8"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000023",
+      "p": "specific_consequence",
+      "v": "1.3.11"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000024",
+      "p": "specific_consequence",
+      "v": "1.3.12"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000025",
+      "p": "specific_consequence",
+      "v": "1.3.8"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000026",
+      "p": "specific_consequence",
+      "v": "1.3.7"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000027",
+      "p": "specific_consequence",
+      "v": "1.2.7"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S5"
+        ],
+        [
+          "psychological-wellbeing",
+          "S4"
+        ],
+        [
+          "relational-integrity-autonomy",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000029",
+      "p": "specific_consequence",
+      "v": "1.2.10"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S4"
+        ],
+        [
+          "rights-liberty",
+          "S5"
+        ],
+        [
+          "relational-integrity-autonomy",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000030",
+      "p": "specific_consequence",
+      "v": "1.2.10"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000031",
+      "p": "specific_consequence",
+      "v": "1.2.8"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000032",
+      "p": "specific_consequence",
+      "v": "2.0.6"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000035",
+      "p": "specific_consequence",
+      "v": "1.1.19"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000038",
+      "p": "specific_consequence",
+      "v": "1.1.19"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000039",
+      "p": "specific_consequence",
+      "v": "1.1.21"
+    },
+    {
+      "d": [
+        [
+          "rights-liberty",
+          "S2"
+        ],
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000041",
+      "p": "specific_consequence",
+      "v": "1.1.23"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S2"
+        ],
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000043",
+      "p": "specific_consequence",
+      "v": "1.1.25"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S2"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000044",
+      "p": "specific_consequence",
+      "v": "1.1.24"
+    },
+    {
+      "d": [
+        [
+          "rights-liberty",
+          "S4"
+        ],
+        [
+          "financial-economic",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000047",
+      "p": "specific_consequence",
+      "v": "1.1.20"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S3"
+        ],
+        [
+          "rights-liberty",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000048",
+      "p": "specific_consequence",
+      "v": "1.2.10"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000049",
+      "p": "specific_consequence",
+      "v": "1.1.23"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000051",
+      "p": "specific_consequence",
+      "v": "1.1.24"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000053",
+      "p": "specific_consequence",
+      "v": "1.1.22"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S3"
+        ],
+        [
+          "reputation-dignity",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000054",
+      "p": "specific_consequence",
+      "v": "1.1.22"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000055",
+      "p": "specific_consequence",
+      "v": "1.1.27"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000056",
+      "p": "specific_consequence",
+      "v": "1.1.23"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000057",
+      "p": "specific_consequence",
+      "v": "1.1.21"
+    },
+    {
+      "d": [
+        [
+          "societal-democratic",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000058",
+      "p": "specific_consequence",
+      "v": "1.1.22"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000059",
+      "p": "specific_consequence",
+      "v": "1.1.20"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000061",
+      "p": "specific_consequence",
+      "v": "1.1.20"
+    },
+    {
+      "d": [
+        [
+          "relational-integrity-autonomy",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000062",
+      "p": "specific_consequence",
+      "v": "1.1.21"
+    },
+    {
+      "d": [
+        [
+          "rights-liberty",
+          "S5"
+        ],
+        [
+          "privacy-confidentiality",
+          "S4"
+        ],
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000064",
+      "p": "specific_consequence",
+      "v": "1.1.22"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000065",
+      "p": "specific_consequence",
+      "v": "1.2.12"
+    },
+    {
+      "d": [
+        [
+          "societal-democratic",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000066",
+      "p": "specific_consequence",
+      "v": "1.1.23"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000070",
+      "p": "specific_consequence",
+      "v": "1.1.20"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000072",
+      "p": "specific_consequence",
+      "v": "1.1.20"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000073",
+      "p": "specific_consequence",
+      "v": "1.1.21"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000074",
+      "p": "specific_consequence",
+      "v": "1.1.17"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000075",
+      "p": "specific_consequence",
+      "v": "1.1.23"
+    },
+    {
+      "d": [
+        [
+          "rights-liberty",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000076",
+      "p": "specific_consequence",
+      "v": "1.1.19"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000078",
+      "p": "specific_consequence",
+      "v": "1.1.20"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S2"
+        ],
+        [
+          "societal-democratic",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000079",
+      "p": "specific_consequence",
+      "v": "1.1.20"
+    },
+    {
+      "d": [
+        [
+          "societal-democratic",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000080",
+      "p": "specific_consequence",
+      "v": "0.1.23"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S2"
+        ],
+        [
+          "privacy-confidentiality",
+          "S3"
+        ],
+        [
+          "financial-economic",
+          "S1"
+        ],
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000082",
+      "p": "specific_consequence",
+      "v": "0.1.22"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000083",
+      "p": "specific_consequence",
+      "v": "0.1.23"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ],
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000084",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000085",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000086",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000088",
+      "p": "specific_consequence",
+      "v": "0.2.23"
+    },
+    {
+      "d": [
+        [
+          "societal-democratic",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000089",
+      "p": "specific_consequence",
+      "v": "0.1.17"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S4"
+        ],
+        [
+          "societal-democratic",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000090",
+      "p": "specific_consequence",
+      "v": "0.1.20"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000091",
+      "p": "specific_consequence",
+      "v": "0.1.17"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ],
+        [
+          "property-asset-damage",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000094",
+      "p": "specific_consequence",
+      "v": "0.1.20"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000095",
+      "p": "specific_consequence",
+      "v": "0.1.22"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000096",
+      "p": "specific_consequence",
+      "v": "0.1.20"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000097",
+      "p": "specific_consequence",
+      "v": "0.1.20"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ],
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000098",
+      "p": "specific_consequence",
+      "v": "0.1.22"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S2"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000100",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S4"
+        ],
+        [
+          "financial-economic",
+          "S3"
+        ],
+        [
+          "relational-integrity-autonomy",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000102",
+      "p": "specific_consequence",
+      "v": "0.1.22"
+    },
+    {
+      "d": [
+        [
+          "relational-integrity-autonomy",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000103",
+      "p": "specific_consequence",
+      "v": "0.1.27"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S4"
+        ],
+        [
+          "relational-integrity-autonomy",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000104",
+      "p": "specific_consequence",
+      "v": "0.1.23"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S3"
+        ],
+        [
+          "relational-integrity-autonomy",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000105",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000107",
+      "p": "specific_consequence",
+      "v": "0.1.19"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000109",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000110",
+      "p": "specific_consequence",
+      "v": "0.1.18"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000111",
+      "p": "specific_consequence",
+      "v": "0.1.18"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ],
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000112",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000113",
+      "p": "specific_consequence",
+      "v": "0.2.10"
+    },
+    {
+      "d": [
+        [
+          "rights-liberty",
+          "S3"
+        ],
+        [
+          "financial-economic",
+          "S1"
+        ],
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000114",
+      "p": "specific_consequence",
+      "v": "0.1.18"
+    },
+    {
+      "d": [
+        [
+          "rights-liberty",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000115",
+      "p": "specific_consequence",
+      "v": "0.1.17"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S2"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000116",
+      "p": "specific_consequence",
+      "v": "0.1.17"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000117",
+      "p": "specific_consequence",
+      "v": "0.1.21"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ],
+        [
+          "property-asset-damage",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000118",
+      "p": "specific_consequence",
+      "v": "0.1.19"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000119",
+      "p": "specific_consequence",
+      "v": "0.1.19"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ],
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000127",
+      "p": "specific_consequence",
+      "v": "0.1.17"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000131",
+      "p": "specific_consequence",
+      "v": "0.3.15"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000135",
+      "p": "specific_consequence",
+      "v": "0.1.13"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S1"
+        ]
+      ],
+      "id": "VIGIL-INC-000140",
+      "p": "specific_consequence",
+      "v": "0.1.15"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000141",
+      "p": "specific_consequence",
+      "v": "0.1.16"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S1"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ],
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000142",
+      "p": "specific_consequence",
+      "v": "0.1.16"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000144",
+      "p": "specific_consequence",
+      "v": "0.1.12"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S1"
+        ]
+      ],
+      "id": "VIGIL-INC-000145",
+      "p": "specific_consequence",
+      "v": "0.1.16"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000146",
+      "p": "specific_consequence",
+      "v": "0.1.15"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S2"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000147",
+      "p": "specific_consequence",
+      "v": "0.1.12"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000148",
+      "p": "specific_consequence",
+      "v": "0.1.16"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000149",
+      "p": "specific_consequence",
+      "v": "0.1.12"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S1"
+        ],
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000150",
+      "p": "specific_consequence",
+      "v": "0.3.13"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000151",
+      "p": "specific_consequence",
+      "v": "0.3.6"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000152",
+      "p": "specific_consequence",
+      "v": "0.3.6"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ],
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000153",
+      "p": "specific_consequence",
+      "v": "0.3.6"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S1"
+        ]
+      ],
+      "id": "VIGIL-INC-000154",
+      "p": "specific_consequence",
+      "v": "0.3.6"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S2"
+        ],
+        [
+          "reputation-dignity",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000155",
+      "p": "specific_consequence",
+      "v": "0.3.7"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S2"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000156",
+      "p": "specific_consequence",
+      "v": "0.3.9"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000157",
+      "p": "specific_consequence",
+      "v": "0.3.8"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ],
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000158",
+      "p": "specific_consequence",
+      "v": "0.3.6"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ],
+        [
+          "property-asset-damage",
+          "S2"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000159",
+      "p": "specific_consequence",
+      "v": "0.3.8"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000160",
+      "p": "specific_consequence",
+      "v": "0.3.7"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000162",
+      "p": "specific_consequence",
+      "v": "0.3.7"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S3"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000163",
+      "p": "specific_consequence",
+      "v": "0.3.7"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000164",
+      "p": "specific_consequence",
+      "v": "0.3.6"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ],
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000165",
+      "p": "specific_consequence",
+      "v": "0.3.7"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S2"
+        ],
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000168",
+      "p": "specific_consequence",
+      "v": "0.3.7"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S5"
+        ]
+      ],
+      "id": "VIGIL-INC-000171",
+      "p": "specific_consequence",
+      "v": "0.2.7"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000173",
+      "p": "specific_consequence",
+      "v": "0.3.7"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S1"
+        ]
+      ],
+      "id": "VIGIL-INC-000174",
+      "p": "specific_consequence",
+      "v": "0.2.8"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000176",
+      "p": "specific_consequence",
+      "v": "0.1.8"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000177",
+      "p": "specific_consequence",
+      "v": "0.1.8"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000178",
+      "p": "specific_consequence",
+      "v": "0.1.7"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000179",
+      "p": "specific_consequence",
+      "v": "0.1.7"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000187",
+      "p": "specific_consequence",
+      "v": "0.1.4"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000189",
+      "p": "specific_consequence",
+      "v": "0.1.5"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S1"
+        ],
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000193",
+      "p": "specific_consequence",
+      "v": "0.1.8"
+    },
+    {
+      "d": [
+        [
+          "relational-integrity-autonomy",
+          "S1"
+        ]
+      ],
+      "id": "VIGIL-INC-000195",
+      "p": "specific_consequence",
+      "v": "0.1.4"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000196",
+      "p": "specific_consequence",
+      "v": "0.1.5"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000197",
+      "p": "specific_consequence",
+      "v": "0.1.4"
+    },
+    {
+      "d": [
+        [
+          "psychological-wellbeing",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000198",
+      "p": "specific_consequence",
+      "v": "0.1.5"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000199",
+      "p": "specific_consequence",
+      "v": "0.1.5"
+    },
+    {
+      "d": [
+        [
+          "financial-economic",
+          "S2"
+        ],
+        [
+          "property-asset-damage",
+          "S3"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000200",
+      "p": "specific_consequence",
+      "v": "0.1.6"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S3"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000203",
+      "p": "specific_consequence",
+      "v": "0.1.4"
+    },
+    {
+      "d": [
+        [
+          "service-operational-infrastructure",
+          "S4"
+        ],
+        [
+          "societal-democratic",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000204",
+      "p": "specific_consequence",
+      "v": "0.1.3"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000208",
+      "p": "specific_consequence",
+      "v": "0.1.2"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000209",
+      "p": "specific_consequence",
+      "v": "0.1.2"
+    }
+  ],
+  "generated_notice": "Deterministically projected from canonical VIGIL Harm Impact assessments. Only assessment_status=assessed dimensions are included. Omitted dimensions are not findings of no harm.",
+  "provenance": {
+    "content_origin": "deterministically-generated",
+    "generation_mode": "deterministic-generation",
+    "human_authorship": false,
+    "human_review_status": "not-reviewed",
+    "human_role": "contract-approver",
+    "human_verification_status": "not-verified",
+    "upstream_provenance": [
+      "vigil/records/incidents/"
+    ]
+  },
+  "record_count": 200,
+  "registry_type": "vigil_harm_dimensions",
+  "source": "vigil/records/incidents/",
+  "version": 1
+}
