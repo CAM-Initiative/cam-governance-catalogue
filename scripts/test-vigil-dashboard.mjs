@@ -46,9 +46,11 @@ test("Globe-only preview shows heat-like beacons rather than numeric sidebar cap
   assert.ok(!globe.includes("state.targets = locations.map"));
   assert.ok(!globe.includes("Arc3") && !globe.includes("countryConnections"), "Avoid fabricating geographical connections");
 });
-test("Donut labels show bracketed counts, with dimensional layers and keyboard filtering", async () => {
+test("Donut uses a fixed severity key, dimensional layers and keyboard filtering", async () => {
   const dashboard = await source("src/components/vigil/VigilCasesDashboard.tsx");
-  assert.ok(dashboard.includes(">{item.code} ({item.count})</text>"));
+  assert.ok(dashboard.includes("vigil-dashboard-severity-key"));
+  assert.ok(dashboard.includes("vigil-dashboard-severity-copy"));
+  assert.doesNotMatch(dashboard, /severityCallouts|vigil-dashboard-severity-callout/);
   assert.ok(dashboard.includes("vigil-donut-dimensional-shadow"));
   assert.ok(dashboard.includes("vigil-donut-face"));
   assert.ok(dashboard.includes("vigil-donut-shade-"));
@@ -62,9 +64,10 @@ test("Globe reset clears the same dashboard filters as the toolbar in both rende
     source("src/components/vigil/EarthGlobe3D.tsx"),
   ]);
   const clear = page.match(/const clearFilters = \(\) => \{([\s\S]*?)\};/)?.[1] ?? "";
-  for (const setter of ["setSearch", "setClassification", "setSeverity", "setJurisdiction", "setFailureClass"]) {
+  for (const setter of ["setSearch", "setClassification", "setSeverity", "setFailureClass"]) {
     assert.ok(clear.includes(setter + '("");'), setter + " is cleared by the globe and toolbar");
   }
+  assert.ok(clear.includes("setJurisdictions([]);"), "globe reset clears all selected jurisdictions");
   assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
   assert.match(page, /onClearFilters=\{clearFilters\}/);
   assert.match(dashboard, /<EarthGlobe3D[^>]*onClearFilters=\{onClearFilters\}/);
@@ -97,8 +100,8 @@ test("Donut selection physically separates the chosen severity and keeps angular
   assert.match(dashboard, /className="vigil-dashboard-donut-slice" transform=/);
   assert.match(dashboard, /selectedCount \?\? total/);
   assert.match(dashboard, /SELECTED/);
-  assert.match(css, /\.vigil-dashboard-severity-callout\.is-muted/);
-  assert.match(css, /\.vigil-dashboard-severity-callout\.is-selected/);
+  assert.ok(dashboard.includes("vigil-dashboard-severity-item"));
+  assert.ok(dashboard.includes("aria-pressed={active}"));
 });
 
 test("Case Files result count, Clear filters, and pagination retain readable side gutters", async () => {
@@ -169,17 +172,15 @@ test("Globe removes blue atmosphere, uses warm gold beacons, and derives selecti
   assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-globe-scene::before \{\s*content: none;\s*display: none;/);
 });
 
-test("Interactive doughnut has no rectangular black SVG focus borders and retains keyboard-only focus indication", async () => {
+test("Interactive doughnut and aligned severity key support keyboard-only focus", async () => {
   const [dashboard, css] = await Promise.all([
     source("src/components/vigil/VigilCasesDashboard.tsx"),
     source("src/components/vigil/VigilCasesDashboard.css"),
   ]);
   assert.ok(dashboard.includes('tabIndex={0} role="button"'), "ring segments remain keyboard focusable");
-  assert.ok(dashboard.includes('role="button" tabIndex={0}'), "callouts remain keyboard focusable");
-  assert.ok(dashboard.includes('aria-pressed={selected===item.code}'));
-  assert.match(css, /\.vigil-dashboard-severity-callout:focus-visible \{\s*outline: none;/);
+  assert.ok(dashboard.includes('vigil-dashboard-severity-key'), "all severity labels use accessible buttons");
+  assert.ok(dashboard.includes('aria-pressed={active}'));
   assert.match(css, /\.vigil-dashboard-donut-segment:focus-visible \{\s*filter: drop-shadow/);
-  assert.match(css, /\.vigil-dashboard-severity-callout:focus-visible \{\s*filter: drop-shadow/);
 });
 
 test("Case Files search and classification filter have card-edge inset, and globe info glyph is lowercase", async () => {
@@ -208,7 +209,7 @@ test("Case Files uses all reviewed country associations for globe beacons and fi
   ]);
   assert.match(dashboard, /countryByCase: Map<string, string\[\]>/);
   assert.match(dashboard, /for \(const id of new Set\(countryIds\)\)/);
-  assert.match(page, /countryByCase\.get\(record\.id\)\?\.includes\(jurisdiction\)/);
+  assert.match(page, /matchesSelectedCountries\(countryByCase\.get\(record\.id\), jurisdictions\)/);
   assert.match(helper, /row\.reviewed_country_codes/);
   assert.match(helper, /row\?\.map_eligible/);
 });
@@ -225,14 +226,13 @@ test("Insight panels stay compact while donut severity labels remain readable an
   assert.ok(!dashboard.includes("Number of case files with each explicitly evidenced failure occurrence;"));
   assert.match(dashboard, /aria-pressed=\{selected===item\.code\}/);
   assert.match(dashboard, /donutSegmentAppearance\(start, item\.count, total, isSelected, Boolean\(selected\)\)/);
-  assert.match(dashboard, /const gap = Math\.min\(47, \(upper - lower\) \/ Math\.max\(1, group\.length - 1\)\)/);
-  assert.match(css, /\.vigil-dashboard-severity-label \{\s*font: 480 19px/);
-  assert.match(css, /\.vigil-dashboard-severity-name \{\s*font: 460 17px/);
-  assert.match(css, /\.vigil-dashboard-severity-callout\.is-muted \{ opacity: \.76/);
+  assert.doesNotMatch(dashboard, /severityCallouts|vigil-dashboard-severity-callout/);
+  assert.match(dashboard, /SEVERITIES\.map\(definition =>/);
+  assert.match(dashboard, /disabled=\{!count\}/);
   assert.match(css, /\.vigil-dashboard-failures-panel \.vigil-dashboard-failure-list \{ margin-top: \.5rem/);
 });
 
-test("All three insight panels share a top-right information disclosure; typography is subdued until selection", async () => {
+test("All three insight panels retain disclosures and severity key highlights selected rows", async () => {
   const [dashboard, css] = await Promise.all([
     source("src/components/vigil/VigilCasesDashboard.tsx"),
     source("src/components/vigil/VigilCasesDashboard.css"),
@@ -244,9 +244,8 @@ test("All three insight panels share a top-right information disclosure; typogra
   assert.equal((dashboard.match(/Counts are distinct incidents, not mentions or evidence-source citations\./g) ?? []).length, 1);
   assert.doesNotMatch(dashboard, /<p className="vigil-dashboard-source-note">Counts are distinct incidents/);
   assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-panel-info \{\s*position: absolute;\s*z-index: 8;\s*top: \.55rem;\s*right: \.55rem;/);
-  assert.match(css, /\.vigil-dashboard-severity-callout\.is-selected \.vigil-dashboard-severity-label \{\s*font-size: 20\.5px;\s*font-weight: 750;/);
-  assert.match(dashboard, /const calloutColor = selected === item\.code \? item\.color : "#99a9b8"/);
-  assert.match(dashboard, /style=\{selected === item\.code \? \{ fill: item\.color \} : undefined\}/);
+  assert.match(dashboard, /className=\{`vigil-dashboard-severity-item\$\{active \? " is-selected"/);
+  assert.match(dashboard, /className="vigil-dashboard-severity-key"/);
 });
 
 test("Experimental shared filter hub spans list and all dashboard instruments", async () => {
@@ -259,9 +258,9 @@ test("Experimental shared filter hub spans list and all dashboard instruments", 
   const layoutPosition = page.indexOf('className="vigil-dashboard-layout"');
   assert.ok(filterPosition >= 0 && layoutPosition > filterPosition, "Shared query hub must be above both columns");
   assert.ok(page.includes('className="vigil-dashboard-case-heading"'));
-  assert.ok(page.includes('className="vigil-result-summary vigil-dashboard-shared-selection"'));
+  assert.ok(page.includes('hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection"'));
   assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
-  assert.ok(page.includes('onClick={() => setJurisdiction("")}'));
+  assert.ok(page.includes('onClick={() => toggleJurisdiction(code)}'));
   assert.match(styles, /html:not\(\[data-theme="dark"\]\) \.vigil-case-library-page \.vigil-dashboard-panel \{/);
   assert.match(styles, /\.vigil-dashboard-selection-chip:focus-visible/);
   assert.match(dashboard, /<Globe2 size=\{19\} \/> Jurisdiction coverage/);
@@ -271,6 +270,9 @@ test("Experimental shared filter hub spans list and all dashboard instruments", 
   assert.doesNotMatch(page, /All severities/);
   assert.doesNotMatch(page, /severityStates/);
   assert.match(page, /onSeverity=\{setSeverity\}/);
+  assert.match(page, /jurisdictions=\{jurisdictions\}/);
+  assert.match(page, /jurisdictions\.map\(code =>/);
+  assert.doesNotMatch(page, /\{sorted\.length\} in this view/);
   assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
 });
 
