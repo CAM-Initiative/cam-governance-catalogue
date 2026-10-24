@@ -485,3 +485,116 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
     margin-top: .72rem;
   }
 }
+
+/* Result count is the distinct filtered total; the list itself stays paginated.
+   Show the page range separately so adding another country is unambiguous. */
+.vigil-case-library-page .vigil-dashboard-case-heading {
+  flex-wrap: wrap;
+}
+.vigil-case-library-page .vigil-dashboard-case-match-count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .15rem;
+  min-width: 0;
+  max-width: 100%;
+  text-align: right;
+  white-space: normal;
+  font-variant-numeric: tabular-nums;
+}
+.vigil-case-library-page .vigil-dashboard-case-match-count strong {
+  font-size: .84rem;
+  font-weight: 750;
+  line-height: 1.32;
+  color: var(--vd-workspace-ink);
+}
+.vigil-case-library-page .vigil-dashboard-case-match-count small {
+  font-size: .71rem;
+  font-weight: 500;
+  line-height: 1.38;
+  color: var(--vd-workspace-muted);
+}
+
+/* Preserve the original mobile reading experience: a full-width top search
+   panel, one Case Files column, and insights BELOW the complete list.
+   No sticky left rail or two-column widgets at tablet/phone widths. */
+@media (max-width: 1140px) {
+  .vigil-case-library-page .vigil-dashboard-workspace {
+    display: block;
+    min-width: 0;
+  }
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-filter-hub {
+    position: static;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    margin-top: .75rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-layout > .vigil-dashboard-case-column {
+    min-width: 0;
+    width: 100%;
+  }
+  .vigil-case-library-page .vigil-dashboard-layout > .vigil-dashboard-sidebar {
+    display: flex;
+    flex-direction: column;
+    grid-column: auto;
+    gap: .85rem;
+    min-width: 0;
+    width: 100%;
+  }
+  .vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel {
+    width: 100%;
+    min-width: 0;
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .vigil-case-library-page .vigil-dashboard-location-panel .vigil-dashboard-globe-scene {
+    width: min(100%, 285px);
+    max-width: 285px;
+  }
+}
+@media (max-width: 820px) {
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-case-table-search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: .7rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control,
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-family-select {
+    min-width: 0;
+    width: 100%;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-heading {
+    align-items: flex-start;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-match-count {
+    width: 100%;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+@media (max-width: 640px) {
+  .vigil-case-library-page .vigil-dashboard-outcomes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .6rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-donut {
+    max-width: 200px;
+    margin-inline: auto;
+  }
+  .vigil-case-library-page .vigil-dashboard-severity-key {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .25rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-severity-item {
+    min-height: 42px;
+  }
+  .vigil-case-library-page .vigil-dashboard-selection-chip {
+    min-height: 36px;
+  }
+}
