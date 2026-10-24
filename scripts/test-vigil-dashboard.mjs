@@ -276,4 +276,29 @@ test("Experimental shared filter hub spans list and all dashboard instruments", 
   assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
 });
 
+test("Three-column desktop workbench keeps one filter source and accessible reading order", async () => {
+  const [page, styles] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  const workbench = page.indexOf('className="vigil-dashboard-workspace"');
+  const filters = page.indexOf('className="vigil-library-toolbar vigil-dashboard-filter-hub"');
+  const results = page.indexOf('className="vigil-dashboard-case-column"');
+  const insights = page.indexOf('<VigilCasesDashboard');
+  assert.ok(workbench >= 0 && filters > workbench && results > filters && insights > results,
+    "One workbench follows the accessible filters, case list, then insights reading order");
+  assert.equal((page.match(/className="vigil-library-toolbar vigil-dashboard-filter-hub"/g) ?? []).length, 1);
+  assert.equal((page.match(/<VigilCasesDashboard/g) ?? []).length, 1);
+  assert.match(page, /className="vigil-dashboard-case-match-count" aria-live="polite"/);
+  assert.doesNotMatch(page, /vigil-dashboard-match-count/);
+  assert.ok(page.includes('hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection"'));
+  assert.ok(page.includes('onClick={() => toggleJurisdiction(code)}'), "Country chips still remove individual countries");
+  assert.match(styles, /@media \\(min-width: 1320px\\) \\{/);
+  assert.match(styles, /grid-template-columns: clamp\\(225px, 17\\.5vw, 250px\\) minmax\\(0, 1fr\\)/);
+  assert.match(styles, /grid-template-columns: minmax\\(0, 1fr\\) minmax\\(300px, 328px\\)/);
+  assert.match(styles, /\\.vigil-dashboard-case-column \\.vigil-case-table-row-link/);
+  assert.match(styles, /@media \\(max-width: 1319px\\)/);
+  assert.match(styles, /grid-template-columns: minmax\\(0, 1fr\\);\\s*gap: \\.8rem/);
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.
