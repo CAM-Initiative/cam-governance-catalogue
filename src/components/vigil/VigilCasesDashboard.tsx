@@ -417,16 +417,16 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
             <p>SU is unassessed, not another severity band or evidence of minimal harm. Counts represent distinct Case Files.</p>
           </div>
         </details>
+        <div className="vigil-dashboard-severity-chart-area">
+          {severityChart === "bars"
+            ? <SeverityBars records={distributionRecords} selected={severity} onSelect={onSeverity}/>
+            : <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>}
+        </div>
         <div className="vigil-dashboard-severity-view-switch" role="group" aria-label="Severity chart view">
           <button type="button" aria-pressed={severityChart === "bars"} className={severityChart === "bars" ? "is-selected" : ""}
             onClick={() => setSeverityChart("bars")}>Bars</button>
           <button type="button" aria-pressed={severityChart === "donut"} className={severityChart === "donut" ? "is-selected" : ""}
             onClick={() => setSeverityChart("donut")}>Donut</button>
-        </div>
-        <div className="vigil-dashboard-severity-chart-area">
-          {severityChart === "bars"
-            ? <SeverityBars records={distributionRecords} selected={severity} onSelect={onSeverity}/>
-            : <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>}
         </div>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-harm-types-panel" aria-labelledby="vigil-dashboard-harm-types">
@@ -462,7 +462,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
             </ol>
             {harmTypes.length > 6 && <button type="button" className="vigil-dashboard-harm-types-expand"
               aria-expanded={showAllHarmTypes} onClick={() => setShowAllHarmTypes(value => !value)}>
-              {showAllHarmTypes ? "Show top six" : `Show all ${harmTypes.length} harm types`}
+              {showAllHarmTypes ? "Show top six" : `Show all ${harmTypes.length} with S2–S5 findings (${harmDimensions.length} defined)`}
             </button>}
             {harmNote && <p className="vigil-dashboard-harm-types-note">{harmNote}</p>}
           </div>}
