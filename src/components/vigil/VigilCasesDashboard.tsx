@@ -18,8 +18,8 @@ type Props = {
   mapRecords: VigilIndexRecord[];
   /** The donut follows all filters except the severity it can select. */
   distributionRecords: VigilIndexRecord[];
-  /** Class rankings match the fully filtered case list. */
-  filteredRecords: VigilIndexRecord[];
+  /** Failure rankings respect all filters except their own selected class. */
+  taxonomyRecords: VigilIndexRecord[];
   severity: string;
   jurisdictions: string[];
   failureClass: string;
@@ -307,7 +307,7 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
   </div>;
 }
 
-export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,onClearFilters,countryByCase,geographyAvailable,geographyNote}: Props) {
+export default function VigilCasesDashboard({mapRecords,distributionRecords,taxonomyRecords,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,onClearFilters,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
   useEffect(() => {
     let active = true;
@@ -334,7 +334,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
     const regions = [...counts].flatMap(([id,count]) => { const c=byId.get(id);return c?[{...c,count}]:[]; }).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
     return {regions,unmapped,mapped:mapRecords.length-unmapped};
   }, [mapRecords,jurisdictionById]);
-  const failures = useMemo(()=>topFailureClasses(filteredRecords),[filteredRecords]);
+  const failures = useMemo(()=>topFailureClasses(taxonomyRecords),[taxonomyRecords]);
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
@@ -372,7 +372,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Taxonomy intelligence counts information" title="Taxonomy counts information">i</summary>
           <div className="vigil-dashboard-panel-info-body">
-            <p>Counts are distinct incidents, not mentions or evidence-source citations.</p>
+            <p>Rankings reflect the current search, severity, jurisdiction and metadata filters, but exclude the failure class you select here. Selecting a class filters the Case Files and other charts without reordering this list. Counts represent distinct Case Files, not mentions or evidence-source citations.</p>
           </div>
         </details>
         <ol className="vigil-dashboard-failure-list">

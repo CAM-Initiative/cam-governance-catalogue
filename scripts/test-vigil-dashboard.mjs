@@ -624,4 +624,37 @@ test("Facet count explanation is a keyboard-accessible information disclosure", 
   assert.match(css, /\.vigil-dashboard-facet-help-body \{[\s\S]*?position: absolute/);
 });
 
+test("Taxonomy ranking excludes its own active class so clicking a failure does not reorder the list", async () => {
+  const [page, dashboard] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+  ]);
+  // A selection that once promoted this class to first must leave ranking data
+  // scoped to the other active filters instead of feeding back onto itself.
+  const fixture = [
+    { raw: { primary_classification: { class_id: "VIGIL-FC-000001", classification_role: "failure-occurrence" } } },
+    { raw: { primary_classification: { class_id: "VIGIL-FC-000001", classification_role: "failure-occurrence" } } },
+    { raw: { primary_classification: { class_id: "VIGIL-FC-000001", classification_role: "failure-occurrence" } } },
+    { raw: { primary_classification: { class_id: "VIGIL-FC-000002", classification_role: "failure-occurrence" } } },
+    { raw: { primary_classification: { class_id: "VIGIL-FC-000002", classification_role: "failure-occurrence" } } },
+  ];
+  const ranking = topFailureClasses(fixture);
+  assert.deepEqual(ranking.map(item => item.id), ["VIGIL-FC-000001", "VIGIL-FC-000002"]);
+  const selectedCases = fixture.filter(record => failureClassIds(record.raw).includes("VIGIL-FC-000002"));
+  assert.deepEqual(topFailureClasses(selectedCases).map(item => item.id), ["VIGIL-FC-000002"]);
+  // The public chart MUST use the original, other-filters-only population,
+  // while case results continue to use the selected-class intersection.
+  assert.match(page, /const rankingBaseCases = useMemo\(\(\) => records\.filter/);
+  assert.match(page, /const baseCases = useMemo\(\(\) => rankingBaseCases\.filter\(record =>/);
+  assert.match(page, /!failureClass \|\| failureClassIds\(record\.raw\)\.includes\(failureClass\)/);
+  assert.match(page, /const taxonomyRecords = useMemo\(\(\) => rankingBaseCases\.filter\(record =>/);
+  assert.match(page, /matchesSelectedCountries\(countryByCase\.get\(record\.id\), jurisdictions\)/);
+  assert.match(page, /!severity \|\| severityCode\(record\) === severity/);
+  assert.match(page, /taxonomyRecords=\{taxonomyRecords\}/);
+  assert.match(dashboard, /topFailureClasses\(taxonomyRecords\)/);
+  assert.doesNotMatch(dashboard, /topFailureClasses\(filteredRecords\)/);
+  assert.match(dashboard, /aria-pressed=\{failureClass===entry\.id\}/);
+  assert.match(dashboard, /Selecting a class filters the Case Files and other charts without reordering this list/);
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.

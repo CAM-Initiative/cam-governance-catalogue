@@ -339,14 +339,22 @@ export default function VigilCases() {
     return dates.length ? dates[dates.length - 1] : undefined;
   }, [records]);
 
-  // Scope each instrument independently of the facet it selects.
-  const baseCases = useMemo(() => records.filter((record) => {
+  // Independent instruments exclude only the filter they themselves control.
+  // Keep the taxonomy ranking's cohort independent of the selected taxonomy class:
+  // selecting a failure must not promote it to first place or replace the top six.
+  const rankingBaseCases = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
     if (!matchesClassificationSelection(canonicalComparisonKey(classificationStatusLabel(record)), classifications)) return false;
-    if (failureClass && !failureClassIds(record.raw).includes(failureClass)) return false;
     if (!matchesIndexFacets(record, indexFacets)) return false;
     return true;
-  }), [classifications, failureClass, indexFacets, records, search]);
+  }), [classifications, indexFacets, records, search]);
+  const baseCases = useMemo(() => rankingBaseCases.filter(record =>
+    !failureClass || failureClassIds(record.raw).includes(failureClass)
+  ), [rankingBaseCases, failureClass]);
+  const taxonomyRecords = useMemo(() => rankingBaseCases.filter(record =>
+    matchesSelectedCountries(countryByCase.get(record.id), jurisdictions)
+    && (!severity || severityCode(record) === severity)
+  ), [rankingBaseCases, countryByCase, jurisdictions, severity]);
 
   const mapRecords = useMemo(() => baseCases.filter(record => {
     if (severity && severityCode(record) !== severity) return false;
@@ -602,7 +610,7 @@ export default function VigilCases() {
               <VigilCasesDashboard
                 mapRecords={mapRecords}
                 distributionRecords={distributionRecords}
-                filteredRecords={filtered}
+                taxonomyRecords={taxonomyRecords}
                 severity={severity}
                 jurisdictions={jurisdictions}
                 failureClass={failureClass}
