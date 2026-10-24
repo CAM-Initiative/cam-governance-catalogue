@@ -7,8 +7,8 @@ export function donutSegmentAppearance(start, count, total, isSelected, hasSelec
   return {
     offsetX: Number((Math.cos(midpointAngle) * separation).toFixed(2)),
     offsetY: Number((Math.sin(midpointAngle) * separation).toFixed(2)),
-    radius: isSelected ? 73 : 70,
-    strokeWidth: isSelected ? 34 : 24,
+    radius: isSelected ? 78 : 75,
+    strokeWidth: isSelected ? 35 : 25,
     opacity: hasSelection && !isSelected ? 0.58 : 1,
   };
 }

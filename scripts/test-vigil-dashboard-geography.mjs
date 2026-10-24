@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { countryLookupFromProjection } from "../src/lib/vigilDashboardGeography.mjs";
+import { countryLookupFromProjection, matchesSelectedCountries, toggleSelectedCountry } from "../src/lib/vigilDashboardGeography.mjs";
 
 const records = [
   { id: "VIGIL-INC-000001", record_version: "1.0", record_type: "incident" },
@@ -60,4 +60,30 @@ test("legacy website projection is version-checked and never guesses from record
 
 test("missing indexes never manufacture geographic coverage", () => {
   assert.equal(countryLookupFromProjection(records, {}, matcher).size, 0);
+});
+
+test("country chips accumulate, toggle individually, and reset without duplicates", () => {
+  let selected = [];
+  selected = toggleSelectedCountry(selected, "AU");
+  selected = toggleSelectedCountry(selected, "CA");
+  selected = toggleSelectedCountry(selected, "US");
+  assert.deepEqual(selected, ["AU", "CA", "US"]);
+  assert.deepEqual(toggleSelectedCountry(selected, "CA"), ["AU", "US"]);
+  assert.deepEqual(toggleSelectedCountry(selected, ""), selected);
+  selected = [];
+  assert.deepEqual(selected, []);
+});
+
+test("multiple selected jurisdictions match any reviewed country, once per Incident", () => {
+  const entries = new Map([
+    ["A", ["AU", "US"]], ["B", ["CA"]], ["C", ["JP"]], ["D", ["AU", "CA"]],
+  ]);
+  const match = selected => [...entries].filter(([, associated]) =>
+    matchesSelectedCountries(associated, selected)
+  ).map(([id]) => id);
+  assert.deepEqual(match(["AU", "CA"]), ["A", "B", "D"]);
+  assert.deepEqual(match(["JP"]), ["C"]);
+  assert.deepEqual(match([]), ["A", "B", "C", "D"]);
+  assert.equal(matchesSelectedCountries(undefined, ["AU"]), false);
+  assert.equal(matchesSelectedCountries(undefined, []), true);
 });
