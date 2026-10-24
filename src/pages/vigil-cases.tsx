@@ -427,7 +427,7 @@ export default function VigilCases() {
               <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-filter-heading">
               <div className="vigil-dashboard-filter-hub-header">
                 <div>
-                  <h2 id="case-filter-heading">Case File Filters</h2>
+                  <h2 id="case-filter-heading">Filters</h2>
                 </div>
                 {hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>}
               </div>
