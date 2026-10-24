@@ -1032,9 +1032,14 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-col
   font-size: .71rem;
   white-space: nowrap;
 }
+/* Give the live matching total breathing room between selected chips
+   and the metadata filter list, including when no filters are selected. */
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-shared-selection {
-  padding-bottom: .65rem;
+  padding-bottom: .9rem;
   gap: .45rem;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-match-count {
+  margin: .38rem 0 .12rem;
 }
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-match-count {
   font-size: .8rem;
