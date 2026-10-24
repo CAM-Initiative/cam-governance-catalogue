@@ -20,7 +20,7 @@ type Props = {
   /** Class rankings match the fully filtered case list. */
   filteredRecords: VigilIndexRecord[];
   severity: string;
-  jurisdiction: string;
+  jurisdictions: string[];
   failureClass: string;
   onSeverity: (code: string) => void;
   onJurisdiction: (id: string) => void;
@@ -155,11 +155,11 @@ function graticule(rotation: number, lon?: number, lat?: number) {
   }
   return drawing;
 }
-function Globe({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string; onSelect: (id: string) => void; onClearFilters: () => void }) {
+function Globe({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void; onClearFilters: () => void }) {
   const [rotation, setRotation] = useState(15);
   const pointer = useRef<{ x: number; rotation: number; moved: boolean } | null>(null);
   useEffect(() => {
-    const target = byId.get(selected);
+    const target = byId.get(selected[selected.length - 1]);
     if (target) setRotation(target.lon);
   }, [selected]);
   const onMove = (event: PointerEvent<SVGSVGElement>) => {
@@ -191,10 +191,10 @@ function Globe({ locations, selected, onSelect, onClearFilters }: { locations: L
           {LAND.map((shape,i)=><path key={i} d={coastline(shape, rotation)} fill="#0c6575" stroke="#5dd1d0" strokeWidth="1" strokeOpacity=".56" fillOpacity=".83" />)}
         </g>
         {pinLocations.map(loc => (
-          <g key={loc.id} className={selected===loc.id?"vigil-globe-pin is-selected":"vigil-globe-pin"} onClick={() => { if (!pointer.current?.moved) onSelect(selected === loc.id ? "" : loc.id); }}>
+          <g key={loc.id} className={selected.includes(loc.id)?"vigil-globe-pin is-selected":"vigil-globe-pin"} onClick={() => { if (!pointer.current?.moved) onSelect(loc.id); }}>
             <title>{loc.name}: {loc.count} case{loc.count===1?"":"s"}</title>
             <circle cx={loc.point.x} cy={loc.point.y} r="14" fill="#58e6f5" opacity=".35" filter="url(#vigil-pin-glow)"/>
-            <circle cx={loc.point.x} cy={loc.point.y} r={selected===loc.id?7:5} fill={selected===loc.id?"#ffcf79":"#6cf5eb"} stroke="#fff8d7" strokeWidth="1.4"/>
+            <circle cx={loc.point.x} cy={loc.point.y} r={selected.includes(loc.id)?7:5} fill={selected.includes(loc.id)?"#ffcf79":"#6cf5eb"} stroke="#fff8d7" strokeWidth="1.4"/>
             <circle cx={loc.point.x} cy={loc.point.y} r="12" fill="transparent" />
           </g>
         ))}
@@ -205,7 +205,7 @@ function Globe({ locations, selected, onSelect, onClearFilters }: { locations: L
     </div>
   );
 }
-function GlobeView({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string; onSelect: (id: string) => void; onClearFilters: () => void }) {
+function GlobeView({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void; onClearFilters: () => void }) {
   const [unavailable, setUnavailable] = useState(false);
   if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />;
   return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />}>
@@ -328,7 +328,7 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
   </div>;
 }
 
-export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdiction,failureClass,onSeverity,onJurisdiction,onFailureClass,onClearFilters,countryByCase,geographyAvailable,geographyNote}: Props) {
+export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,onClearFilters,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
   useEffect(() => {
     let active = true;
@@ -360,20 +360,20 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
         <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Geographic Profile</span><h2 id="vigil-dashboard-geography"><Globe2 size={19} /> Jurisdiction coverage</h2></div></div>
-        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdiction} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
+        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdictions} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
         <label className="vigil-dashboard-country-keyboard">
           <span className="sr-only">Choose country using a keyboard-accessible list</span>
-          <select value={jurisdiction} disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)} aria-label="Select jurisdiction using keyboard">
-            <option value="">All recorded jurisdictions</option>
+          <select value="" disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)} aria-label="Add or remove a jurisdiction using keyboard">
+            <option value="">Add a jurisdiction</option>
             {locations.regions.map(item=><option key={item.id} value={item.id}>{item.name} ({item.count})</option>)}
-            {jurisdiction && !locations.regions.some(item=>item.id===jurisdiction)&&<option value={jurisdiction}>{byId.get(jurisdiction)?.name??jurisdiction}</option>}
+            {jurisdictions.filter(id=>!locations.regions.some(item=>item.id===id)).map(id=><option key={id} value={id}>{byId.get(id)?.name??id} (selected)</option>)}
           </select>
         </label>
         <details className="vigil-dashboard-geo-disclosure vigil-dashboard-panel-info">
           <summary aria-label="Globe data and imagery information" title="Globe data information">i</summary>
           <div className="vigil-dashboard-geo-disclosure-body vigil-dashboard-panel-info-body">
             <p>{geographyNote}</p>
-            <p>Country beacons show relative case counts for reviewed jurisdiction associations, not incident coordinates. A cross-border case may contribute once to more than one country. Earth imagery: NASA Blue Marble.</p>
+            <p>Choose multiple countries on the globe or with the keyboard selector. Case Files match any selected country and are counted once. Country beacons represent reviewed jurisdiction associations, not incident coordinates. Earth imagery: NASA Blue Marble.</p>
             {!geographyAvailable && <p>Geographic data is unavailable for the selected source. Case Files remain searchable.</p>}
           </div>
         </details>
