@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -134,7 +134,14 @@ function SortHeading({ label, sortKey, sort, onSort }: { label: string; sortKey:
 export default function VigilCases() {
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [search, setSearch] = useState("");
-  const [classification, setClassification] = useState("");
+  // Multiple classification outcomes combine as OR, while search, country,
+  // severity and taxonomy filters remain intersections with that set.
+  const [classifications, setClassifications] = useState<string[]>([]);
+  const toggleClassification = (key: string) => {
+    setClassifications(current => current.includes(key)
+      ? current.filter(value => value !== key)
+      : [...current, key]);
+  };
   const [severity, setSeverity] = useState("");
   const [jurisdictions, setJurisdictions] = useState<string[]>([]);
   const toggleJurisdiction = (code: string) => setJurisdictions(current => toggleSelectedCountry(current, code));
@@ -142,7 +149,7 @@ export default function VigilCases() {
   // The result-toolbar and globe reset share a single source of truth.
   const clearFilters = () => {
     setSearch("");
-    setClassification("");
+    setClassifications([]);
     setSeverity("");
     setJurisdictions([]);
     setFailureClass("");
@@ -228,10 +235,10 @@ export default function VigilCases() {
   // Scope each instrument independently of the facet it selects.
   const baseCases = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
-    if (classification && canonicalComparisonKey(classificationStatusLabel(record)) !== classification) return false;
+    if (classifications.length && !classifications.includes(canonicalComparisonKey(classificationStatusLabel(record)))) return false;
     if (failureClass && !failureClassIds(record.raw).includes(failureClass)) return false;
     return true;
-  }), [classification, failureClass, records, search]);
+  }), [classifications, failureClass, records, search]);
 
   const mapRecords = useMemo(() => baseCases.filter(record => {
     if (severity && severityCode(record) !== severity) return false;
@@ -246,8 +253,8 @@ export default function VigilCases() {
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, classification, severity, jurisdictions, failureClass, sort]);
-  const hasActiveFilters = Boolean(search || classification || severity || jurisdictions.length || failureClass);
+  useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, sort]);
+  const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageStart = sorted.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
@@ -322,20 +329,38 @@ export default function VigilCases() {
                   {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
                 </label>
 
-                <label className="vigil-family-select">
-                  <span>Classification</span>
-                  <select value={classification} onChange={(event) => setClassification(event.target.value)}>
-                    <option value="">All classifications ({records.length})</option>
-                    {classificationStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
-                  </select>
-                </label>
+                <details className="vigil-dashboard-classification-facet" aria-label="Classification filters">
+                  <summary className="vigil-dashboard-facet-heading">
+                    <span>Classification</span>
+                    <span className="vigil-dashboard-facet-state">
+                      {classifications.length ? `${classifications.length} selected` : "All"}
+                      <ChevronDown size={15} aria-hidden="true" />
+                    </span>
+                  </summary>
+                  <div className="vigil-dashboard-facet-options" role="group" aria-label="Choose classification outcomes">
+                    <label className="vigil-dashboard-facet-option">
+                      <input type="checkbox" checked={classifications.length === 0}
+                        onChange={() => setClassifications([])} />
+                      <span className="vigil-dashboard-facet-option-name">All classifications</span>
+                      <span className="vigil-dashboard-facet-count">{records.length}</span>
+                    </label>
+                    {classificationStates.map(entry =>
+                      <label className="vigil-dashboard-facet-option" key={entry.key}>
+                        <input type="checkbox" checked={classifications.includes(entry.key)}
+                          onChange={() => toggleClassification(entry.key)} />
+                        <span className="vigil-dashboard-facet-option-name">{entry.label}</span>
+                        <span className="vigil-dashboard-facet-count">{entry.count}</span>
+                      </label>
+                    )}
+                  </div>
+                </details>
 
               </div>
               {hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection">
                 <span className="vigil-dashboard-selection-caption">Current view</span>
                 <div className="vigil-dashboard-selection-chips">
                   {search && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSearch("")} aria-label="Remove search filter">Search: {search}<X aria-hidden="true" size={13} /></button>}
-                  {classification && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setClassification("")} aria-label="Remove classification filter">Classification: {classificationStates.find(entry => entry.key === classification)?.label ?? classification}<X aria-hidden="true" size={13} /></button>}
+                  {classifications.map(key => <button type="button" key={key} className="vigil-dashboard-selection-chip" onClick={() => toggleClassification(key)} aria-label={`Remove ${classificationStates.find(entry => entry.key === key)?.label ?? key} classification filter`}>Classification: {classificationStates.find(entry => entry.key === key)?.label ?? key}<X aria-hidden="true" size={13} /></button>)}
                   {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
                   {jurisdictions.map(code => <button type="button" key={code} className="vigil-dashboard-selection-chip" onClick={() => toggleJurisdiction(code)} aria-label={`Remove ${countryDisplayName(code)} jurisdiction filter`}>Jurisdiction: {countryDisplayName(code)}<X aria-hidden="true" size={13} /></button>)}
                   {failureClass && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setFailureClass("")} aria-label="Remove fidelity class filter">{failureClass.replace("VIGIL-FC-", "FC-")}<X aria-hidden="true" size={13} /></button>}
