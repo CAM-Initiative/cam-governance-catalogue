@@ -260,7 +260,7 @@ test("Experimental shared filter hub spans list and all dashboard instruments", 
   assert.ok(page.includes('className="vigil-dashboard-case-heading"'));
   assert.ok(page.includes('className="vigil-result-summary vigil-dashboard-shared-selection"'));
   assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
-  assert.match(page, /onClick=\{\(\) => setJurisdiction\(" "\.trim\(\)\)\}/);
+  assert.ok(page.includes('onClick={() => setJurisdiction("")}'));
   assert.match(styles, /html:not\(\[data-theme="dark"\]\) \.vigil-case-library-page \.vigil-dashboard-panel \{/);
   assert.match(styles, /\.vigil-dashboard-selection-chip:focus-visible/);
   assert.match(dashboard, /<Globe2 size=\{19\} \/> Jurisdiction coverage/);
