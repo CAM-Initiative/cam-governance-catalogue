@@ -108,6 +108,7 @@ const ALIASES: Record<string, string[]> = {
   CZ: ["czech republic", "czechia"],
 };
 const byId = new Map(COUNTRIES.map(country => [country.id, country]));
+export function countryDisplayName(code: string) { return byId.get(code)?.name ?? code; }
 export function countryFromJurisdiction(value: string) {
   return countryFromJurisdictionString(value, COUNTRIES, ALIASES);
 }
