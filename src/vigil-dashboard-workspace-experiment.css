@@ -342,3 +342,146 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   .vigil-dashboard-mobile-insights-link {
   margin-top: .6rem;
 }
+
+/* Three-column observatory workbench (experiment only).
+   Source order remains filters -> investigations -> insights for keyboard and
+   screen reader users; narrower screens retain the established two/one-column
+   composition without duplicating or remounting the dashboard. */
+.vigil-case-library-page .vigil-dashboard-workspace {
+  min-width: 0;
+  margin-top: 1rem;
+}
+.vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-filter-hub {
+  min-width: 0;
+  margin-top: 0;
+}
+.vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-layout {
+  min-width: 0;
+}
+.vigil-case-library-page .vigil-dashboard-case-match-count {
+  color: var(--vd-workspace-muted);
+  font-size: .77rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (min-width: 1320px) {
+  .vigil-case-library-page .vigil-dashboard-workspace {
+    display: grid;
+    grid-template-columns: clamp(225px, 17.5vw, 250px) minmax(0, 1fr);
+    gap: .9rem;
+    align-items: start;
+  }
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-filter-hub {
+    grid-column: 1;
+    grid-row: 1;
+    position: sticky;
+    top: 5.5rem;
+    width: 100%;
+    padding: .9rem .85rem;
+    border-radius: 12px;
+    align-self: start;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-case-table-search {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .8rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub-header {
+    margin-bottom: .9rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
+    font-size: 1.02rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control {
+    min-height: 44px;
+    padding-inline: .55rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control input {
+    font-size: .81rem;
+    width: 100%;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-family-select {
+    width: 100%;
+  }
+  .vigil-case-library-page .vigil-dashboard-shared-selection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .55rem;
+    padding-top: .75rem;
+    margin-top: .9rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-selection-caption {
+    font-size: .7rem;
+    font-weight: 700;
+  }
+  .vigil-case-library-page .vigil-dashboard-selection-chips {
+    flex: 0 1 auto;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: .42rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-selection-chip {
+    width: 100%;
+    max-width: 100%;
+    min-height: 34px;
+    justify-content: space-between;
+    font-size: .75rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-clear-all {
+    margin-inline-start: 0;
+    align-self: flex-start;
+    padding: .25rem 0;
+  }
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-layout {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 328px);
+    gap: .9rem;
+    align-items: start;
+  }
+  /* Let Case Files remain legible rather than honouring the old 520px
+     minimum for the first table column within a narrower centre workspace. */
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-head,
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-row-link {
+    grid-template-columns: minmax(0, 1fr) minmax(94px, 119px) minmax(57px, 67px) 18px;
+    gap: .48rem;
+    padding-inline: .7rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-primary {
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: .55rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-id {
+    overflow-wrap: anywhere;
+    font-size: .71rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy h2 {
+    font-size: .9rem;
+    line-height: 1.4;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy p {
+    font-size: .8rem;
+    line-height: 1.48;
+  }
+  .vigil-case-library-page .vigil-dashboard-sidebar {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-panel {
+    min-width: 0;
+    padding: .85rem;
+  }
+}
+
+/* Tablet: filters become the upper toolbar, followed by results and widgets.
+   Mobile: the existing dashboard breakpoint puts insights after Case Files. */
+@media (max-width: 1319px) {
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-layout {
+    margin-top: .72rem;
+  }
+}
