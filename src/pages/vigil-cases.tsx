@@ -15,6 +15,7 @@ import VigilCasesDashboard, { countryDisplayName, countryFromJurisdiction } from
 import { failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
 import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
 import { countryLookupFromProjection, matchesSelectedCountries, toggleSelectedCountry } from "@/lib/vigilDashboardGeography.mjs";
+import { matchesClassificationSelection, toggleClassificationSelection } from "@/lib/vigilClassificationFilter.mjs";
 
 type PageState =
   | { status: "loading" }
@@ -138,9 +139,7 @@ export default function VigilCases() {
   // severity and taxonomy filters remain intersections with that set.
   const [classifications, setClassifications] = useState<string[]>([]);
   const toggleClassification = (key: string) => {
-    setClassifications(current => current.includes(key)
-      ? current.filter(value => value !== key)
-      : [...current, key]);
+    setClassifications(current => toggleClassificationSelection(current, key));
   };
   const [severity, setSeverity] = useState("");
   const [jurisdictions, setJurisdictions] = useState<string[]>([]);
@@ -235,7 +234,7 @@ export default function VigilCases() {
   // Scope each instrument independently of the facet it selects.
   const baseCases = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
-    if (classifications.length && !classifications.includes(canonicalComparisonKey(classificationStatusLabel(record)))) return false;
+    if (!matchesClassificationSelection(canonicalComparisonKey(classificationStatusLabel(record)), classifications)) return false;
     if (failureClass && !failureClassIds(record.raw).includes(failureClass)) return false;
     return true;
   }), [classifications, failureClass, records, search]);
