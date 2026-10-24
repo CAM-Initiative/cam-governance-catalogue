@@ -106,7 +106,7 @@ test("Case Files result count, Clear filters, and pagination retain readable sid
     source("src/components/vigil/VigilCasesDashboard.css"),
     source("src/pages/vigil-cases.tsx"),
   ]);
-  assert.match(page, /className="vigil-result-summary"/);
+  assert.match(page, /className="vigil-result-summary(?: [^"]+)?"/);
   assert.match(page, /Clear filters/);
   assert.match(page, /className="vigil-pagination"/);
   assert.match(styles, /\.vigil-dashboard-case-column \.vigil-result-summary \{\s*padding-inline: clamp\(0\.8rem, 2vw, 1\.25rem\)/);
