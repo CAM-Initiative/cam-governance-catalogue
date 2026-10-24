@@ -11,7 +11,7 @@ export const INDEX_FACETS = [
   { id: "activity", title: "Activity context" },
   { id: "vendor", title: "Platform / vendor" },
   { id: "adjudication", title: "Adjudication coverage" },
-  { id: "sourceRole", title: "Evidence source role" },
+  { id: "sourceRole", title: "Source role" },
   { id: "requirements", title: "External requirement assessments" },
   { id: "externalAssessments", title: "External assessments" },
   { id: "mappedClass", title: "Mapped Fidelity Class" },
@@ -86,7 +86,7 @@ export function facetOptionLabel(id, value) {
     return value === "present" ? "One or more assessments" : "None recorded";
   }
   if (id === "year") return value;
-  if (id === "mappedClass") return value.replace(/^VIGIL-FC-0*/, "FC-");
+  if (id === "mappedClass") return "FC-" + String(Number(value.slice(-6))).padStart(3, "0");
   const names = {
     "pre-deployment": "Pre-deployment",
     "non-agentic": "Non-agentic",
