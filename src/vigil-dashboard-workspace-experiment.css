@@ -551,3 +551,123 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
     min-height: 36px;
   }
 }
+
+/* Editorial filter rail inspired by the Observatory reference:
+   disclosure sections with fine rules and native checkbox facets, not
+   a nest of boxed selects. Only the desktop left rail loses its card. */
+.vigil-case-library-page .vigil-dashboard-classification-facet {
+  width: 100%;
+  min-width: 0;
+  border-top: 1px solid var(--vd-workspace-border);
+  border-bottom: 1px solid var(--vd-workspace-border);
+  padding: .72rem 0;
+  margin: .05rem 0;
+}
+.vigil-case-library-page .vigil-dashboard-facet-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  list-style: none;
+  cursor: pointer;
+  color: var(--vd-workspace-ink);
+  font: 730 .73rem/1.5 var(--app-font-mono), monospace;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+.vigil-case-library-page .vigil-dashboard-facet-heading::-webkit-details-marker { display: none; }
+.vigil-case-library-page .vigil-dashboard-facet-heading:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.vigil-case-library-page .vigil-dashboard-facet-state {
+  display: inline-flex;
+  align-items: center;
+  gap: .32rem;
+  font: 550 .7rem/1.4 var(--app-font-sans), sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--vd-workspace-muted);
+}
+.vigil-case-library-page .vigil-dashboard-facet-state svg {
+  flex: 0 0 auto;
+  transition: transform .18s ease;
+}
+.vigil-case-library-page .vigil-dashboard-classification-facet[open] .vigil-dashboard-facet-state svg {
+  transform: rotate(180deg);
+}
+.vigil-case-library-page .vigil-dashboard-facet-options {
+  display: grid;
+  gap: .15rem;
+  max-height: 19rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin-top: .6rem;
+  padding: .2rem .1rem .2rem 0;
+}
+.vigil-case-library-page .vigil-dashboard-facet-option {
+  display: grid;
+  grid-template-columns: 15px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: .5rem;
+  min-height: 30px;
+  padding: .31rem .18rem;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--vd-workspace-ink);
+  font-size: .78rem;
+  line-height: 1.4;
+}
+.vigil-case-library-page .vigil-dashboard-facet-option:hover {
+  background: hsl(var(--primary) / .08);
+}
+.vigil-case-library-page .vigil-dashboard-facet-option:focus-within {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+.vigil-case-library-page .vigil-dashboard-facet-option input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: .15rem 0 0;
+  accent-color: hsl(var(--primary));
+  cursor: pointer;
+}
+.vigil-case-library-page .vigil-dashboard-facet-option-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.vigil-case-library-page .vigil-dashboard-facet-count {
+  font-variant-numeric: tabular-nums;
+  font-size: .72rem;
+  color: var(--vd-workspace-muted);
+  padding-left: .15rem;
+}
+@media (min-width: 1320px) {
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-filter-hub,
+  html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-filter-hub {
+    padding: .52rem .35rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
+    font-size: 1.05rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-row {
+    gap: .75rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control {
+    border-radius: 4px;
+    background: transparent;
+  }
+  .vigil-case-library-page .vigil-dashboard-shared-selection {
+    border-top: 0;
+    margin-top: .25rem;
+    padding-top: .45rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vigil-case-library-page .vigil-dashboard-facet-state svg { transition: none; }
+}
