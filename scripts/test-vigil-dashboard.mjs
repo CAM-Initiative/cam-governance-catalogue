@@ -182,7 +182,7 @@ test("Interactive doughnut has no rectangular black SVG focus borders and retain
   assert.match(css, /\.vigil-dashboard-severity-callout:focus-visible \{\s*filter: drop-shadow/);
 });
 
-test("Case Files search and both filters have card-edge inset, and globe info glyph is lowercase", async () => {
+test("Case Files search and classification filter have card-edge inset, and globe info glyph is lowercase", async () => {
   const [css, dashboard, page, workspace] = await Promise.all([
     source("src/components/vigil/VigilCasesDashboard.css"),
     source("src/components/vigil/VigilCasesDashboard.tsx"),
@@ -192,7 +192,7 @@ test("Case Files search and both filters have card-edge inset, and globe info gl
   assert.match(page, /<section className="vigil-library-toolbar vigil-dashboard-filter-hub"/);
   assert.match(page, /className="vigil-search-row vigil-case-table-search"/);
   assert.match(page, /<span>Classification<\/span>/);
-  assert.match(page, /<span>Severity<\/span>/);
+  assert.doesNotMatch(page, /<span>Severity<\/span>/);
   assert.match(workspace, /\.vigil-case-library-page \.vigil-dashboard-filter-hub \{[\s\S]*?padding: clamp\(\.85rem, 1\.8vw, 1\.2rem\) clamp\(\.9rem, 2vw, 1\.35rem\)/);
   assert.match(workspace, /@media \(max-width: 720px\) \{[\s\S]*?\.vigil-dashboard-filter-hub \{ padding: \.8rem \.85rem;/);
   assert.match(dashboard, /<summary aria-label="Globe data and imagery information" title="Globe data information">i<\/summary>/);
@@ -265,6 +265,13 @@ test("Experimental shared filter hub spans list and all dashboard instruments", 
   assert.match(styles, /html:not\(\[data-theme="dark"\]\) \.vigil-case-library-page \.vigil-dashboard-panel \{/);
   assert.match(styles, /\.vigil-dashboard-selection-chip:focus-visible/);
   assert.match(dashboard, /<Globe2 size=\{19\} \/> Jurisdiction coverage/);
+  assert.match(dashboard, /Geographic Profile/);
+  assert.doesNotMatch(dashboard, /Geographic intelligence/);
+  assert.doesNotMatch(page, /One connected evidence set/);
+  assert.doesNotMatch(page, /All severities/);
+  assert.doesNotMatch(page, /severityStates/);
+  assert.match(page, /onSeverity=\{setSeverity\}/);
+  assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
