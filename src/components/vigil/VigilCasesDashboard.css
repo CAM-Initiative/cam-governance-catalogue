@@ -266,9 +266,11 @@
 .vigil-dashboard-failure-list button > :not(.vigil-dashboard-failure-bar) { position: relative; z-index: 1; }
 .vigil-case-library-page .vigil-dashboard-failure-rank,
 .vigil-case-library-page .vigil-dashboard-failure-name span { color: var(--vd-accent); }
+.vigil-case-library-page .vigil-dashboard-failure-rank { font-size: .87rem; }
+.vigil-case-library-page .vigil-dashboard-failure-name span { font-size: .81rem; }
 .vigil-case-library-page .vigil-dashboard-failure-name strong {
   color: var(--vd-ink);
-  font-size: .82rem;
+  font-size: .96rem;
   line-height: 1.45;
 }
 .vigil-case-library-page .vigil-dashboard-failure-count { color: var(--vd-accent); }
@@ -661,7 +663,7 @@
   color: var(--vd-ink);
   background: hsl(var(--card));
   box-shadow: 0 9px 25px hsl(var(--foreground) / .16);
-  font-size: .77rem;
+  font-size: .9rem;
   line-height: 1.55;
 }
 .vigil-case-library-page .vigil-dashboard-panel-info-body p { margin: 0; }
@@ -877,13 +879,13 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-code
 }
 .vigil-case-library-page .vigil-dashboard-harm-type-label {
   min-width: 0;
-  font-size: .82rem;
+  font-size: .97rem;
   font-weight: 600;
   line-height: 1.4;
   overflow-wrap: break-word;
 }
 .vigil-case-library-page .vigil-dashboard-harm-type-count {
-  font: 750 .83rem/1.4 var(--app-font-sans), sans-serif;
+  font: 750 .96rem/1.4 var(--app-font-sans), sans-serif;
   font-variant-numeric: tabular-nums;
 }
 .vigil-case-library-page .vigil-dashboard-harm-type-meter {
@@ -919,7 +921,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-code
   border: 0;
   background: transparent;
   color: var(--vd-ink);
-  font: 600 .74rem/1.4 var(--app-font-sans), sans-serif;
+  font: 600 .92rem/1.4 var(--app-font-sans), sans-serif;
   text-decoration: underline;
   text-underline-offset: .2rem;
   cursor: pointer;
@@ -927,7 +929,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-bar-code
 .vigil-case-library-page .vigil-dashboard-harm-types-note {
   margin: .48rem 0 0;
   color: var(--vd-muted);
-  font: 500 .7rem/1.45 var(--app-font-sans), sans-serif;
+  font: 500 .86rem/1.45 var(--app-font-sans), sans-serif;
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-label,
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-count {
