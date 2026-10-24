@@ -373,8 +373,6 @@ export default function VigilCases() {
   const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass || Object.keys(indexFacets).length);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
-  const pageStart = sorted.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
-  const pageEnd = Math.min(currentPage * PAGE_SIZE, sorted.length);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const pagination = useMemo(() => paginationTokens(currentPage, pageCount), [currentPage, pageCount]);
 
@@ -426,31 +424,19 @@ export default function VigilCases() {
             />
 
             <div className="vigil-dashboard-workspace">
-              <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-search-heading">
+              <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-filter-heading">
               <div className="vigil-dashboard-filter-hub-header">
                 <div>
-                  <h2 id="case-search-heading">Explore Case Files</h2>
+                  <h2 id="case-filter-heading">Explore Case Files</h2>
                 </div>
               </div>
-              <div className="vigil-search-row vigil-case-table-search">
-                <label className="vigil-search-control">
-                  <Search aria-hidden="true" />
-                  <span className="sr-only">Describe the behaviour you’re seeing…</span>
-                  <input
-                    type="search"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search Case Files…"
-                  />
-                  {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
-                </label>
-
-              {hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection">
+              <div className="vigil-dashboard-filter-controls">
+              <div className="vigil-result-summary vigil-dashboard-shared-selection">
                 <div className="vigil-dashboard-selection-header">
-                  <span className="vigil-dashboard-selection-caption">Current view</span>
-                  <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>
+                  <span className="vigil-dashboard-selection-caption">Matching case files</span>
+                  {hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>}
                 </div>
-                <div className="vigil-dashboard-selection-chips">
+                {hasActiveFilters && <div className="vigil-dashboard-selection-chips">
                   {search && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSearch("")} aria-label="Remove search filter">Search: {search}<X aria-hidden="true" size={13} /></button>}
                   {classifications.map(key => <button type="button" key={key} className="vigil-dashboard-selection-chip" onClick={() => toggleClassification(key)} aria-label={`Remove ${classificationStates.find(entry => entry.key === key)?.label ?? key} classification filter`}>Classification: {classificationStates.find(entry => entry.key === key)?.label ?? key}<X aria-hidden="true" size={13} /></button>)}
                   {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
@@ -462,9 +448,10 @@ export default function VigilCases() {
                       {INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: {facetOptionLabel(id, key)}<X aria-hidden="true" size={13}/>
                     </button>
                   ))}
-                </div>
-                <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
-              </div>}
+                 </div>}
+                 <p className="vigil-dashboard-filter-match-count" aria-live="polite" aria-atomic="true"><strong>{sorted.length} matching {sorted.length === 1 ? "case file" : "case files"}</strong></p>
+                 {hasActiveFilters && <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>}
+               </div>
                 <div className="vigil-dashboard-metadata-facets">
                 <details className="vigil-dashboard-classification-facet" aria-label="Classification filters">
                   <summary className="vigil-dashboard-facet-heading">
@@ -501,17 +488,21 @@ export default function VigilCases() {
 
             <div className="vigil-dashboard-layout">
               <div className="vigil-dashboard-case-column">
-                <div className="vigil-dashboard-case-heading">
-                  <h2>Matching Case Files</h2>
-                  <span className="vigil-dashboard-case-match-count" aria-live="polite" aria-atomic="true">
-                    <strong>{sorted.length} {jurisdictions.length ? "unique matching" : "matching"} {sorted.length === 1 ? "Case File" : "Case Files"}</strong>
-                    <small>{jurisdictions.length > 0
-                      ? `Across ${jurisdictions.length} selected ${jurisdictions.length === 1 ? "country" : "countries"} · Showing ${pageStart}–${pageEnd} on this page`
-                      : `Showing ${pageStart}–${pageEnd} on this page`}</small>
-                  </span>
-                </div>
+                <div className="vigil-library-toolbar vigil-dashboard-case-search" role="search" aria-label="Search Case Files">
+                   <label className="vigil-search-control">
+                  <Search aria-hidden="true" />
+                  <span className="sr-only">Describe the behaviour you’re seeing…</span>
+                  <input
+                    type="search"
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Search Case Files…"
+                  />
+                  {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
+                </label>
+                 </div>
 
-            {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
+             {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
             {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
             {state.status === "ready" && state.notice && <div className="vigil-registry-notice">{state.notice}</div>}
 

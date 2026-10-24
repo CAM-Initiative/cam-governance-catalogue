@@ -950,3 +950,61 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   font-size: .81rem;
   white-space: nowrap;
 }
+
+/* Search and results layout, October experiment: filter summary/count in the
+   left rail; search replaces the redundant title in the wider case-file card. */
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-controls {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: .15rem;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-shared-selection {
+  margin: 0;
+  padding: 0 0 .75rem;
+  border: 0;
+  border-bottom: 1px solid var(--vd-workspace-border);
+  flex-direction: column;
+  align-items: stretch;
+  gap: .45rem;
+}
+.vigil-case-library-page .vigil-dashboard-filter-match-count {
+  margin: .1rem 0 0;
+  color: var(--vd-workspace-ink);
+  font-family: var(--app-font-sans), sans-serif;
+  font-size: .82rem;
+  font-weight: 650;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+.vigil-case-library-page .vigil-dashboard-filter-match-count strong { font-weight: 700; }
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
+  display: block;
+  box-sizing: border-box;
+  padding: .82rem clamp(1rem, 2vw, 1.35rem);
+  border-bottom: 1px solid var(--vd-workspace-border);
+  background: hsl(var(--card) / .4);
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search .vigil-search-control {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 44px;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search input {
+  min-width: 0;
+  width: 0;
+  flex: 1 1 0%;
+  font-family: var(--app-font-sans), sans-serif;
+  font-size: .9rem;
+}
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
+  background: hsl(37 34% 95% / .65);
+}
+@media (max-width: 720px) {
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
+    padding: .78rem .85rem;
+  }
+}
