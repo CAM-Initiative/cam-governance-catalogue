@@ -299,7 +299,7 @@ test("Three-column desktop workbench keeps one filter source and accessible read
   assert.equal((page.match(/<VigilCasesDashboard/g) ?? []).length, 1);
   assert.match(page, /className="vigil-dashboard-filter-match-count" aria-live="polite"/);
   assert.doesNotMatch(page, /vigil-dashboard-match-count/);
-  assert.ok(page.includes('hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection"'));
+  assert.ok(page.includes('<div className="vigil-result-summary vigil-dashboard-shared-selection"'), "The matching total stays visible even when no filter is active");
   assert.ok(page.includes('onClick={() => toggleJurisdiction(code)}'), "Country chips still remove individual countries");
   assert.ok(styles.includes("@media (min-width: 1320px) {"));
   assert.ok(styles.includes("grid-template-columns: clamp(225px, 17.5vw, 250px) minmax(0, 1fr)"));
