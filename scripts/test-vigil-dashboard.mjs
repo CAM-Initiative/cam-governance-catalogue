@@ -889,7 +889,7 @@ test("Case Files institutional hierarchy stays route scoped and preserves access
   assert.match(dashboard, /aria-label="Case File dashboard"/);
   assert.match(page, /aria-labelledby="case-filter-heading"/);
   assert.match(page, /aria-label="AI Incident Case Files"/);
-  assert.match(page, /onClick=\{\(\) => updateSort/);
+  assert.match(page, /onSort=\{updateSort\}/);
   assert.match(dashboard, /onHarmType\(harmType === entry\.id \? "" : entry\.id\)/);
   assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-register-heading/);
   assert.match(css, /@media \(min-width: 1320px\)/);
