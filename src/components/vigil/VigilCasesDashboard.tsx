@@ -462,7 +462,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
             </ol>
             {harmTypes.length > 6 && <button type="button" className="vigil-dashboard-harm-types-expand"
               aria-expanded={showAllHarmTypes} onClick={() => setShowAllHarmTypes(value => !value)}>
-              {showAllHarmTypes ? "Show top six" : `Show all ${harmTypes.length} with S2–S5 findings (${harmDimensions.length} defined)`}
+              {showAllHarmTypes ? "Show top six" : "Show all"}
             </button>}
             {harmNote && <p className="vigil-dashboard-harm-types-note">{harmNote}</p>}
           </div>}
