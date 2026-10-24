@@ -300,12 +300,12 @@ export default function VigilCases() {
               ]}
             />
 
-            <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-search-heading">
+            <div className="vigil-dashboard-workspace">
+              <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-search-heading">
               <div className="vigil-dashboard-filter-hub-header">
                 <div>
                   <h2 id="case-search-heading">Explore Case Files</h2>
                 </div>
-                <span className="vigil-dashboard-match-count" aria-live="polite">{sorted.length} matching {sorted.length === 1 ? "Case File" : "Case Files"}</span>
               </div>
               <div className="vigil-search-row vigil-case-table-search">
                 <label className="vigil-search-control">
@@ -348,6 +348,7 @@ export default function VigilCases() {
               <div className="vigil-dashboard-case-column">
                 <div className="vigil-dashboard-case-heading">
                   <h2>Matching Case Files</h2>
+                  <span className="vigil-dashboard-case-match-count" aria-live="polite">{sorted.length} matching</span>
                 </div>
 
             {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
@@ -453,6 +454,7 @@ export default function VigilCases() {
                 geographyAvailable={geographyAvailable}
                 geographyNote={geographyNote}
               />
+            </div>
             </div>
           </section>
         </div>
