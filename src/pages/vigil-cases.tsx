@@ -311,10 +311,14 @@ export default function VigilCases() {
               ]}
             />
 
-            <div className="vigil-dashboard-layout">
-              <div className="vigil-dashboard-case-column">
-            <section className="vigil-library-toolbar" aria-labelledby="case-search-heading">
-              <h2 id="case-search-heading" className="sr-only">Search and filter Case Files</h2>
+            <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-search-heading">
+              <div className="vigil-dashboard-filter-hub-header">
+                <div>
+                  <span className="vigil-dashboard-workspace-kicker">One connected evidence set</span>
+                  <h2 id="case-search-heading">Explore Case Files</h2>
+                </div>
+                <span className="vigil-dashboard-match-count" aria-live="polite">{sorted.length} matching {sorted.length === 1 ? "Case File" : "Case Files"}</span>
+              </div>
               <div className="vigil-search-row vigil-case-table-search">
                 <label className="vigil-search-control">
                   <Search aria-hidden="true" />
@@ -344,12 +348,27 @@ export default function VigilCases() {
                   </select>
                 </label>
               </div>
-              <div className="vigil-result-summary">
-                <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
+              <div className="vigil-result-summary vigil-dashboard-shared-selection">
+                <span className="vigil-dashboard-selection-caption">Current view</span>
+                <div className="vigil-dashboard-selection-chips">
+                  {!search && !classification && !severity && !jurisdiction && !failureClass && <span className="vigil-dashboard-selection-default">All Case Files</span>}
+                  {search && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSearch("")} aria-label="Remove search filter">Search: {search}<X aria-hidden="true" size={13} /></button>}
+                  {classification && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setClassification("")} aria-label="Remove classification filter">Classification: {classificationStates.find(entry => entry.key === classification)?.label ?? classification}<X aria-hidden="true" size={13} /></button>}
+                  {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
+                  {jurisdiction && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setJurisdiction("")} aria-label="Remove jurisdiction filter">Jurisdiction: {jurisdiction}<X aria-hidden="true" size={13} /></button>}
+                  {failureClass && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setFailureClass("")} aria-label="Remove fidelity class filter">{failureClass.replace("VIGIL-FC-", "FC-")}<X aria-hidden="true" size={13} /></button>}
+                </div>
                 <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
-                {(search || classification || severity || jurisdiction || failureClass) && <button type="button" onClick={clearFilters}>Clear filters</button>}
+                {(search || classification || severity || jurisdiction || failureClass) && <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>}
               </div>
             </section>
+
+            <div className="vigil-dashboard-layout">
+              <div className="vigil-dashboard-case-column">
+                <div className="vigil-dashboard-case-heading">
+                  <h2>Matching Case Files</h2>
+                  <span aria-hidden="true">{sorted.length} in this view</span>
+                </div>
 
             {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
             {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}

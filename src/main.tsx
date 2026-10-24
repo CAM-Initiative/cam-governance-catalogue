@@ -47,5 +47,6 @@ import "./vigil-observatory-instrument-experiment.css";
 import "./vigil-observatory-masthead.css";
 import "./vigil-severity-chip.css";
 import "./mobile-responsive-polish.css";
+import "./vigil-dashboard-workspace-experiment.css";
 
 createRoot(document.getElementById("root")!).render(<App />);

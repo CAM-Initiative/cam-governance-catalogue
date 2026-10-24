@@ -248,4 +248,22 @@ test("All three insight panels share a top-right information disclosure; typogra
   assert.match(dashboard, /style=\{selected === item\.code \? \{ fill: item\.color \} : undefined\}/);
 });
 
+test("Experimental shared filter hub spans list and all dashboard instruments", async () => {
+  const [page, styles, dashboard] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+  ]);
+  const filterPosition = page.indexOf('className="vigil-library-toolbar vigil-dashboard-filter-hub"');
+  const layoutPosition = page.indexOf('className="vigil-dashboard-layout"');
+  assert.ok(filterPosition >= 0 && layoutPosition > filterPosition, "Shared query hub must be above both columns");
+  assert.ok(page.includes('className="vigil-dashboard-case-heading"'));
+  assert.ok(page.includes('className="vigil-result-summary vigil-dashboard-shared-selection"'));
+  assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
+  assert.match(page, /onClick=\{\(\) => setJurisdiction\(" "\.trim\(\)\)\}/);
+  assert.match(styles, /html:not\(\[data-theme="dark"\]\) \.vigil-case-library-page \.vigil-dashboard-panel \{/);
+  assert.match(styles, /\.vigil-dashboard-selection-chip:focus-visible/);
+  assert.match(dashboard, /<Globe2 size=\{19\} \/> Jurisdiction coverage/);
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.
