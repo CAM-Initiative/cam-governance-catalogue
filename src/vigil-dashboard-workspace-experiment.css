@@ -555,7 +555,8 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 /* Editorial filter rail inspired by the Observatory reference:
    disclosure sections with fine rules and native checkbox facets, not
    a nest of boxed selects. Only the desktop left rail loses its card. */
-.vigil-case-library-page .vigil-dashboard-classification-facet {
+.vigil-case-library-page .vigil-dashboard-classification-facet,
+.vigil-case-library-page .vigil-dashboard-index-facet {
   width: 100%;
   min-width: 0;
   border-top: 1px solid var(--vd-workspace-border);
@@ -594,7 +595,8 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   flex: 0 0 auto;
   transition: transform .18s ease;
 }
-.vigil-case-library-page .vigil-dashboard-classification-facet[open] .vigil-dashboard-facet-state svg {
+.vigil-case-library-page .vigil-dashboard-classification-facet[open] .vigil-dashboard-facet-state svg,
+.vigil-case-library-page .vigil-dashboard-index-facet[open] .vigil-dashboard-facet-state svg {
   transform: rotate(180deg);
 }
 .vigil-case-library-page .vigil-dashboard-facet-options {
@@ -670,4 +672,33 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 }
 @media (prefers-reduced-motion: reduce) {
   .vigil-case-library-page .vigil-dashboard-facet-state svg { transition: none; }
+}
+
+/* Each index-backed facet uses the same hairline disclosure. Only one toolbar
+   grid cell owns the facets, preventing two-column grid auto-placement. */
+.vigil-case-library-page .vigil-dashboard-metadata-facets {
+  width: 100%;
+  min-width: 0;
+}
+.vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-classification-facet,
+.vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-index-facet {
+  border-bottom: 0;
+  margin: 0;
+}
+.vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-index-facet:last-of-type {
+  border-bottom: 1px solid var(--vd-workspace-border);
+}
+.vigil-case-library-page .vigil-dashboard-facet-guidance {
+  margin: .7rem .1rem 0;
+  color: var(--vd-workspace-muted);
+  font-size: .7rem;
+  line-height: 1.5;
+}
+.vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-facet-heading {
+  min-height: 26px;
+}
+@media (min-width: 1320px) {
+  .vigil-case-library-page .vigil-dashboard-metadata-facets {
+    max-width: 100%;
+  }
 }
