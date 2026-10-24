@@ -957,8 +957,8 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   white-space: nowrap;
 }
 
-/* Search and results layout, October experiment: filter summary/count in the
-   left rail; search replaces the redundant title in the wider case-file card. */
+/* Search and results: query follows the filter summary rules, immediately
+   before Classification in the left rail. Case Files and globe now share a top edge. */
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-controls {
   display: flex;
   flex-direction: column;
@@ -984,35 +984,35 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   font-variant-numeric: tabular-nums;
 }
 .vigil-case-library-page .vigil-dashboard-filter-match-count strong { font-weight: 550; }
-.vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
-  display: block;
-  box-sizing: border-box;
-  padding: .82rem clamp(1rem, 2vw, 1.35rem);
-  border-bottom: 1px solid var(--vd-workspace-border);
-  background: hsl(var(--card) / .4);
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-search {
+  width: 100%;
+  min-width: 0;
+  margin: .64rem 0 .5rem;
 }
-.vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search .vigil-search-control {
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-search .vigil-search-control {
   box-sizing: border-box;
   display: flex;
   width: 100%;
   max-width: none;
   min-width: 0;
   min-height: 44px;
+  padding-inline: .55rem;
 }
-.vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search input {
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-search input {
   min-width: 0;
   width: 0;
   flex: 1 1 0%;
   font-family: var(--app-font-sans), sans-serif;
-  font-size: .9rem;
+  font-size: .86rem;
 }
-html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
-  background: hsl(37 34% 95% / .65);
+
+/* Restrained blush from the Observatory's rose-tinted masthead family,
+   scoped to Harm Types instead of changing all dashboard accent colours. */
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-fill {
+  background: linear-gradient(90deg, hsl(350 33% 42%), hsl(350 37% 52%));
 }
-@media (max-width: 720px) {
-  .vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
-    padding: .78rem .85rem;
-  }
+html[data-theme="dark"] .vigil-case-library-page .vigil-dashboard-harm-type-fill {
+  background: linear-gradient(90deg, hsl(350 26% 59%), hsl(350 31% 68%));
 }
 
 /* Calm hierarchy: a single sidebar title and consistent sans-serif case text. */
