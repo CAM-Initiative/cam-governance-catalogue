@@ -1,4 +1,4 @@
-import{r as yt,j as On,R as ol}from"./index-B-eDYLAT.js";/**
+import{r as yt,j as On,R as ol}from"./index-CWU0uF-1.js";/**
  * @license
  * Copyright 2010-2025 Three.js Authors
  * SPDX-License-Identifier: MIT
