@@ -785,7 +785,8 @@ test("Severity bar labels display only legible codes; full category meanings mov
   assert.match(css, /\.vigil-dashboard-severity-panel \.vigil-dashboard-severity-legend/);
 });
 
-// Touch this regression test to regenerate publication assets from the final review branch head.
+// Dashboard bar polish: retain this source test as a publication rebuild trigger
+// after reconciling the latest VIGIL register sync from main.
 
 
 test("Sparse HIM join honours record versions and excludes S1/unreported from positive harm totals", () => {
