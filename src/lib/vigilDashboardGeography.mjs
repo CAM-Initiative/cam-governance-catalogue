@@ -39,3 +39,14 @@ export function countryLookupFromProjection(records, projection, countryMatcher)
   }
   return map;
 }
+
+// Dashboard country selection is an additive OR facet, not an intersection.
+// An Incident appears once if any selected jurisdiction is reviewed for it.
+export function toggleSelectedCountry(selected, code) {
+  if (!code) return selected;
+  return selected.includes(code) ? selected.filter(item => item !== code) : [...selected, code];
+}
+
+export function matchesSelectedCountries(associated, selected) {
+  return selected.length === 0 || selected.some(code => associated?.includes(code));
+}
