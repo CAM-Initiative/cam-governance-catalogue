@@ -248,7 +248,7 @@ export default function VigilCases() {
       delete next[id];
       return next;
     });
-  // The result-toolbar and globe reset share a single source of truth.
+  // All filters can be cleared in the left rail; chips remove individual selections.
   const clearFilters = () => {
     setSearch("");
     setClassifications([]);
@@ -427,15 +427,12 @@ export default function VigilCases() {
               <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-filter-heading">
               <div className="vigil-dashboard-filter-hub-header">
                 <div>
-                  <h2 id="case-filter-heading">Explore Case Files</h2>
+                  <h2 id="case-filter-heading">Case File Filters</h2>
                 </div>
+                {hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>}
               </div>
               <div className="vigil-dashboard-filter-controls">
               <div className="vigil-result-summary vigil-dashboard-shared-selection">
-                <div className="vigil-dashboard-selection-header">
-                  <span className="vigil-dashboard-selection-caption">Matching case files</span>
-                  {hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>}
-                </div>
                 {hasActiveFilters && <div className="vigil-dashboard-selection-chips">
                   {search && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSearch("")} aria-label="Remove search filter">Search: {search}<X aria-hidden="true" size={13} /></button>}
                   {classifications.map(key => <button type="button" key={key} className="vigil-dashboard-selection-chip" onClick={() => toggleClassification(key)} aria-label={`Remove ${classificationStates.find(entry => entry.key === key)?.label ?? key} classification filter`}>Classification: {classificationStates.find(entry => entry.key === key)?.label ?? key}<X aria-hidden="true" size={13} /></button>)}
@@ -600,7 +597,6 @@ export default function VigilCases() {
                 onSeverity={setSeverity}
                 onJurisdiction={toggleJurisdiction}
                 onFailureClass={setFailureClass}
-                onClearFilters={clearFilters}
                 countryByCase={countryByCase}
                 geographyAvailable={geographyAvailable}
                 geographyNote={geographyNote}
