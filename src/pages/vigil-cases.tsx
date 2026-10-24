@@ -375,6 +375,7 @@ export default function VigilCases() {
                   {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
                 </label>
 
+                <div className="vigil-dashboard-metadata-facets">
                 <details className="vigil-dashboard-classification-facet" aria-label="Classification filters">
                   <summary className="vigil-dashboard-facet-heading">
                     <span>Classification</span>
@@ -404,6 +405,7 @@ export default function VigilCases() {
                   options={facet.options} total={records.length} selected={indexFacets[facet.id] ?? []}
                   onToggle={toggleIndexFacet} onClear={clearIndexFacet}/>)}
                 <p className="vigil-dashboard-facet-guidance">Counts reflect the full loaded index. Values not established in the index are shown separately. Select multiple items within or across sections.</p>
+                </div>
               </div>
               {hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection">
                 <span className="vigil-dashboard-selection-caption">Current view</span>
