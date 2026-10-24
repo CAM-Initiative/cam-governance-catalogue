@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { Globe2, Layers3, RotateCcw, ShieldAlert } from "lucide-react";
+import { Globe2, Layers3, ShieldAlert } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
@@ -26,7 +26,6 @@ type Props = {
   onSeverity: (code: string) => void;
   onJurisdiction: (id: string) => void;
   onFailureClass: (id: string) => void;
-  onClearFilters: () => void;
   countryByCase: Map<string, string[]>;
   geographyAvailable: boolean;
   geographyNote: string;
@@ -157,7 +156,7 @@ function graticule(rotation: number, lon?: number, lat?: number) {
   }
   return drawing;
 }
-function Globe({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void; onClearFilters: () => void }) {
+function Globe({ locations, selected, onSelect }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void }) {
   const [rotation, setRotation] = useState(15);
   const pointer = useRef<{ x: number; rotation: number; moved: boolean } | null>(null);
   useEffect(() => {
@@ -202,16 +201,15 @@ function Globe({ locations, selected, onSelect, onClearFilters }: { locations: L
         ))}
         <ellipse cx="174" cy="174" rx="169" ry="164" fill="none" stroke="#39cde2" strokeOpacity=".16" strokeDasharray="4 9" />
       </svg>
-      
-      <button type="button" className="vigil-dashboard-reset-rotation" onClick={() => { setRotation(15); onClearFilters(); }} aria-label="Reset globe view and clear filters" title="Reset globe and clear filters"><RotateCcw size={15} /></button>
+
     </div>
   );
 }
-function GlobeView({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void; onClearFilters: () => void }) {
+function GlobeView({ locations, selected, onSelect }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void }) {
   const [unavailable, setUnavailable] = useState(false);
-  if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />;
-  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />}>
-    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} onUnavailable={() => setUnavailable(true)} />
+  if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} />;
+  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} />}>
+    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onUnavailable={() => setUnavailable(true)} />
   </Suspense>;
 }
 
@@ -276,8 +274,8 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
         })}
         <circle cx={cx} cy={cy} r="62.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
         <circle cx={cx} cy={cy} r="87.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
-        <text x={cx} y={cy-4} textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
-        <text x={cx} y={cy+15} textAnchor="middle" className="vigil-dashboard-donut-caption">{selected ? `${selected} SELECTED` : "CASE FILES"}</text>
+        <text x={cx} y={cy+7} textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
+
         {labels.map(item => {
           const active = selected === item.code;
           const dim = selected && !active;
@@ -307,7 +305,7 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
   </div>;
 }
 
-export default function VigilCasesDashboard({mapRecords,distributionRecords,taxonomyRecords,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,onClearFilters,countryByCase,geographyAvailable,geographyNote}: Props) {
+export default function VigilCasesDashboard({mapRecords,distributionRecords,taxonomyRecords,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
   useEffect(() => {
     let active = true;
@@ -339,7 +337,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
         <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-geography"><Globe2 size={19} aria-hidden="true" /> Geographic Profile</h2></div>
-        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdictions} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
+        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdictions} onSelect={onJurisdiction}/>
         <label className="vigil-dashboard-country-keyboard">
           <span className="sr-only">Choose country using a keyboard-accessible list</span>
           <select value="" disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)} aria-label="Add or remove a jurisdiction using keyboard">
