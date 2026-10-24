@@ -670,7 +670,7 @@ test("Case File severity presentation uses ascending S1-to-S5 semantics", async 
   assert.match(report, /S1: "Minimal \/ no downstream harm"/);
   assert.match(report, /S5: "Catastrophic \/ critical"/);
   assert.doesNotMatch(about, /Severity measures supported consequence|Harm & severity/);
-  assert.match(severity, /highest defensible materialised-harm threshold/);
+  assert.match(severity, /The highest band supported by the evidence within the selected assessment pathway/);
   assert.match(severity, /MIT AI Incident Tracker harm-severity scale/);
   assert.match(severity, /CSET AI Harm Framework/);
   assert.match(chip, /return \/\^S\[1-5\]\$\/\.test\(code\) \? code : undefined;/);
@@ -843,7 +843,7 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype outs
 
 
 
-test("harm methodology consolidates evidence-state definitions into the derivation method", async () => {
+test("harm methodology separates Severity bands and SU from the evidence-state ledger", async () => {
   const [matrix, severity, css, menuCss] = await Promise.all([
     read("src/components/vigil/HarmImpactMatrix.tsx"),
     read("src/pages/vigil-severity-methodology.tsx"),
@@ -862,18 +862,22 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable/);
   assert.doesNotMatch(methodSection, /<dt>SU — Unassessed<\/dt>/);
-  assert.match(methodSection, /SU — Unassessed applies when no harm dimension has a defensible band/);
-  assert.match(methodSection, /SU is an evidence state, not a sixth severity band/);
-  assert.match(methodSection, /<h3>Overall severity<\/h3>[\s\S]*highest defensible materialised-harm threshold controls the overall severity/);
+  // SU belongs alongside the public S1–S5 Severity key, not inside the
+  // evidence-state table or the old Overall severity column.
+  const severitySection = severity.match(/<section id="severity"[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.match(severitySection, /<h2 id="harm-severity-heading">Severity<\/h2>/);
+  assert.match(severitySection, /HARM_PUBLIC_SEVERITY_LEVELS\.map/);
+  assert.match(severitySection, /<VigilStatusChip value="SU"/);
+  assert.match(severitySection, /not a sixth severity band/);
+  assert.match(severitySection, /not added or averaged/);
+  assert.doesNotMatch(methodSection, /SU — Unassessed|<h3>Overall severity<\/h3>/);
   assert.doesNotMatch(methodSection, /Severity display|Individual Case Files do not repeat this entire reference matrix/);
   assert.doesNotMatch(methodSection, /vigil-severity-case-file-note/);
-  const overallRule = methodSection.match(/<h3>Overall severity<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
-  assert.match(overallRule, /Only dimensions with a defensible assessed band/);
-  assert.match(overallRule, /Never combine ordinary and aggregate bands within one assessment/);
   assert.doesNotMatch(severity, /<section id="case-files"|The Incident view shows only the assessment that was actually made/);
   assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
-  assert.match(menuCss, /\.vigil-severity-method-row \{[\s\S]*grid-template-columns: minmax\(9rem, 0\.42fr\) minmax\(0, 1fr\)/);
-  assert.match(menuCss, /\.vigil-severity-evidence-states dt,[\s\S]*\.vigil-severity-method-row h3 \{[\s\S]*font-family: var\(--app-font-sans\)[\s\S]*font-size: 0\.92rem[\s\S]*font-weight: 680/);
+  assert.match(menuCss, /\.vigil-severity-band-list \{[\s\S]*grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
+  assert.match(menuCss, /\.vigil-severity-unassessed \{/);
+  assert.match(menuCss, /\.vigil-harm-pathway-comparison \{/);
 });
 
 test("Stage 02 is presented publicly as Assessment", async () => {

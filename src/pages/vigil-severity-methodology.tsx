@@ -82,7 +82,6 @@ export default function VigilSeverityMethodology() {
             </div>
             <div className="vigil-severity-principles">
               <div className="vigil-severity-evidence-states">
-                <h3>Evidence states</h3>
                 <p>Each harm dimension is resolved to an evidence state before any overall severity is derived.</p>
                 <dl>
                   <div><dt>Assessed</dt><dd>Evidence supports a materialised impact and a specific threshold band.</dd></div>
@@ -96,7 +95,7 @@ export default function VigilSeverityMethodology() {
           </section>
 
           <section id="pathways" className="document-section vigil-severity-methodology-section" aria-labelledby="harm-pathways-heading">
-            <div className="document-section-heading"><p>Assessment pathways</p><h2 id="harm-pathways-heading">Select the pathway before scoring</h2></div>
+            <div className="document-section-heading"><p>Assessment pathways</p><h2 id="harm-pathways-heading">Specific harm or Aggregate Harm?</h2></div>
             <div className="document-reading">
               <p>{HARM_PUBLIC_PATHWAY_COPY.intro}</p>
               <div className="vigil-harm-pathway-comparison">
