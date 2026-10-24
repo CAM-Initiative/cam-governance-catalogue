@@ -26,7 +26,6 @@ type SortDirection = "asc" | "desc";
 type SortState = { key: SortKey; direction: SortDirection };
 
 type ClassificationStatusCount = { key: string; label: string; count: number };
-type SeverityCount = { key: string; label: string; count: number };
 
 const PAGE_SIZE = 18;
 const SEVERITY_ORDER: Record<string, number> = { S1: 1, S2: 2, S3: 3, S4: 4, S5: 5, SU: 6 };
@@ -72,17 +71,6 @@ function severityLabel(code: string) {
     SU: "SU · Unassessed",
   };
   return labels[code] ?? code;
-}
-
-function severityCounts(records: VigilIndexRecord[]): SeverityCount[] {
-  const counts = new Map<string, SeverityCount>();
-  for (const record of records) {
-    const key = severityCode(record);
-    const existing = counts.get(key);
-    if (existing) existing.count += 1;
-    else counts.set(key, { key, label: severityLabel(key), count: 1 });
-  }
-  return [...counts.values()].sort((a, b) => (SEVERITY_ORDER[a.key] ?? 99) - (SEVERITY_ORDER[b.key] ?? 99));
 }
 
 function severityRank(record: VigilIndexRecord) {
@@ -231,7 +219,6 @@ export default function VigilCases() {
 
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
-  const severityStates = useMemo(() => severityCounts(records), [records]);
   const updated = useMemo(() => {
     const dates = values(records, (record) => record.record_last_updated ?? record.publicDisplay.dates.lastUpdated ?? record.date_recorded).sort();
     return dates.length ? dates[dates.length - 1] : undefined;
@@ -314,7 +301,6 @@ export default function VigilCases() {
             <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-search-heading">
               <div className="vigil-dashboard-filter-hub-header">
                 <div>
-                  <span className="vigil-dashboard-workspace-kicker">One connected evidence set</span>
                   <h2 id="case-search-heading">Explore Case Files</h2>
                 </div>
                 <span className="vigil-dashboard-match-count" aria-live="polite">{sorted.length} matching {sorted.length === 1 ? "Case File" : "Case Files"}</span>
@@ -340,13 +326,6 @@ export default function VigilCases() {
                   </select>
                 </label>
 
-                <label className="vigil-family-select">
-                  <span>Severity</span>
-                  <select value={severity} onChange={(event) => setSeverity(event.target.value)}>
-                    <option value="">All severities ({records.length})</option>
-                    {severityStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
-                  </select>
-                </label>
               </div>
               <div className="vigil-result-summary vigil-dashboard-shared-selection">
                 <span className="vigil-dashboard-selection-caption">Current view</span>
