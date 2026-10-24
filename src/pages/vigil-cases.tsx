@@ -250,6 +250,8 @@ export default function VigilCases() {
   const hasActiveFilters = Boolean(search || classification || severity || jurisdictions.length || failureClass);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
+  const pageStart = sorted.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
+  const pageEnd = Math.min(currentPage * PAGE_SIZE, sorted.length);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const pagination = useMemo(() => paginationTokens(currentPage, pageCount), [currentPage, pageCount]);
 
@@ -348,7 +350,12 @@ export default function VigilCases() {
               <div className="vigil-dashboard-case-column">
                 <div className="vigil-dashboard-case-heading">
                   <h2>Matching Case Files</h2>
-                  <span className="vigil-dashboard-case-match-count" aria-live="polite">{sorted.length} matching</span>
+                  <span className="vigil-dashboard-case-match-count" aria-live="polite" aria-atomic="true">
+                    <strong>{sorted.length} {jurisdictions.length ? "unique matching" : "matching"} {sorted.length === 1 ? "Case File" : "Case Files"}</strong>
+                    <small>{jurisdictions.length > 0
+                      ? `Across ${jurisdictions.length} selected ${jurisdictions.length === 1 ? "country" : "countries"} · Showing ${pageStart}–${pageEnd} on this page`
+                      : `Showing ${pageStart}–${pageEnd} on this page`}</small>
+                  </span>
                 </div>
 
             {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
