@@ -688,8 +688,8 @@ test("Dashboard calm pass unifies case typography and compacts darker light-them
   assert.ok(css.includes("font-family: var(--app-font-mono), monospace;"));
   assert.ok(css.includes("font-weight: 700;"));
   assert.ok(css.includes("font-weight: 400;"));
-  assert.ok(css.includes("hsl(29 19% 86%)"));
-  assert.ok(css.includes("hsl(27 16% 79%)"));
+  assert.ok(css.includes("hsl(27 7% 98%)"));
+  assert.ok(css.includes("hsl(28 10% 94%)"));
   assert.ok(css.includes("padding: .58rem .64rem .46rem;"));
   assert.ok(css.includes("width: min(100%, 222px)"));
   assert.ok(!dashboard.includes("vigil-dashboard-donut-caption"));
