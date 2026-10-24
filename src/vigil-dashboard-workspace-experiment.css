@@ -237,3 +237,108 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 @media print {
   .vigil-case-library-page .vigil-dashboard-selection-chip { display: none; }
 }
+
+/* Compact geographical instrument: keep the existing 3D globe and hit targets,
+   but reclaim height in the dashboard rail (also usable in a future left rail). */
+.vigil-case-library-page .vigil-dashboard-location-panel .vigil-dashboard-globe-scene {
+  width: min(100%, 250px);
+  max-width: 250px;
+  margin: .15rem auto .1rem;
+}
+@media (max-width: 720px) {
+  .vigil-case-library-page .vigil-dashboard-location-panel .vigil-dashboard-globe-scene {
+    width: min(100%, 285px);
+    max-width: 285px;
+  }
+}
+
+/* SVG leader-line labels overlapped at narrow sidebar widths. Give each of
+   the six severities its own predictable, keyboard-operable row instead. */
+.vigil-case-library-page .vigil-dashboard-outcomes {
+  display: grid;
+  grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr);
+  align-items: center;
+  gap: .35rem;
+}
+.vigil-case-library-page .vigil-dashboard-donut {
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+  min-width: 0;
+}
+.vigil-case-library-page .vigil-dashboard-severity-key {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .2rem;
+}
+.vigil-case-library-page .vigil-dashboard-severity-item {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .4rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
+  padding: .25rem .3rem;
+  border: 1px solid transparent;
+  border-radius: .4rem;
+  background: transparent;
+  color: var(--vd-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.vigil-case-library-page .vigil-dashboard-severity-item:hover,
+.vigil-case-library-page .vigil-dashboard-severity-item.is-selected {
+  background: hsl(var(--primary) / .09);
+  border-color: hsl(var(--primary) / .42);
+}
+.vigil-case-library-page .vigil-dashboard-severity-item.is-selected {
+  box-shadow: inset 3px 0 0 hsl(var(--primary) / .72);
+}
+.vigil-case-library-page .vigil-dashboard-severity-item.is-muted { opacity: .65; }
+.vigil-case-library-page .vigil-dashboard-severity-item:disabled { opacity: .48; cursor: default; }
+.vigil-case-library-page .vigil-dashboard-severity-item:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.vigil-case-library-page .vigil-dashboard-severity-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+.vigil-case-library-page .vigil-dashboard-severity-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  line-height: 1.2;
+}
+.vigil-case-library-page .vigil-dashboard-severity-copy strong {
+  font-size: .8rem;
+  font-weight: 760;
+}
+.vigil-case-library-page .vigil-dashboard-severity-copy span {
+  font-size: .69rem;
+  color: var(--vd-muted);
+  overflow-wrap: anywhere;
+}
+.vigil-case-library-page .vigil-dashboard-severity-quantity {
+  font-size: .8rem;
+  font-weight: 730;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 721px) and (max-width: 1140px) {
+  .vigil-case-library-page .vigil-dashboard-donut { max-width: 220px; }
+}
+@media (max-width: 360px) {
+  .vigil-case-library-page .vigil-dashboard-outcomes { gap: .2rem; }
+  .vigil-case-library-page .vigil-dashboard-severity-item { gap: .22rem; padding-inline: .15rem; }
+}
+
+/* When filters are empty the selection band is absent, not an empty spacer. */
+.vigil-case-library-page .vigil-dashboard-filter-hub:not(:has(.vigil-dashboard-shared-selection))
+  .vigil-dashboard-mobile-insights-link {
+  margin-top: .6rem;
+}
