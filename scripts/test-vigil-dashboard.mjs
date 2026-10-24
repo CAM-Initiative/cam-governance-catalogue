@@ -248,7 +248,8 @@ test("All three insight panels retain disclosures and selected leader-line label
   assert.match(dashboard, /<summary aria-label="Globe data and imagery information"/);
   assert.match(dashboard, /<summary aria-label="Harm severity chart information"/);
   assert.match(dashboard, /<summary aria-label="Taxonomy intelligence counts information"/);
-  assert.equal((dashboard.match(/Counts are distinct incidents, not mentions or evidence-source citations\./g) ?? []).length, 1);
+  assert.equal((dashboard.match(/Counts represent distinct Case Files, not mentions or evidence-source citations\./g) ?? []).length, 1);
+  assert.match(dashboard, /Selecting a class filters the Case Files and other charts without reordering this list/);
   assert.doesNotMatch(dashboard, /<p className="vigil-dashboard-source-note">Counts are distinct incidents/);
   assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-panel-info \{\s*position: absolute;\s*z-index: 8;\s*top: \.55rem;\s*right: \.55rem;/);
   assert.match(dashboard, /className=\{`vigil-dashboard-severity-callout\$\{active \? " is-selected"/);
