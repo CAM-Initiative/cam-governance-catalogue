@@ -507,6 +507,19 @@ export default function VigilCases() {
                  <p className="vigil-dashboard-filter-match-count" aria-live="polite" aria-atomic="true"><strong>{sorted.length} matching {sorted.length === 1 ? "case file" : "case files"}</strong></p>
                  {hasActiveFilters && <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>}
                </div>
+                <div className="vigil-dashboard-filter-search" role="search" aria-label="Search Case Files">
+                  <label className="vigil-search-control">
+                    <Search aria-hidden="true" />
+                    <span className="sr-only">Describe the behaviour you’re seeing…</span>
+                    <input
+                      type="search"
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      placeholder="Search Case Files…"
+                    />
+                    {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
+                  </label>
+                </div>
                 <div className="vigil-dashboard-metadata-facets">
                 <details className="vigil-dashboard-classification-facet" aria-label="Classification filters">
                   <summary className="vigil-dashboard-facet-heading">
@@ -543,19 +556,7 @@ export default function VigilCases() {
 
             <div className="vigil-dashboard-layout">
               <div className="vigil-dashboard-case-column">
-                <div className="vigil-library-toolbar vigil-dashboard-case-search" role="search" aria-label="Search Case Files">
-                   <label className="vigil-search-control">
-                  <Search aria-hidden="true" />
-                  <span className="sr-only">Describe the behaviour you’re seeing…</span>
-                  <input
-                    type="search"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search Case Files…"
-                  />
-                  {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
-                </label>
-                 </div>
+
 
              {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
             {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
