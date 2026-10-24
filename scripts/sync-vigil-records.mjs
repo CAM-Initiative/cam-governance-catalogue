@@ -6,6 +6,7 @@ const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const sourceConfigPath = resolve(repoRoot, "src", "config", "registrySources.json");
 const outputDir = resolve(repoRoot, "docs", "data");
 const fallbackPath = resolve(outputDir, "vigil-registry-fallback.json");
+const harmFallbackPath = resolve(outputDir, "vigil-harm-dimensions.json");
 const syncMetaPath = resolve(outputDir, "vigil-registry-sync-meta.json");
 const strictSync = process.env.VIGIL_SYNC_STRICT === "1";
 const recordBranch = process.env.VIGIL_RECORD_BRANCH;
@@ -197,6 +198,30 @@ try {
   const registry = parseIncidentRegistry(sourceText, registrySource);
   const fallbackRegistry = publicFallbackRegistry(registry);
   await writeFile(fallbackPath, `${JSON.stringify(fallbackRegistry)}\n`);
+
+  // The harm sidecar is maintained upstream by VIGIL's deterministic generator.
+  // Refresh the checked static fallback only when it belongs to this exact
+  // indexed corpus and contains matching record versions. A missing upstream
+  // sidecar must never erase the last independently validated local copy.
+  const upstreamHarmUrl =
+    `https://raw.githubusercontent.com/${registrySources.vigil.repo}/${recordBranch || registrySources.vigil.branch}/vigil/VIGIL.Harm.Dimensions.Index.json`;
+  try {
+    const harmIndex = JSON.parse(await loadSource(upstreamHarmUrl));
+    if (harmIndex?.registry_type !== "vigil_harm_dimensions" || harmIndex.version !== 1 ||
+        harmIndex.record_count !== registry.records.length || !Array.isArray(harmIndex.entries)) {
+      throw new Error("Harm sidecar record count or contract does not match the Incident registry");
+    }
+    const versions = new Map(registry.records.map(record => [record.id, record.record_version]));
+    for (const entry of harmIndex.entries) {
+      if (!versions.has(entry.id) || (entry.v && entry.v !== versions.get(entry.id))) {
+        throw new Error("Harm sidecar has an Incident ID/version absent from the current registry");
+      }
+    }
+    await writeFile(harmFallbackPath, `${JSON.stringify(harmIndex, null, 2)}\n`);
+    console.log(`Synced assessed HIM sidecar (${harmIndex.entries.length} matching assessed incidents)`);
+  } catch (error) {
+    console.warn(`No compatible upstream HIM sidecar yet; retaining the checked local fallback: ${error.message}`);
+  }
   const upstreamFingerprint = registry.records
     .map((record) => [
       record.id,
