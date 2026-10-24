@@ -1,0 +1,393 @@
+/* Case Files / institutional research workspace
+   A coherent editorial layer applied ONLY to the Case Files landing page.
+   No chart data, filter semantics, globe geometry, sorting or dossier styling
+   is changed here. It deliberately follows the existing experiment cascade. */
+
+.vigil-case-library-page {
+  --case-rule: hsl(var(--border) / .73);
+  --case-rule-faint: hsl(var(--border) / .47);
+  --case-ink: hsl(var(--foreground));
+  --case-muted: hsl(var(--muted-foreground));
+  --case-gold: hsl(var(--primary));
+  --case-paper: hsl(var(--card));
+  --case-tint: hsl(var(--secondary) / .23);
+}
+
+.vigil-case-library-page > .container {
+  max-width: 1740px;
+  padding-inline: clamp(1rem, 2.55vw, 2.65rem);
+  padding-top: clamp(1.1rem, 2vw, 1.75rem);
+}
+
+/* Quiet the masthead specifically on the archive's busiest landing page. */
+.vigil-case-library-page .vigil-observatory-masthead {
+  min-height: clamp(13rem, 17vw, 15.75rem);
+  border-color: var(--case-rule);
+  box-shadow: none;
+}
+.vigil-case-library-page .vigil-observatory-masthead-title {
+  padding-block: clamp(1.35rem, 2vw, 1.85rem);
+}
+.vigil-case-library-page .vigil-observatory-masthead h1 {
+  font-size: clamp(2.8rem, 3.7vw, 3.75rem);
+}
+.vigil-case-library-page .vigil-observatory-masthead-description {
+  max-width: 47rem;
+}
+.vigil-case-library-page .vigil-dashboard-workspace {
+  margin-top: clamp(1.25rem, 2.2vw, 2rem);
+  align-items: start;
+}
+.vigil-case-library-page .vigil-dashboard-layout {
+  align-items: start;
+}
+
+/* Shared section labels: one understandable hierarchy across all three areas. */
+.vigil-case-library-page .vigil-dashboard-eyebrow {
+  display: block;
+  margin: 0 0 .45rem;
+  font: 700 .72rem/1.35 var(--app-font-mono), monospace;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--case-gold);
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub-header {
+  align-items: flex-end;
+  padding: 0 0 .85rem;
+  margin: 0 0 .9rem;
+  border-bottom: 1px solid var(--case-rule);
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
+  font: 650 1.12rem/1.24 var(--app-font-sans), sans-serif;
+  letter-spacing: -.015em;
+  color: var(--case-ink);
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub {
+  border-color: var(--case-rule);
+  box-shadow: none;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-search {
+  margin-block: .65rem .65rem;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control {
+  border: 1px solid var(--case-rule);
+  border-radius: 6px;
+  background: var(--case-paper);
+  box-shadow: inset 0 1px 2px hsl(var(--foreground) / .045);
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control:focus-within {
+  border-color: hsl(var(--primary) / .7);
+  outline: 2px solid hsl(var(--ring) / .45);
+  outline-offset: 1px;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading {
+  min-height: 42px;
+  padding-block: .45rem;
+  font-size: .94rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--case-ink);
+}
+.vigil-case-library-page .vigil-dashboard-metadata-facets {
+  border-top: 1px solid var(--case-rule-faint);
+}
+.vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-classification-facet,
+.vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-index-facet {
+  border-bottom: 1px solid var(--case-rule-faint);
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-option,
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-count,
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-state {
+  font-size: .9rem;
+  line-height: 1.4;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-match-count {
+  font-size: .94rem;
+  font-weight: 650;
+  color: var(--case-ink);
+}
+.vigil-case-library-page .vigil-dashboard-clear-all {
+  font-size: .84rem;
+}
+.vigil-case-library-page .vigil-dashboard-selection-chip {
+  border-radius: 5px;
+  font-size: .83rem;
+  background: var(--case-tint);
+}
+.vigil-case-library-page .vigil-dashboard-selection-chip:focus-visible,
+.vigil-case-library-page .vigil-dashboard-clear-all:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+/* The register is the primary reading surface, not another floating widget. */
+.vigil-case-library-page .vigil-dashboard-case-column {
+  border: 1px solid var(--case-rule);
+  border-radius: 3px;
+  background: var(--case-paper);
+  box-shadow: none;
+  overflow: hidden;
+}
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-column {
+  background: var(--case-paper);
+  box-shadow: none;
+}
+.vigil-case-library-page .vigil-dashboard-register-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: .75rem;
+  padding: clamp(.95rem, 1.45vw, 1.35rem) clamp(1rem, 1.7vw, 1.5rem);
+  border-bottom: 1px solid var(--case-rule);
+}
+.vigil-case-library-page .vigil-dashboard-register-heading .vigil-dashboard-eyebrow {
+  margin-bottom: .28rem;
+}
+.vigil-case-library-page .vigil-dashboard-register-heading h2 {
+  margin: 0;
+  color: var(--case-ink);
+  font: 650 clamp(1.24rem, 1.55vw, 1.5rem)/1.25 var(--app-font-sans), sans-serif;
+  letter-spacing: -.025em;
+}
+.vigil-case-library-page .vigil-dashboard-register-heading p:last-child {
+  margin: .34rem 0 0;
+  color: var(--case-muted);
+  font: 400 .9rem/1.5 var(--app-font-sans), sans-serif;
+}
+.vigil-case-library-page .vigil-case-table-head {
+  min-height: 46px;
+  background: hsl(var(--secondary) / .19) !important;
+  border-top: 0;
+  border-bottom: 1px solid var(--case-rule);
+}
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-case-table-head {
+  background: hsl(var(--secondary) / .19) !important;
+}
+.vigil-case-library-page .vigil-case-sort-heading {
+  color: var(--case-muted);
+  font: 650 .78rem/1.45 var(--app-font-mono), monospace;
+  letter-spacing: .04em;
+}
+.vigil-case-library-page .vigil-case-sort-heading.is-active {
+  color: var(--case-ink);
+}
+.vigil-case-library-page .vigil-case-table-row {
+  border-bottom: 1px solid var(--case-rule-faint);
+  background: transparent;
+}
+.vigil-case-library-page .vigil-case-table-row:last-child { border-bottom: 0; }
+.vigil-case-library-page .vigil-case-table-row-link {
+  min-height: 108px;
+  padding-block: 1.03rem;
+  background: transparent;
+  transition: background-color .17s ease, box-shadow .17s ease;
+}
+.vigil-case-library-page .vigil-case-table-row-link:hover,
+.vigil-case-library-page .vigil-case-table-row-link:focus-visible {
+  background: hsl(var(--primary) / .055);
+  box-shadow: inset 3px 0 0 hsl(var(--primary) / .67);
+}
+.vigil-case-library-page .vigil-case-table-row-link:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+.vigil-case-library-page .vigil-case-table-copy h2 {
+  color: var(--case-ink);
+  font: 690 1.1rem/1.38 var(--app-font-sans), sans-serif;
+  letter-spacing: -.012em;
+  text-wrap: pretty;
+}
+.vigil-case-library-page .vigil-case-table-copy p {
+  color: hsl(var(--foreground) / .78);
+  font: 400 .95rem/1.55 var(--app-font-sans), sans-serif;
+  margin-top: .36rem;
+  -webkit-line-clamp: 2;
+}
+.vigil-case-library-page .vigil-case-table-id {
+  color: var(--case-gold);
+  font: 650 .84rem/1.5 var(--app-font-mono), monospace;
+  letter-spacing: .012em;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-text {
+  font-size: .91rem;
+  line-height: 1.45;
+  color: var(--case-ink);
+}
+.vigil-case-library-page .vigil-case-table-open { color: var(--case-muted); }
+.vigil-case-library-page .vigil-pagination {
+  border-top: 1px solid var(--case-rule);
+  background: transparent;
+}
+
+/* Corpus signals are instruments, not a stack of unrelated cards. */
+.vigil-case-library-page .vigil-dashboard-sidebar {
+  gap: 0;
+  min-width: 0;
+}
+.vigil-case-library-page .vigil-dashboard-signals-heading {
+  padding: .35rem .35rem 1rem;
+  border-bottom: 1px solid var(--case-rule);
+}
+.vigil-case-library-page .vigil-dashboard-signals-heading h2 {
+  margin: 0;
+  color: var(--case-ink);
+  font: 650 1.21rem/1.3 var(--app-font-sans), sans-serif;
+  letter-spacing: -.02em;
+}
+.vigil-case-library-page .vigil-dashboard-signals-heading p:last-child {
+  margin: .35rem 0 0;
+  color: var(--case-muted);
+  font: 400 .88rem/1.48 var(--app-font-sans), sans-serif;
+}
+.vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel {
+  min-width: 0;
+  padding: 1.05rem .35rem 1.25rem;
+  border: 0;
+  border-bottom: 1px solid var(--case-rule);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel::before {
+  display: none;
+}
+.vigil-case-library-page .vigil-dashboard-panel-heading h2 {
+  font: 650 1.04rem/1.4 var(--app-font-sans), sans-serif;
+  letter-spacing: -.012em;
+  color: var(--case-ink);
+}
+.vigil-case-library-page .vigil-dashboard-panel-heading h2 svg {
+  width: 18px;
+  height: 18px;
+  color: var(--case-gold);
+}
+.vigil-case-library-page .vigil-dashboard-panel-info { top: .95rem; right: .3rem; }
+.vigil-case-library-page .vigil-dashboard-panel-info > summary { box-shadow: none; }
+.vigil-case-library-page .vigil-dashboard-severity-view-switch {
+  border-radius: 6px;
+  box-shadow: none;
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-choice,
+.vigil-case-library-page .vigil-dashboard-failure-list button {
+  border-radius: 5px;
+}
+.vigil-case-library-page .vigil-dashboard-failure-list {
+  gap: .36rem;
+}
+.vigil-case-library-page .vigil-dashboard-failure-list button {
+  box-shadow: none;
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-label {
+  font-size: .95rem;
+}
+.vigil-case-library-page .vigil-dashboard-harm-type-count {
+  font-size: .95rem;
+}
+.vigil-case-library-page .vigil-dashboard-ad {
+  padding-top: .8rem;
+}
+
+/* Give the case register the available reading width on large screens. */
+@media (min-width: 1320px) {
+  .vigil-case-library-page .vigil-dashboard-workspace {
+    grid-template-columns: clamp(205px, 15.6vw, 235px) minmax(0, 1fr);
+    column-gap: clamp(1.1rem, 1.8vw, 1.7rem);
+  }
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-filter-hub {
+    padding: .25rem .25rem 1rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(285px, 305px);
+    gap: clamp(1.15rem, 1.75vw, 1.65rem);
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-head,
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-row-link {
+    grid-template-columns: minmax(0, 1fr) 116px 73px 16px;
+    gap: .67rem;
+    padding-inline: clamp(.95rem, 1.2vw, 1.3rem);
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-primary {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: .68rem;
+  }
+}
+/* Below the three-column threshold, filters remain before the records. */
+@media (max-width: 1319px) {
+  .vigil-case-library-page .vigil-dashboard-workspace {
+    margin-top: 1.1rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub {
+    background: var(--case-paper);
+  }
+  html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-filter-hub {
+    background: var(--case-paper);
+    box-shadow: none;
+  }
+  .vigil-case-library-page .vigil-dashboard-layout {
+    margin-top: 1rem;
+  }
+}
+@media (max-width: 1140px) {
+  .vigil-case-library-page .vigil-dashboard-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .1rem 1.5rem;
+    align-items: start;
+  }
+  .vigil-case-library-page .vigil-dashboard-signals-heading {
+    grid-column: 1 / -1;
+    padding-top: 1rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel {
+    width: 100%;
+    min-width: 0;
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .vigil-case-library-page .vigil-dashboard-ad {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 720px) {
+  .vigil-case-library-page .vigil-dashboard-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .vigil-case-library-page .vigil-dashboard-signals-heading {
+    width: 100%;
+    margin-top: .4rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel {
+    padding-inline: .1rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-register-heading {
+    padding: 1rem .85rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-register-heading p:last-child {
+    font-size: .85rem;
+  }
+  .vigil-case-library-page .vigil-case-table-row-link {
+    padding-block: .95rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
+    font-size: 1.12rem;
+  }
+}
+@media (max-width: 430px) {
+  .vigil-case-library-page .vigil-dashboard-register-heading h2 { font-size: 1.22rem; }
+  .vigil-case-library-page .vigil-case-table-copy h2 { font-size: 1.03rem; }
+  .vigil-case-library-page .vigil-case-table-copy p { font-size: .93rem; }
+  .vigil-case-library-page .vigil-dashboard-eyebrow { font-size: .7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vigil-case-library-page .vigil-case-table-row-link { transition: none; }
+}
+@media print {
+  .vigil-case-library-page .vigil-dashboard-signals-heading { display: none; }
+  .vigil-case-library-page .vigil-dashboard-case-column { border: 0; }
+}
