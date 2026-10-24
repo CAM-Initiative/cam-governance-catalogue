@@ -760,6 +760,11 @@ test("Bar and donut share the exact same distribution and filter handler with ba
   assert.match(dashboard, /<SeverityBars records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
   assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
   assert.match(dashboard, /SU is unassessed, not another severity band or evidence of minimal harm/);
+  const chartStart = dashboard.indexOf('className="vigil-dashboard-severity-chart-area"');
+  const toggleStart = dashboard.indexOf('className="vigil-dashboard-severity-view-switch"');
+  const harmTypesStart = dashboard.indexOf('className="vigil-dashboard-harm-types-panel"');
+  assert.ok(chartStart > 0 && chartStart < toggleStart && toggleStart < harmTypesStart,
+    "Bars/Donut switch follows the chart but precedes the next panel");
 });
 
 test("Severity bar labels display only legible codes; full category meanings move into info disclosure", async () => {
@@ -774,7 +779,7 @@ test("Severity bar labels display only legible codes; full category meanings mov
   assert.match(dashboard, /<dl className="vigil-dashboard-severity-legend">/);
   assert.match(dashboard, /SEVERITIES\.map\(entry => <div key=\{entry\.code\}>/);
   assert.match(dashboard, /<dd>\{entry\.label\}<\/dd>/);
-  assert.match(css, /\.vigil-dashboard-bar-code \{[\s\S]*?\.93rem/);
+  assert.match(css, /\.vigil-dashboard-bar-code \{[\s\S]*?\.84rem/);
   assert.match(css, /\.vigil-dashboard-severity-panel \.vigil-dashboard-severity-legend/);
 });
 
@@ -819,6 +824,21 @@ test("Real sparse harm sidecar remains tiny and joins current canonical index en
   assert.equal(projection.assessed_record_count, 137);
   assert.ok(projection.entries.every(x => /^VIGIL-INC-\d{6}$/.test(x.id) && x.d.every(row => row.length === 2 && /^S[1-5]$/.test(row[1]))));
   assert.ok((await source("docs/data/vigil-harm-dimensions.json")).length < 60_000);
+});
+
+test("Severity and Case Files use a restrained common type scale, and harm count wording discloses methodology coverage", async () => {
+  const [dashboard, chartStyles, caseStyles] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  assert.match(chartStyles, /\.vigil-dashboard-bar-code \{[\s\S]*?font: 700 \.84rem\/1\.25/);
+  assert.match(chartStyles, /\.vigil-dashboard-bar-value \{[\s\S]*?font: 700 \.82rem\/1\.2/);
+  assert.match(chartStyles, /\.vigil-dashboard-severity-view-switch \{[\s\S]*?margin: \.65rem auto 0;/);
+  assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy h2 \{[\s\S]*?font-size: \.94rem/);
+  assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy p \{[\s\S]*?font-size: \.84rem/);
+  assert.match(chartStyles, /\.vigil-dashboard-harm-type-label \{[\s\S]*?font-size: \.82rem/);
+  assert.match(dashboard, /\x60Show all \$\{harmTypes\.length\} with S2–S5 findings \(\$\{harmDimensions\.length\} defined\)\x60/);
 });
 
 test("Harm Types cross-filter every existing instrument but preserves its own ranking order", async () => {
