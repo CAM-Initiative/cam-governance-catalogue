@@ -30,6 +30,7 @@ type DatasetState = {
 
 const datasetRail = [
   { href: "#case-files", label: "Case Files" },
+  { href: "#release", label: "VIGIL research archive" },
   { href: "#harm-impact", label: "Harm Impact Matrix" },
   { href: "#taxonomy", label: "Alignment Taxonomy" },
   { href: "#standards", label: "AI Governance Standards" },
@@ -182,7 +183,7 @@ export default function Datasets() {
         artworkSrc={VIGIL_MASTHEAD_ARTWORK.datasets}
         metadata={[
           { label: "Status", value: "Beta" },
-          { label: "Public resources", value: "5" },
+          { label: "Public resources", value: "6" },
           { label: "Formats", value: "JSON · PDF · Archive", mono: true },
           { label: "Maintainer", value: "CAM Initiative" },
         ]}
@@ -200,6 +201,16 @@ export default function Datasets() {
             status={caseFilesStatus}
             downloadHref={VIGIL_INCIDENT_REGISTRY_URL}
             downloadLabel="Open JSON index"
+          />
+
+          <DatasetSection
+            id="release"
+            eyebrow="VIGIL Observatory"
+            title="Research Archive"
+            description="Versioned research release of 200 admitted canonical Incident records and the published Alignment Taxonomy v0.8.1 (80 Fidelity Classes in 17 families), with provenance, assessment methodology and validation materials. The archive is available for inspection and citation; substantive reuse is subject to the VIGIL Observatory Proprietary Licence."
+            status="Version 1.0.0 · GitHub release"
+            downloadHref="https://github.com/CAM-Initiative/Vigil/releases/tag/v1.0.0"
+            downloadLabel="Open v1.0.0 release"
           />
 
           <DatasetSection
