@@ -118,6 +118,11 @@ function pageHtml({ route, title, description, body = "", canonicalRoute = route
     .replace(/<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${escapeHtml(title)}" />`)
     .replace(/<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${escapeHtml(description)}" />`);
 
+  // Detail URLs remain shareable references; overview pages and Case Files
+  // are the intended search landing pages.
+  if (/^\/observatory\/(?:alignment-taxonomy|ai-governance-standards)\/[^/]+\/?$/.test(route)) {
+    html = html.replace("</head>", '    <meta name="robots" content="noindex, follow" />\n  </head>');
+  }
   if (structuredData) {
     const encoded = JSON.stringify(structuredData).replaceAll("<", "\\u003c");
     html = html.replace("</head>", `    <script type="application/ld+json">${encoded}</script>\n  </head>`);
@@ -763,7 +768,6 @@ if (latestCaseLastmod) sitemapLastmodByRoute.set("/observatory/cases", latestCas
 const sitemapRoutes = [...new Set([
   "/",
   ...staticRoutes.map(([route]) => route),
-  ...taxonomyRoutes,
   ...incidentRecords.map((record) => `/observatory/cases/${encodeURIComponent(record.id)}`),
 ])];
 
