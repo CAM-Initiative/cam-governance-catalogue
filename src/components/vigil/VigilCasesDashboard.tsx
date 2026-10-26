@@ -1,9 +1,12 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { Layers3, RotateCcw, ShieldAlert } from "lucide-react";
+import { Globe2, HeartPulse, Layers3, ShieldAlert } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
+import { harmTypeCounts } from "@/lib/vigilHarmDimensions.mjs";
+import { harmDimensions } from "@/lib/vigilHarmReference";
 import { donutSegmentAppearance } from "@/lib/vigilDonutSelection.mjs";
+import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "@/lib/vigilDonutCallouts.mjs";
 import { countryFromJurisdictionString } from "@/lib/vigilCountryMatching.mjs";
 import { AdSenseRail } from "@/components/advertising/AdSenseRail";
 import "./VigilCasesDashboard.css";
@@ -17,22 +20,27 @@ type Props = {
   mapRecords: VigilIndexRecord[];
   /** The donut follows all filters except the severity it can select. */
   distributionRecords: VigilIndexRecord[];
-  /** Class rankings match the fully filtered case list. */
-  filteredRecords: VigilIndexRecord[];
+  /** Failure rankings respect all filters except their own selected class. */
+  taxonomyRecords: VigilIndexRecord[];
+  harmRecords: VigilIndexRecord[];
+  harmById: Map<string, { pathway: string | null; dimensions: [string, string][] }>;
+  harmAvailable: boolean;
+  harmNote: string;
+  harmType: string;
+  onHarmType: (id: string) => void;
   severity: string;
-  jurisdiction: string;
+  jurisdictions: string[];
   failureClass: string;
   onSeverity: (code: string) => void;
   onJurisdiction: (id: string) => void;
   onFailureClass: (id: string) => void;
-  onClearFilters: () => void;
-  countryByCase: Map<string, string>;
+  countryByCase: Map<string, string[]>;
   geographyAvailable: boolean;
   geographyNote: string;
 };
 
-// Display pins indicate broad primary jurisdictions, NOT where an incident happened.
-// No location is inferred from a vendor's headquarters or a place named in prose.
+// Display pins indicate explicitly reviewed jurisdiction associations, NOT where an
+// incident happened. Countries are never inferred from an organization or prose.
 const COUNTRIES: Country[] = [
   { id: "AU", name: "Australia", lat: -25, lon: 134 },
   { id: "US", name: "United States", lat: 39, lon: -98 },
@@ -84,6 +92,18 @@ const COUNTRIES: Country[] = [
   { id: "EE", name: "Estonia", lat: 59, lon: 25 },
   { id: "PK", name: "Pakistan", lat: 30, lon: 69 },
   { id: "HK", name: "Hong Kong", lat: 22, lon: 114 },
+  { id: "IR", name: "Iran", lat: 32, lon: 53 },
+  { id: "BG", name: "Bulgaria", lat: 43, lon: 25 },
+  { id: "BW", name: "Botswana", lat: -22, lon: 24 },
+  { id: "CO", name: "Colombia", lat: 4, lon: -74 },
+  { id: "EC", name: "Ecuador", lat: -1, lon: -78 },
+  { id: "KH", name: "Cambodia", lat: 13, lon: 105 },
+  { id: "KZ", name: "Kazakhstan", lat: 48, lon: 68 },
+  { id: "LK", name: "Sri Lanka", lat: 7, lon: 81 },
+  { id: "LT", name: "Lithuania", lat: 55, lon: 24 },
+  { id: "NA", name: "Namibia", lat: -22, lon: 17 },
+  { id: "PR", name: "Puerto Rico", lat: 18, lon: -66 },
+  { id: "ZW", name: "Zimbabwe", lat: -19, lon: 30 },
   { id: "TH", name: "Thailand", lat: 16, lon: 101 },
 ];
 const ALIASES: Record<string, string[]> = {
@@ -96,6 +116,7 @@ const ALIASES: Record<string, string[]> = {
   CZ: ["czech republic", "czechia"],
 };
 const byId = new Map(COUNTRIES.map(country => [country.id, country]));
+export function countryDisplayName(code: string) { return byId.get(code)?.name ?? code; }
 export function countryFromJurisdiction(value: string) {
   return countryFromJurisdictionString(value, COUNTRIES, ALIASES);
 }
@@ -143,11 +164,11 @@ function graticule(rotation: number, lon?: number, lat?: number) {
   }
   return drawing;
 }
-function Globe({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string; onSelect: (id: string) => void; onClearFilters: () => void }) {
+function Globe({ locations, selected, onSelect }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void }) {
   const [rotation, setRotation] = useState(15);
   const pointer = useRef<{ x: number; rotation: number; moved: boolean } | null>(null);
   useEffect(() => {
-    const target = byId.get(selected);
+    const target = byId.get(selected[selected.length - 1]);
     if (target) setRotation(target.lon);
   }, [selected]);
   const onMove = (event: PointerEvent<SVGSVGElement>) => {
@@ -179,25 +200,24 @@ function Globe({ locations, selected, onSelect, onClearFilters }: { locations: L
           {LAND.map((shape,i)=><path key={i} d={coastline(shape, rotation)} fill="#0c6575" stroke="#5dd1d0" strokeWidth="1" strokeOpacity=".56" fillOpacity=".83" />)}
         </g>
         {pinLocations.map(loc => (
-          <g key={loc.id} className={selected===loc.id?"vigil-globe-pin is-selected":"vigil-globe-pin"} onClick={() => { if (!pointer.current?.moved) onSelect(selected === loc.id ? "" : loc.id); }}>
+          <g key={loc.id} className={selected.includes(loc.id)?"vigil-globe-pin is-selected":"vigil-globe-pin"} onClick={() => { if (!pointer.current?.moved) onSelect(loc.id); }}>
             <title>{loc.name}: {loc.count} case{loc.count===1?"":"s"}</title>
             <circle cx={loc.point.x} cy={loc.point.y} r="14" fill="#58e6f5" opacity=".35" filter="url(#vigil-pin-glow)"/>
-            <circle cx={loc.point.x} cy={loc.point.y} r={selected===loc.id?7:5} fill={selected===loc.id?"#ffcf79":"#6cf5eb"} stroke="#fff8d7" strokeWidth="1.4"/>
+            <circle cx={loc.point.x} cy={loc.point.y} r={selected.includes(loc.id)?7:5} fill={selected.includes(loc.id)?"#ffcf79":"#6cf5eb"} stroke="#fff8d7" strokeWidth="1.4"/>
             <circle cx={loc.point.x} cy={loc.point.y} r="12" fill="transparent" />
           </g>
         ))}
         <ellipse cx="174" cy="174" rx="169" ry="164" fill="none" stroke="#39cde2" strokeOpacity=".16" strokeDasharray="4 9" />
       </svg>
-      
-      <button type="button" className="vigil-dashboard-reset-rotation" onClick={() => { setRotation(15); onClearFilters(); }} aria-label="Reset globe view and clear filters" title="Reset globe and clear filters"><RotateCcw size={15} /></button>
+
     </div>
   );
 }
-function GlobeView({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string; onSelect: (id: string) => void; onClearFilters: () => void }) {
+function GlobeView({ locations, selected, onSelect }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void }) {
   const [unavailable, setUnavailable] = useState(false);
-  if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />;
-  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />}>
-    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} onUnavailable={() => setUnavailable(true)} />
+  if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} />;
+  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} />}>
+    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onUnavailable={() => setUnavailable(true)} />
   </Suspense>;
 }
 
@@ -209,54 +229,25 @@ const SEVERITIES = [
   { code: "S5", label: "Critical", color: "#e75c6e" },
   { code: "SU", label: "Unassessed", color: "#8b9cad" },
 ];
-type SeverityLabel = {
-  code: string; label: string; color: string; count: number;
-  midAngle: number; side: "left" | "right"; idealY: number; y: number;
-};
-// Place leader labels on either side of the actual coloured slice; make room
-// for even the small slices without allowing label text to collide.
-function severityCallouts(entries: Array<{ code: string; count: number }>, total: number): SeverityLabel[] {
-  let elapsed = 0;
-  const labels = entries.filter(item => item.count > 0).map(item => {
-    const midpoint = elapsed + item.count / 2;
-    elapsed += item.count;
-    const midAngle = -Math.PI / 2 + (midpoint / total) * 2 * Math.PI;
-    const definition = SEVERITIES.find(value => value.code === item.code);
-    return {
-      code: item.code, label: definition?.label ?? item.code, color: definition?.color ?? "#8b9cad",
-      count: item.count, midAngle, side: (Math.cos(midAngle) < 0 ? "left" : "right") as "left" | "right",
-      idealY: 128 + Math.sin(midAngle) * 94, y: 0,
-    };
-  });
-  for (const side of ["left", "right"] as const) {
-    const group = labels.filter(item => item.side === side).sort((a,b) => a.idealY - b.idealY);
-    if (!group.length) continue;
-    const gap = 33, lower = 27, upper = 231;
-    group.forEach((item, i) => { item.y = Math.max(item.idealY, i ? group[i-1].y + gap : lower); });
-    if (group[group.length-1].y > upper) {
-      const excess = group[group.length-1].y - upper;
-      group.forEach(item => { item.y -= excess; });
-    }
-    if (group[0].y < lower) {
-      const offset = lower - group[0].y;
-      group.forEach(item => { item.y += offset; });
-    }
-  }
-  return labels;
-}
+// Editorial leader lines return to the donut, with deterministic spacing so
+// even adjacent tiny severity slices never overlap labels in a narrow rail.
 function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRecord[]; selected: string; onSelect: (code: string) => void }) {
   const distribution = severityDistribution(records);
   const total = distribution.reduce((sum, item) => sum + item.count, 0);
-  const labels = total ? severityCallouts(distribution, total) : [];
+  const labels = layoutSeverityCallouts(distribution.map(item => ({
+    ...item, label: SEVERITIES.find(definition => definition.code === item.code)?.label ?? item.code,
+    color: SEVERITIES.find(definition => definition.code === item.code)?.color ?? "#8b9cad",
+  })), total);
   const selectedCount = distribution.find(item => item.code === selected)?.count;
+  const { centerX: cx, centerY: cy, labelLeftX, labelRightX } = CALLOUT_GEOMETRY;
   let elapsed = 0;
   const activate = (code: string) => onSelect(selected === code ? "" : code);
   return <div className="vigil-dashboard-outcomes">
     <div className="vigil-dashboard-donut">
-      <svg viewBox="0 0 360 258" role="group" aria-label={`Harm severity for ${total} case files. Select a ring segment or its connected label to filter.`}>
+      <svg viewBox="0 0 440 306" role="group" aria-label={`Harm severity for ${total} Case Files. Select a donut segment or its connected label to filter.`}>
         <defs>
           <filter id="vigil-donut-dimensional-shadow" x="-35%" y="-35%" width="170%" height="170%">
-            <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#001927" floodOpacity=".35"/>
+            <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#001927" floodOpacity=".29"/>
           </filter>
           <radialGradient id="vigil-donut-face" cx="38%" cy="27%" r="85%">
             <stop offset="0%" stopColor="#ffffff" stopOpacity=".07"/>
@@ -270,8 +261,8 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           </linearGradient>)}
         </defs>
         <g filter="url(#vigil-donut-dimensional-shadow)">
-          <circle cx="180" cy="128" r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="28"/>
-          <circle cx="180" cy="128" r="57" fill="url(#vigil-donut-face)"/>
+          <circle cx={cx} cy={cy} r="75" fill="none" className="vigil-dashboard-donut-track" strokeWidth="29"/>
+          <circle cx={cx} cy={cy} r="62" fill="url(#vigil-donut-face)"/>
         </g>
         {distribution.map(item => {
           const start = elapsed; elapsed += item.count;
@@ -279,42 +270,87 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           const appearance = donutSegmentAppearance(start, item.count, total, isSelected, Boolean(selected));
           const circumference = 2 * Math.PI * appearance.radius;
           return total && item.count ? <g key={item.code} className="vigil-dashboard-donut-slice" transform={isSelected ? `translate(${appearance.offsetX} ${appearance.offsetY})` : undefined}>
-            <circle cx="180" cy="128" r={appearance.radius} fill="none" stroke={`url(#vigil-donut-shade-${item.code})`}
+            <circle cx={cx} cy={cy} r={appearance.radius} fill="none" stroke={`url(#vigil-donut-shade-${item.code})`}
               strokeWidth={appearance.strokeWidth} opacity={appearance.opacity}
               strokeDasharray={`${(item.count / total) * circumference} ${circumference}`}
-              strokeDashoffset={-(start / total) * circumference} transform="rotate(-90 180 128)"
+              strokeDashoffset={-(start / total) * circumference} transform={`rotate(-90 ${cx} ${cy})`}
               onClick={() => activate(item.code)} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(item.code); } }}
-              tabIndex={0} role="button" aria-label={`${item.code}: ${item.count} case files; ${isSelected ? "clear filter" : "filter"}`}
-              aria-pressed={isSelected} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} case files</title>
+              tabIndex={0} role="button" aria-label={`${item.code}: ${item.count} Case Files; ${isSelected ? "clear filter" : "filter"}`}
+              aria-pressed={isSelected} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} Case Files</title>
             </circle>
           </g> : null;
         })}
-        <circle cx="180" cy="128" r="57.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
-        <circle cx="180" cy="128" r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
-        <text x="180" y="124" textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
-        <text x="180" y="143" textAnchor="middle" className="vigil-dashboard-donut-caption">{selected ? `${selected} SELECTED` : "CASE FILES"}</text>
+        <circle cx={cx} cy={cy} r="62.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
+        <circle cx={cx} cy={cy} r="87.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
+        <text x={cx} y={cy+7} textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
+
         {labels.map(item => {
+          const active = selected === item.code;
+          const dim = selected && !active;
           const dx = Math.cos(item.midAngle), dy = Math.sin(item.midAngle);
-          const x0 = 180 + dx * (selected === item.code ? 105 : 84), y0 = 128 + dy * (selected === item.code ? 105 : 84);
-          const x1 = item.side === "left" ? 99 : 261;
-          const x2 = item.side === "left" ? 85 : 275;
-          const xText = item.side === "left" ? 78 : 282;
-          const anchor = item.side === "left" ? "end" : "start";
-          return <g key={item.code} className={`vigil-dashboard-severity-callout${selected === item.code ? " is-selected" : selected ? " is-muted" : ""}`} role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} case files`} aria-pressed={selected===item.code} onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}}>
-            <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${x1},${item.y.toFixed(1)} L${x2},${item.y.toFixed(1)}`} stroke={item.color} strokeWidth={selected===item.code?2.4:1.6} fill="none" strokeLinejoin="round"/>
-            <circle cx={x0} cy={y0} r="2.7" fill={item.color}/>
-            <text x={xText} y={item.y-3} textAnchor={anchor} className="vigil-dashboard-severity-label" fill={item.color}>{item.code} ({item.count})</text>
-            <text x={xText} y={item.y+11} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
+          const x0 = cx + dx * (active ? 106 : 91);
+          const y0 = cy + dy * (active ? 106 : 91);
+          const left = item.side === "left";
+          const joinX = left ? 112 : 328;
+          const endX = left ? 106 : 334;
+          const textX = left ? labelLeftX : labelRightX;
+          const anchor = left ? "end" : "start";
+          return <g key={item.code} className={`vigil-dashboard-severity-callout${active ? " is-selected" : dim ? " is-muted" : ""}`}
+              role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} Case Files`}
+              aria-pressed={active} onClick={() => activate(item.code)}
+              onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(item.code); } }}>
+            <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${joinX},${item.y.toFixed(1)} L${endX},${item.y.toFixed(1)}`}
+              stroke={active ? item.color : "var(--vd-chart-line, #a6a3a2)"}
+              strokeWidth={active ? 2.6 : 1.6} fill="none" strokeLinejoin="round" pointerEvents="none"/>
+            <circle cx={x0} cy={y0} r="2.6" fill={active ? item.color : "var(--vd-chart-line, #a6a3a2)"} pointerEvents="none"/>
+            <text x={textX} y={item.y-7} textAnchor={anchor} className="vigil-dashboard-severity-label">{item.code} ({item.count})</text>
+            <text x={textX} y={item.y+15} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
+            <rect x={left ? 0 : 328} y={item.y-29} width="112" height="48" fill="transparent" pointerEvents="all"/>
           </g>;
         })}
       </svg>
     </div>
-    <p className="vigil-dashboard-chart-instruction">{selected ? `${selected} filter active. Select that segment again to clear it.` : "Select a coloured segment or label to filter cases."}</p>
   </div>;
 }
 
-export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdiction,failureClass,onSeverity,onJurisdiction,onFailureClass,onClearFilters,countryByCase,geographyAvailable,geographyNote}: Props) {
+/* Experimental alternative: a simple categorical bar chart shares the exact
+   incident distribution and selected-severity callback with the donut.
+   SU remains a distinct *unassessed* category, never another harm rating. */
+function SeverityBars({ records, selected, onSelect }: { records: VigilIndexRecord[]; selected: string; onSelect: (code: string) => void }) {
+  const distribution = severityDistribution(records);
+  const total = distribution.reduce((sum, item) => sum + item.count, 0);
+  const maxCount = Math.max(1, ...distribution.map(item => item.count));
+  return <div className="vigil-dashboard-outcomes">
+    <div className="vigil-dashboard-severity-bars" role="group" aria-label={`Harm severity for ${total} Case Files, six bar categories; SU is unassessed. Select a bar to filter.`}>
+      {SEVERITIES.map(entry => {
+        const count = distribution.find(item => item.code === entry.code)?.count ?? 0;
+        const isSelected = selected === entry.code;
+        return <button
+          type="button"
+          key={entry.code}
+          className={`vigil-dashboard-bar-choice${entry.code === "SU" ? " is-unassessed" : ""}${isSelected ? " is-selected" : selected ? " is-muted" : ""}`}
+          onClick={() => onSelect(isSelected ? "" : entry.code)}
+          aria-pressed={isSelected}
+          aria-label={`${entry.code} ${entry.label}: ${count} Case Files; ${isSelected ? "clear filter" : "filter"}`}
+          title={`${entry.code} — ${entry.label}: ${count} Case Files`}
+          disabled={count === 0 && !isSelected}>
+          <span className="vigil-dashboard-bar-plot" aria-hidden="true">
+            <span className="vigil-dashboard-bar-fill"
+              style={{ height: `${(count / maxCount) * 82}%`, backgroundColor: entry.color }}>
+              <span className="vigil-dashboard-bar-value">{count}</span>
+            </span>
+          </span>
+          <span className="vigil-dashboard-bar-code">{entry.code}</span>
+        </button>;
+      })}
+    </div>
+  </div>;
+}
+
+export default function VigilCasesDashboard({mapRecords,distributionRecords,taxonomyRecords,harmRecords,harmById,harmAvailable,harmNote,harmType,onHarmType,severity,jurisdictions,failureClass,onSeverity,onJurisdiction,onFailureClass,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
+  const [severityChart, setSeverityChart] = useState<"bars" | "donut">("bars");
+  const [showAllHarmTypes, setShowAllHarmTypes] = useState(false);
   useEffect(() => {
     let active = true;
     loadFailureTaxonomy().then(result => {
@@ -331,44 +367,114 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
     const counts = new Map<string,number>();
     let unmapped = 0;
     for (const record of mapRecords) {
-      const countryId = jurisdictionById.get(record.id);
-      if (!countryId) { unmapped++; continue; }
-      counts.set(countryId,(counts.get(countryId)??0)+1);
+      // Multi-country associations count once for each reviewed country, while
+      // each country still counts an Incident only once.
+      const countryIds = (jurisdictionById.get(record.id) ?? []).filter(id => byId.has(id));
+      if (!countryIds.length) { unmapped++; continue; }
+      for (const id of new Set(countryIds)) counts.set(id, (counts.get(id) ?? 0) + 1);
     }
     const regions = [...counts].flatMap(([id,count]) => { const c=byId.get(id);return c?[{...c,count}]:[]; }).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
     return {regions,unmapped,mapped:mapRecords.length-unmapped};
   }, [mapRecords,jurisdictionById]);
-  const failures = useMemo(()=>topFailureClasses(filteredRecords),[filteredRecords]);
+  const failures = useMemo(()=>topFailureClasses(taxonomyRecords),[taxonomyRecords]);
+  const harmTypes = useMemo(() => harmTypeCounts(harmRecords, harmById, harmDimensions), [harmRecords, harmById]);
+  const visibleHarmTypes = showAllHarmTypes ? harmTypes : harmTypes.slice(0, 6);
+  const topHarmCount = harmTypes[0]?.count ?? 1;
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
-        <h2 id="vigil-dashboard-geography" className="sr-only">Jurisdiction coverage — interactive globe</h2>
-        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdiction} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-geography"><Globe2 size={19} aria-hidden="true" /> Geographic Profile</h2></div>
+        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdictions} onSelect={onJurisdiction}/>
         <label className="vigil-dashboard-country-keyboard">
           <span className="sr-only">Choose country using a keyboard-accessible list</span>
-          <select value={jurisdiction} disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)} aria-label="Select jurisdiction using keyboard">
-            <option value="">All recorded jurisdictions</option>
+          <select value="" disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)} aria-label="Add or remove a jurisdiction using keyboard">
+            <option value="">Add a jurisdiction</option>
             {locations.regions.map(item=><option key={item.id} value={item.id}>{item.name} ({item.count})</option>)}
-            {jurisdiction && !locations.regions.some(item=>item.id===jurisdiction)&&<option value={jurisdiction}>{byId.get(jurisdiction)?.name??jurisdiction}</option>}
+            {jurisdictions.filter(id=>!locations.regions.some(item=>item.id===id)).map(id=><option key={id} value={id}>{byId.get(id)?.name??id} (selected)</option>)}
           </select>
         </label>
-        <details className="vigil-dashboard-geo-disclosure">
+        <details className="vigil-dashboard-geo-disclosure vigil-dashboard-panel-info">
           <summary aria-label="Globe data and imagery information" title="Globe data information">i</summary>
-          <div className="vigil-dashboard-geo-disclosure-body">
+          <div className="vigil-dashboard-geo-disclosure-body vigil-dashboard-panel-info-body">
             <p>{geographyNote}</p>
-            <p>Country beacons show relative case counts for recorded jurisdiction associations, not incident coordinates. Earth imagery: NASA Blue Marble.</p>
+            <p>Choose multiple countries on the globe or with the keyboard selector. Case Files match any selected country and are counted once. Country beacons represent reviewed jurisdiction associations, not incident coordinates. Earth imagery: NASA Blue Marble.</p>
             {!geographyAvailable && <p>Geographic data is unavailable for the selected source. Case Files remain searchable.</p>}
           </div>
         </details>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-severity-panel" aria-labelledby="vigil-dashboard-severity">
-        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Risk profile</span><h2 id="vigil-dashboard-severity"><ShieldAlert size={19} /> Harm severity</h2></div></div>
-        <p className="vigil-dashboard-panel-note">Incident-level assessments across the current selection. Select a segment to filter.</p>
-        <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-severity"><ShieldAlert size={19} aria-hidden="true" /> Harm Severity</h2></div>
+        <details className="vigil-dashboard-panel-info">
+          <summary aria-label="Harm severity chart information" title="Harm severity information">i</summary>
+          <div className="vigil-dashboard-panel-info-body">
+            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a bar, donut segment, or connected label to filter. The codes and colours mean:</p>
+            <dl className="vigil-dashboard-severity-legend">
+              {SEVERITIES.map(entry => <div key={entry.code}>
+                <dt><span className="vigil-dashboard-severity-legend-dot" style={{ backgroundColor: entry.color }} aria-hidden="true" />{entry.code}</dt>
+                <dd>{entry.label}</dd>
+              </div>)}
+            </dl>
+            <p>SU is unassessed, not another severity band or evidence of minimal harm. Counts represent distinct Case Files.</p>
+          </div>
+        </details>
+        <div className="vigil-dashboard-severity-chart-area">
+          {severityChart === "bars"
+            ? <SeverityBars records={distributionRecords} selected={severity} onSelect={onSeverity}/>
+            : <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>}
+        </div>
+        <div className="vigil-dashboard-severity-view-switch" role="group" aria-label="Severity chart view">
+          <button type="button" aria-pressed={severityChart === "bars"} className={severityChart === "bars" ? "is-selected" : ""}
+            onClick={() => setSeverityChart("bars")}>Bars</button>
+          <button type="button" aria-pressed={severityChart === "donut"} className={severityChart === "donut" ? "is-selected" : ""}
+            onClick={() => setSeverityChart("donut")}>Donut</button>
+        </div>
+      </section>
+      <section className="vigil-dashboard-panel vigil-dashboard-harm-types-panel" aria-labelledby="vigil-dashboard-harm-types">
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-harm-types"><HeartPulse size={19} aria-hidden="true" /> Harm Types</h2></div>
+        <details className="vigil-dashboard-panel-info">
+          <summary aria-label="Harm type count information" title="Harm type information">i</summary>
+          <div className="vigil-dashboard-panel-info-body">
+            <p>Counts represent distinct matching incidents with an explicitly assessed S2–S5 band in each Harm Impact dimension. They are not numbers of victims or severities summed together. An incident may have several evidenced harm types.</p>
+            <p>S1 assessments are retained in the sparse index but excluded from evidenced materialised harm counts. Unreported and insufficient-evidence dimensions are not findings of no harm.</p>
+            <p>Solid bars denote assessed specific consequences; the striped portion represents separately modelled Aggregate Harm. Aggregate exposure is not a confirmed individual injury. Select a type to filter the other charts and Case Files without reordering this ranking.</p>
+            {harmNote && <p>{harmNote}</p>}
+          </div>
+        </details>
+        {!harmAvailable ? <p className="vigil-dashboard-empty">{harmNote}</p> :
+          <div className="vigil-dashboard-harm-types-body">
+            <ol className="vigil-dashboard-harm-types-ranking">
+              {visibleHarmTypes.map(entry => <li key={entry.id}>
+                <button type="button"
+                  className={`vigil-dashboard-harm-type-choice${harmType === entry.id ? " is-selected" : ""}`}
+                  aria-pressed={harmType === entry.id}
+                  aria-label={`Filter ${entry.label}: ${entry.count} distinct Case Files with assessed S2–S5 harm; ${entry.specific} specific, ${entry.modelled} modelled aggregate, ${entry.unspecified} unspecified pathway`}
+                  onClick={() => onHarmType(harmType === entry.id ? "" : entry.id)}>
+                  <span className="vigil-dashboard-harm-type-label">{entry.label}</span>
+                  <strong className="vigil-dashboard-harm-type-count">{entry.count}</strong>
+                  <span className="vigil-dashboard-harm-type-meter" aria-hidden="true">
+                    <span className="vigil-dashboard-harm-type-fill" style={{ width: `${100 * entry.count / topHarmCount}%` }}>
+                      {entry.modelled > 0 && <span className="vigil-dashboard-harm-type-modelled" style={{ width: `${100 * entry.modelled / entry.count}%` }}/>}
+                    </span>
+                  </span>
+                </button>
+              </li>)}
+              {!harmTypes.length && <li className="vigil-dashboard-empty">No assessed S2–S5 harm type recorded in this selection; this is not evidence of no harm.</li>}
+            </ol>
+            {harmTypes.length > 6 && <button type="button" className="vigil-dashboard-harm-types-expand"
+              aria-expanded={showAllHarmTypes} onClick={() => setShowAllHarmTypes(value => !value)}>
+              {showAllHarmTypes ? "Show top six" : "Show all"}
+            </button>}
+            {harmNote && <p className="vigil-dashboard-harm-types-note">{harmNote}</p>}
+          </div>}
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-failures-panel" aria-labelledby="vigil-dashboard-failures">
-        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Taxonomy intelligence</span><h2 id="vigil-dashboard-failures"><Layers3 size={19} /> Most frequent failures</h2></div></div>
-        <p className="vigil-dashboard-panel-note">Number of case files with each explicitly evidenced failure occurrence; successful invariants and unresolved boundaries are excluded.</p>
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-failures"><Layers3 size={19} aria-hidden="true" /> Taxonomy Frequent Failures</h2></div>
+        <details className="vigil-dashboard-panel-info">
+          <summary aria-label="Taxonomy intelligence counts information" title="Taxonomy counts information">i</summary>
+          <div className="vigil-dashboard-panel-info-body">
+            <p>Rankings reflect the current search, severity, jurisdiction and metadata filters, but exclude the failure class you select here. Selecting a class filters the Case Files and other charts without reordering this list. Counts represent distinct Case Files, not mentions or evidence-source citations.</p>
+          </div>
+        </details>
         <ol className="vigil-dashboard-failure-list">
           {failures.map((entry,index)=><li key={entry.id}>
             <button type="button" onClick={()=>onFailureClass(failureClass===entry.id?"":entry.id)} className={failureClass===entry.id?"is-selected":""} aria-pressed={failureClass===entry.id} title="Filter case files by this failure class">
@@ -380,7 +486,6 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
           </li>)}
           {!failures.length && <li className="vigil-dashboard-empty">No evidenced failure-role mappings in this selection.</li>}
         </ol>
-        <p className="vigil-dashboard-source-note">Counts are distinct incidents, not mentions or evidence-source citations.</p>
       </section>
       <div className="vigil-dashboard-ad"><AdSenseRail/></div>
     </aside>

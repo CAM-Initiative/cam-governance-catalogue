@@ -8,9 +8,9 @@ import React from "react";
 const root = new URL("../", import.meta.url);
 const read = path => readFile(new URL(path, root), "utf8");
 const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
-const { aggregateHarmSections, aggregateHarmBandSummary, publicHarmIndicatorLabel, HARM_PATHWAY_STEPS } = await import("../src/lib/vigilHarmPublic.mjs");
+const { aggregateHarmSections, aggregateHarmBandSummary, HARM_PATHWAY_STEPS, HARM_PUBLIC_PATHWAY_COPY, HARM_PUBLIC_SEVERITY_LEVELS } = await import("../src/lib/vigilHarmPublic.mjs");
 
-test("interactive and static methodology preserve every canonical criterion and quantitative indicator", async () => {
+test("interactive and static methodology preserve every canonical severity criterion", async () => {
   const methodology = JSON.parse(await read("src/data/vigil-harm-methodology.json"));
   const published = await read("docs/observatory/harm-impact-assessment/index.html");
   const server = await createServer({ server: { middlewareMode: true }, appType: "custom" });
@@ -31,11 +31,6 @@ test("interactive and static methodology preserve every canonical criterion and 
           assert.ok(published.includes(escape(sections.mechanism)), `${dimension.dimension_id}/${band}: shared mechanism criterion`);
         }
       }
-      for (const indicator of dimension.quantitative_indicators) {
-        const label = escape(publicHarmIndicatorLabel(indicator));
-        assert.ok(rendered.includes(label), `${dimension.dimension_id}: interactive indicator`);
-        assert.ok(published.includes(label), `${dimension.dimension_id}: static indicator`);
-      }
     }
     assert.ok(published.includes(methodology.version));
     assert.doesNotMatch(published, /reviews eleven harm dimensions|VIGIL-HIM 1\.0\.1/);
@@ -51,7 +46,7 @@ test("methodology source trail covers every registered reference and separates m
   assert.deepEqual(references.map(item => item.reference_id), methodology.reference_ids);
   for (const reference of references) assert.ok(published.includes(escape(reference.url)), reference.reference_id);
   assert.match(published, /not a count of injured people/);
-  assert.match(published, /Choose the assessment pathway/);
+  assert.match(published, /Assessment pathways/);
   assert.equal(HARM_PATHWAY_STEPS.length, 5);
   assert.match(published, /not externally validated clinical severity conversions/);
   const server = await createServer({ server: { middlewareMode: true }, appType: "custom" });
@@ -84,6 +79,27 @@ test("public harm methodology excludes maintainer workflow and repeated boilerpl
   );
   assert.equal(aggregates.length, 25);
   assert.equal(methodology.dimensions.length, 12);
+});
+
+test("public Harm Impact separates severity from evidence states and hides workflow quantification notes", async () => {
+  const published = await read("docs/observatory/harm-impact-assessment/index.html");
+  const page = await read("src/pages/vigil-severity-methodology.tsx");
+  const matrix = await read("src/components/vigil/HarmImpactMatrix.tsx");
+  const maintainer = "vigil/docs/maintenance/HARM-IMPACT-METHODOLOGY-MAINTENANCE.md";
+  for (const level of HARM_PUBLIC_SEVERITY_LEVELS) {
+    assert.ok(published.includes(`data-severity="${level.code}"`), `${level.code} static severity chip`);
+  }
+  assert.match(page, /id="severity"/);
+  assert.match(page, /<VigilStatusChip value="SU"/);
+  assert.match(published, /not a sixth severity band/);
+  assert.doesNotMatch(published, /Quantification and recognition guidance|id="quantification"/);
+  assert.doesNotMatch(matrix, /Quantification and recognition guidance|harm-quantification-heading|publicHarmIndicatorLabel/);
+  assert.match(published, /id="method"><h2>Evidence states/);
+  for (const paragraph of Object.values(HARM_PUBLIC_PATHWAY_COPY)) {
+    assert.ok(published.includes(escape(paragraph)), "static pathway copy matches the interactive page");
+  }
+  assert.equal(HARM_PATHWAY_STEPS.length, 5, "the private workflow checklist is preserved");
+  assert.ok(maintainer.includes("HARM-IMPACT-METHODOLOGY"));
 });
 
 test("threshold emphasis preserves wording and highlights quantitative and outcome boundaries", async () => {

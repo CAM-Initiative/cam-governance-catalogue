@@ -1,14 +1,12 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
-import { RotateCcw } from "lucide-react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import * as THREE from "three";
 import { globePosition, globeRotationForLongitude } from "@/lib/vigilGlobeCoordinates.mjs";
 
 type Location = { id: string; name: string; lat: number; lon: number; count: number };
 type GlobeProps = {
   locations: Location[];
-  selected: string;
+  selected: string[];
   onSelect: (country: string) => void;
-  onClearFilters: () => void;
   onUnavailable: () => void;
 };
 
@@ -54,7 +52,7 @@ type SceneState = {
   texture?: THREE.Texture;
 };
 
-export default function EarthGlobe3D({ locations, selected, onSelect, onClearFilters, onUnavailable }: GlobeProps) {
+export default function EarthGlobe3D({ locations, selected, onSelect, onUnavailable }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<SceneState | null>(null);
@@ -68,15 +66,6 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
   callbackRef.current = onSelect;
   selectedRef.current = selected;
   unavailableRef.current = onUnavailable;
-
-  const reset = useCallback(() => {
-    onClearFilters();
-    const state = sceneRef.current;
-    if (!state) return;
-    state.targetSpin = nearestAngle(state.earth.rotation.y, globeRotationForLongitude(START_LONGITUDE));
-    state.targetTilt = 0.19;
-    state.lastInteraction = Date.now();
-  }, [onClearFilters]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -169,7 +158,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
         state.earth.rotation.y += (state.targetSpin - state.earth.rotation.y) * smoothness;
         state.tilt.rotation.x += (state.targetTilt - state.tilt.rotation.x) * smoothness;
         // Gentle ambient motion, disabled entirely for reduced-motion users.
-        if (!prefersReducedMotion && !state.dragStart && !selectedRef.current &&
+        if (!prefersReducedMotion && !state.dragStart && !selectedRef.current.length &&
           Date.now() - state.lastInteraction > 7000) {
           state.targetSpin += 0.00048;
         }
@@ -254,7 +243,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
     state.lightMaterials = [];
     const maximum = Math.max(1, ...locations.map(location => location.count));
     for (const location of locations) {
-      const selectedLocation = selected === location.id;
+      const selectedLocation = selected.includes(location.id);
       // Logarithmic scaling prevents a high-volume jurisdiction from drowning
       // out smaller ones; these are source-field-derived COUNTRY anchors.
       const intensity = Math.log1p(location.count) / Math.log1p(maximum);
@@ -302,8 +291,8 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
 
   useEffect(() => {
     const state = sceneRef.current;
-    if (!state || !selected) return;
-    const marker = locations.find(location => location.id === selected);
+    if (!state || !selected.length) return;
+    const marker = locations.find(location => location.id === selected[selected.length - 1]);
     if (!marker) return;
     state.targetSpin = nearestAngle(state.earth.rotation.y, globeRotationForLongitude(marker.lon));
     state.targetTilt = THREE.MathUtils.clamp(marker.lat * RAD, -0.95, 0.95);
@@ -365,7 +354,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
     if (!drag || Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 6) return;
     const hit = hoveredBeacon(event);
     if (hit) {
-      callbackRef.current(selectedRef.current === hit.id ? "" : hit.id);
+      callbackRef.current(hit.id);
       setOverBeacon(false);
       setHoverLabel(null);
       hoverIdRef.current = null;
@@ -384,7 +373,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
         onContextMenu={event => event.preventDefault()}
       />
       {!ready && <div className="vigil-dashboard-three-loading" role="status">Loading satellite view…</div>}
-      <button type="button" className="vigil-dashboard-reset-rotation" onClick={reset} aria-label="Reset globe view and clear filters" title="Reset globe and clear filters"><RotateCcw size={15} /></button>
+
       {hoverLabel && <span className="vigil-dashboard-globe-tooltip" role="status">{hoverLabel}</span>}
     </div>
   );

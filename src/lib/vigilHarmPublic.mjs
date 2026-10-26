@@ -30,6 +30,25 @@ export function aggregateHarmBandSummary(criterion) {
 
 export const HARM_PUBLIC_DERIVATION_STATEMENT = "First determine whether the evidence concerns harm to a specific person, group, organisation or asset, or a potentially generalisable mechanism in an actually deployed AI feature without a specific harmed case. Assess the first using ordinary consequence criteria. Use Aggregate Harm for the second, even when the evidence is insufficient to assign a band. Overall severity is the highest independently supported dimension band on the selected pathway. Do not count eligible users as injured people or increase specific-case severity using provider-wide audience totals.";
 
+// Reader-facing interpretation of the canonical 1.1.0 pathway-selection contract.
+// Keep the detailed routing checklist in VIGIL's maintainer workflow, not the public page.
+export const HARM_PUBLIC_SEVERITY_LEVELS = [
+  { code: "S1", label: "Minimal / no harm" },
+  { code: "S2", label: "Low" },
+  { code: "S3", label: "Moderate" },
+  { code: "S4", label: "High" },
+  { code: "S5", label: "Catastrophic / critical" },
+];
+
+export const HARM_PUBLIC_PATHWAY_COPY = {
+  intro: "VIGIL assesses two different kinds of evidence: consequences that have actually materialised in a particular case, and potentially widespread consequences modelled from evidence about a deployed AI feature. The same Incident is not scored under both pathways.",
+  specific: "Where an identifiable person, actual group, organisation or asset experienced a supported consequence, assess what happened to them using the ordinary matrix. A single severe outcome can justify a high severity band. The provider's total user count does not make that particular outcome more severe.",
+  aggregate: "Sometimes a deployed AI feature exhibits a potentially repeatable harmful behaviour, but the evidence does not identify a particular person, group, organisation or asset that was actually harmed. Aggregate Harm is VIGIL's separate, explicitly modelled assessment of the possible collective significance of that behaviour in the feature's relevant real-world population or decisions. It is not a claim that everyone exposed was injured.",
+  routing: "First establish that the feature or a materially equivalent configuration was actually deployed, that the reported behaviour could generalise in one of the five eligible harm dimensions, and that the Incident is not assessing a specific actual harmed case. One observed screenshot can raise the question; it cannot prove that the behaviour repeats or how many people experienced harm. A simulated or unreleased test does not establish deployment-scale Aggregate Harm.",
+  banding: "Selecting Aggregate Harm is only the first decision. Assigning S1–S5 additionally requires source-backed evidence of the tested feature and realistic encounter conditions, reproducibility or strong corroboration, an appropriate feature-specific eligible population or decision denominator, a credible consequence of the seriousness claimed, safeguards and uncertainty. Platform-wide registrations and hypothetical audience size alone are insufficient.",
+  limits: "If a deployed finding meets the Aggregate Harm routing conditions but its evidence cannot establish a band, retain Aggregate Harm as the pathway and record SU. Do not switch to the ordinary pathway to obtain a score, infer numbers of injured people, or combine ordinary and aggregate bands.",
+};
+
 export const HARM_PATHWAY_STEPS = [
   "Identify whether the model or feature was actually deployed. A simulated or unreleased test does not establish deployment-scale Aggregate Harm.",
   "Check whether the evidence shows a potentially generalisable mechanism in one of the five dimensions that permit Aggregate Harm assessment.",

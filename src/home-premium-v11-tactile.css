@@ -2214,3 +2214,21 @@ html:not([data-theme="dark"]) .diagnostic-outer-machined-ring {
     inset 0 0 0 1px hsl(35 8% 35% / 0.08),
     0 0.08rem 0.18rem hsl(30 10% 24% / 0.07);
 }
+
+/* Collapsed gear tags: fit the visible label, not the off-screen question/detail.
+   Their zero-height content was still taking part in the grid's intrinsic width,
+   leaving unexplained space to the right of shorter labels on desktop and mobile.
+   Only idle tags shrink-wrap; dwell and explicit tap expansion keep their widths. */
+.diagnostic-orbit-v2 .diagnostic-node:not(.is-active):not(.is-expanded) {
+  width: max-content;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node:not(.is-active):not(.is-expanded) .diagnostic-node-copy {
+  width: max-content;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node:not(.is-active):not(.is-expanded) .diagnostic-node-copy strong,
+.diagnostic-orbit-v2 .diagnostic-node:not(.is-active):not(.is-expanded) .diagnostic-node-detail {
+  min-width: 0;
+  max-width: 0;
+}
