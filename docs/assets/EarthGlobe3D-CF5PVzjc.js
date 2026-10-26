@@ -1,4 +1,4 @@
-import{r as Rt,j as Bi}from"./index-yLrCp1CG.js";/**
+import{r as Rt,j as Bi}from"./index-DBIiSqd5.js";/**
  * @license
  * Copyright 2010-2025 Three.js Authors
  * SPDX-License-Identifier: MIT
