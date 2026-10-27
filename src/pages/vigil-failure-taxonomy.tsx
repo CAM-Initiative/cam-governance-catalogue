@@ -265,13 +265,11 @@ function ClassManualCard({
   classById,
   caseFileExamples,
   caseFileExamplesAvailable,
-  showSupportingEvidence = false,
 }: {
   item: FailureTaxonomyClass;
   classById: Map<string, FailureTaxonomyClass>;
   caseFileExamples: CaseFileExampleMap;
   caseFileExamplesAvailable: boolean;
-  showSupportingEvidence?: boolean;
 }) {
   const linkedCases = caseFileExamples[item.class_id] ?? [];
   const invariantExemplars = item.invariant_exemplars ?? [];
@@ -286,10 +284,7 @@ function ClassManualCard({
       <span className="vigil-taxonomy-manual-pill">{item.status}</span>
     </div>
 
-    <p className="vigil-taxonomy-manual-plain"><strong>Plain English:</strong> {item.plain_english}</p>
-
-    <h4>Technical definition</h4>
-    <p>{item.definition}</p>
+    <p className="vigil-taxonomy-manual-plain vigil-taxonomy-class-lede">{item.plain_english}</p>
 
     {item.invariant ? <section className="vigil-taxonomy-class-invariant">
       <h4>Class invariant</h4>
@@ -297,28 +292,49 @@ function ClassManualCard({
     </section> : null}
 
     <p className="vigil-taxonomy-occurrence-rule">Success and failure are distinct evidence-supported relationships to the same invariant. Missing failure evidence does not establish success, and missing success evidence does not establish failure.</p>
-    <div className="vigil-taxonomy-manual-grid vigil-taxonomy-polarity-grid">
-      <section>
+
+    <div className="vigil-taxonomy-manual-grid vigil-taxonomy-polarity-grid" aria-label="Possible evidence-supported outcomes">
+      <section className="vigil-taxonomy-class-condition vigil-taxonomy-class-condition--success">
         <h4>Success condition</h4>
         <p>{item.success_condition}</p>
-        <h4>Success recognition criteria</h4>
-        <ul>{(item.success_recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
       </section>
-      <section>
+      <section className="vigil-taxonomy-class-condition vigil-taxonomy-class-condition--failure">
         <h4>Failure condition</h4>
         <p>{item.failure_condition}</p>
         {item.failure_plain_english ? <p><strong>In plain English:</strong> {item.failure_plain_english}</p> : null}
-        <h4>Failure recognition criteria</h4>
-        <ul>{(item.failure_recognition?.required_conditions ?? item.recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
-        {item.failure_recognition?.indicators?.length ? <>
-          <h4>Failure indicators</h4>
-          <ul>{item.failure_recognition.indicators.map((indicator) => <li key={indicator}>{indicator}</li>)}</ul>
-        </> : null}
-        <h4>Exclusions from failure recognition</h4>
-        <ul>{(item.exclusions ?? []).map((exclusion) => <li key={exclusion}>{exclusion}</li>)}</ul>
       </section>
     </div>
 
+    <div className="vigil-taxonomy-class-disclosures">
+      <details className="vigil-taxonomy-class-disclosure">
+        <summary><span>Recognition tests and exclusions</span><span className="vigil-taxonomy-class-disclosure-hint">Conditions for assessing occurrences</span></summary>
+        <div className="vigil-taxonomy-class-disclosure-body">
+          <p>These are shared class-level tests, not findings about any particular Incident.</p>
+          <div className="vigil-taxonomy-manual-grid">
+            <section>
+              <h4>Success recognition criteria</h4>
+              <ul>{(item.success_recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
+            </section>
+            <section>
+              <h4>Failure recognition criteria</h4>
+              <ul>{(item.failure_recognition?.required_conditions ?? item.recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
+              {item.failure_recognition?.indicators?.length ? <>
+                <h4>Failure indicators</h4>
+                <ul>{item.failure_recognition.indicators.map((indicator) => <li key={indicator}>{indicator}</li>)}</ul>
+              </> : null}
+            </section>
+          </div>
+          <section className="vigil-taxonomy-class-exclusions">
+            <h4>Exclusions from failure recognition</h4>
+            <ul>{(item.exclusions ?? []).map((exclusion) => <li key={exclusion}>{exclusion}</li>)}</ul>
+          </section>
+        </div>
+      </details>
+
+      <details className="vigil-taxonomy-class-disclosure">
+        <summary><span>Case Files and observed outcomes</span><span className="vigil-taxonomy-class-disclosure-hint">Evidence-linked examples</span></summary>
+        <div className="vigil-taxonomy-class-disclosure-body">
+          <p>Case File relationships describe assessed occurrences; they do not define the class itself.</p>
     <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
       <h4>Linked Case Files {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
       {!caseFileExamplesAvailable
@@ -351,6 +367,14 @@ function ClassManualCard({
       </ul>
     </section> : null}
 
+        </div>
+      </details>
+
+      <details className="vigil-taxonomy-class-disclosure">
+        <summary><span>Technical definition, relationships and sources</span><span className="vigil-taxonomy-class-disclosure-hint">Full reference material</span></summary>
+        <div className="vigil-taxonomy-class-disclosure-body">
+          <h4>Technical definition</h4>
+          <p>{item.definition}</p>
     {item.examples?.length ? <>
       <h4>Illustrative examples</h4>
       <ul>{item.examples.map((example) => <li key={example}>{example}</li>)}</ul>
@@ -367,13 +391,10 @@ function ClassManualCard({
       </li>)}</ul>
     </> : null}
 
-    {showSupportingEvidence
-      ? <SupportingEvidence item={item} />
-      : item.external_references?.length ? <p className="vigil-taxonomy-supporting-evidence-link">
-        <Link href={`/observatory/alignment-taxonomy/${item.class_id}/`}>
-          Supporting evidence · {item.external_references.length} {item.external_references.length === 1 ? "source" : "sources"}
-        </Link>
-      </p> : null}
+          <SupportingEvidence item={item} />
+        </div>
+      </details>
+    </div>
   </article>;
 }
 
@@ -394,25 +415,15 @@ function ClassManualSection({
     <div className="vigil-taxonomy-single-class-context">
       <p>Fidelity class</p>
       <Link href={`/observatory/alignment-taxonomy/${parent.family.family_id}/`}>
-        View whole family · {parent.family.name}
+        View family · {parent.family.name}
       </Link>
     </div>
     <h2 id={`${item.class_id.toLowerCase()}-view-heading`} className="sr-only">{item.name}</h2>
-    <ClassManualCard item={item} classById={classById} caseFileExamples={caseFileExamples} caseFileExamplesAvailable={caseFileExamplesAvailable} showSupportingEvidence />
+    <ClassManualCard item={item} classById={classById} caseFileExamples={caseFileExamples} caseFileExamplesAvailable={caseFileExamplesAvailable} />
   </section>;
 }
 
-function FamilyManualSection({
-  document,
-  classById,
-  caseFileExamples,
-  caseFileExamplesAvailable,
-}: {
-  document: FailureTaxonomyFamilyDocument;
-  classById: Map<string, FailureTaxonomyClass>;
-  caseFileExamples: CaseFileExampleMap;
-  caseFileExamplesAvailable: boolean;
-}) {
+function FamilyManualSection({ document }: { document: FailureTaxonomyFamilyDocument }) {
   const family = document.family;
 
   return <section className="vigil-taxonomy-manual-family" id={family.family_id.toLowerCase()}>
@@ -452,25 +463,11 @@ function FamilyManualSection({
         <ul>{family.scope.map((scope) => <li key={scope}>{scope}</li>)}</ul>
       </> : null}
 
-      {family.allowed_class_ids?.length ? <details>
-        <summary><strong>Allowed identifiers</strong></summary>
-        <ul>{family.allowed_class_ids.map((id, index) => <li key={id}>
-          <code>{id}</code>{family.allowed_class_codes?.[index] ? <> — <code>{family.allowed_class_codes[index]}</code></> : null}
-        </li>)}</ul>
-      </details> : null}
+      <p className="vigil-taxonomy-family-navigation">For individual class definitions, recognition conditions and evidence, expand this family in the Contents navigation and open a Fidelity Class reference page.</p>
 
     </header>
 
-    <h2 className="vigil-taxonomy-manual-classes-heading">Fidelity classes</h2>
-    <div className="vigil-taxonomy-manual-class-list">
-      {document.classes.map((item) => <ClassManualCard
-        key={item.class_id}
-        item={item}
-        classById={classById}
-        caseFileExamples={caseFileExamples}
-        caseFileExamplesAvailable={caseFileExamplesAvailable}
-      />)}
-    </div>
+
   </section>;
 }
 
@@ -572,12 +569,7 @@ export default function VigilFailureTaxonomy() {
               classById={classById}
               caseFileExamples={state.data.caseFileExamples.classes}
               caseFileExamplesAvailable={state.data.caseFileExamplesAvailable}
-            /> : <FamilyManualSection
-              document={selectedFamily}
-              classById={classById}
-              caseFileExamples={state.data.caseFileExamples.classes}
-              caseFileExamplesAvailable={state.data.caseFileExamplesAvailable}
-            />}
+            /> : <FamilyManualSection document={selectedFamily} />}
           </div>
         </div> : null}
       </section>

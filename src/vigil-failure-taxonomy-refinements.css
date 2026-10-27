@@ -645,3 +645,146 @@
 .vigil-taxonomy-polarity-grid > section h4:not(:first-child) {
   margin-top: 1rem;
 }
+
+
+/* Fidelity Class detail: one dedicated reference page, with an accessible
+   reading hierarchy. The family page never embeds Class detail entries. */
+.vigil-taxonomy-manual-page .vigil-taxonomy-single-class-view .vigil-taxonomy-manual-class {
+  padding-top: 1.3rem;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-lede {
+  max-width: 64ch;
+  font-size: clamp(1.12rem, 1.55vw, 1.3rem);
+  line-height: 1.6;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-invariant {
+  margin: 1.7rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--vigil-workbench-rule-strong);
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-invariant h4 {
+  margin: 0 0 0.6rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-invariant blockquote {
+  max-width: 78ch;
+  padding: 0.4rem 0 0.4rem 1.15rem;
+  border-left: 3px solid hsl(var(--primary) / 0.8);
+  background: transparent;
+  font-family: var(--app-font-serif);
+  font-size: 1.18rem;
+  line-height: 1.62;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-condition {
+  padding-top: 1rem;
+  border-top: 2px solid hsl(var(--border));
+  background: transparent;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-condition--success {
+  border-top-color: hsl(var(--status-success) / 0.65);
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-condition--failure {
+  border-top-color: hsl(var(--foreground) / 0.4);
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-condition h4 {
+  margin: 0 0 0.55rem;
+  font-size: 1.02rem;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosures {
+  margin-top: 2rem;
+  border-top: 1px solid var(--vigil-workbench-rule-strong);
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure {
+  border-bottom: 1px solid var(--vigil-workbench-rule-strong);
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure > summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.7rem 1.2rem;
+  padding: 1.25rem 0;
+  color: hsl(var(--foreground));
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.05rem, 1.4vw, 1.26rem);
+  font-weight: 650;
+  line-height: 1.4;
+  cursor: pointer;
+  list-style: none;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure > summary::before {
+  content: "+";
+  flex: 0 0 auto;
+  color: hsl(var(--primary));
+  font-family: var(--app-font-mono);
+  font-size: 1.18rem;
+  font-weight: 600;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure[open] > summary::before {
+  content: "−";
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure > summary:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 4px;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-hint {
+  margin-left: auto;
+  font-family: var(--app-font-mono);
+  font-size: 0.73rem;
+  font-weight: 400;
+  color: hsl(var(--muted-foreground));
+  text-align: right;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-body {
+  padding: 0.15rem 0 1.6rem 1.7rem;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-body > p,
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-body > section > p {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-body > h4,
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-exclusions h4 {
+  margin: 0.75rem 0 0.45rem;
+  font-size: 1.04rem;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-body > ul,
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-exclusions ul {
+  margin: 0.6rem 0 0;
+  padding-left: 1.4rem;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-body li {
+  margin-top: 0.45rem;
+  line-height: 1.65;
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-class-exclusions {
+  margin-top: 1.4rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--vigil-workbench-rule);
+}
+.vigil-taxonomy-manual-page .vigil-taxonomy-family-navigation {
+  max-width: 65ch;
+  margin-top: 1.6rem !important;
+  padding: 1.05rem 0 0;
+  border-top: 1px solid var(--vigil-workbench-rule-strong);
+  color: hsl(var(--muted-foreground));
+}
+@media (max-width: 760px) {
+  .vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure > summary {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-hint {
+    width: 100%;
+    margin-left: 1.8rem;
+    text-align: left;
+  }
+  .vigil-taxonomy-manual-page .vigil-taxonomy-class-disclosure-body {
+    padding-left: 0;
+  }
+}
