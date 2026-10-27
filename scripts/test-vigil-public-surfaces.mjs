@@ -736,12 +736,12 @@ test("Failure Class views surface external supporting evidence without bloating 
   assert.match(taxonomyPage, /Evidence note\./);
   assert.match(taxonomyPage, /reference\.evidence_note/);
   assert.match(taxonomyPage, /reference\.reference_role/);
-  assert.match(taxonomyPage, /showSupportingEvidence/);
-  assert.match(taxonomyPage, /Supporting evidence · \{item\.external_references\.length\}/);
-  assert.match(taxonomyPage, /showSupportingEvidence \/>/);
+  assert.match(taxonomyPage, /<SupportingEvidence item=\{item\} \/>/);
+  assert.match(taxonomyPage, /Technical definition, relationships and sources/);
+  assert.doesNotMatch(taxonomyPage, /showSupportingEvidence/);
   assert.ok(
-    taxonomyPage.indexOf("{showSupportingEvidence") > taxonomyPage.indexOf("{item.relationships?.length ?"),
-    "Supporting evidence should render after Relationships at the end of a Failure Class record",
+    taxonomyPage.indexOf("<SupportingEvidence item={item} />") > taxonomyPage.indexOf("{item.relationships?.length ?"),
+    "Supporting evidence should render after Relationships in the dedicated Class reference disclosure",
   );
   assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence-note/);
