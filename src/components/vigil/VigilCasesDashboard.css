@@ -674,6 +674,30 @@
   font-size: .9rem;
   line-height: 1.55;
 }
+.vigil-case-library-page .vigil-dashboard-panel-info-close {
+  float: right;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  margin: -.25rem -.35rem .35rem .45rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--vd-muted);
+  cursor: pointer;
+}
+.vigil-case-library-page .vigil-dashboard-panel-info-close:hover {
+  background: hsl(var(--foreground) / .06);
+  border-color: var(--vd-rule);
+  color: var(--vd-ink);
+}
+.vigil-case-library-page .vigil-dashboard-panel-info-close:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
 .vigil-case-library-page .vigil-dashboard-panel-info-body p { margin: 0; }
 .vigil-case-library-page .vigil-dashboard-panel-info-body p + p { margin-top: .6rem; }
 .vigil-case-library-page .vigil-dashboard-panel-info[open] { z-index: 15; }
@@ -781,7 +805,7 @@
   width: min(69%, 30px);
   min-height: 0;
   border-radius: 6px 6px 0 0;
-  /* Keep each severity's inline semantic colour; shade above it for depth. */
+  /* The shared CAM gold matches Case File severity chips; lighting adds depth. */
   background-image:
     linear-gradient(105deg, hsl(0 0% 100% / .27) 0%, transparent 43%, hsl(0 0% 0% / .17) 100%),
     linear-gradient(180deg, hsl(0 0% 100% / .18), transparent 40%, hsl(0 0% 0% / .12));

@@ -894,3 +894,19 @@ test("Case Files right-side widgets use only fine separators without losing 3D c
   assert.match(chart, /\.vigil-dashboard-failure-list button:hover \.vigil-dashboard-failure-bar/);
   assert.match(dashboard, /showAllHarmTypes \? "Show top six" : "Show all"/);
 });
+
+test("Dashboard information popups close accessibly and severity bars match the list's gold", async () => {
+  const [dashboard, css, chipCss] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+    source("src/vigil-severity-chip.css"),
+  ]);
+  assert.equal((dashboard.match(/<DashboardInfoClose label=/g) ?? []).length, 4);
+  assert.ok(dashboard.includes('disclosure.open = false;'));
+  assert.ok(dashboard.includes('disclosure.querySelector("summary")?.focus();'));
+  assert.ok(dashboard.includes('aria-label={`Close ${label} information`}'));
+  assert.ok(css.includes(".vigil-case-library-page .vigil-dashboard-panel-info-close:focus-visible"));
+  assert.ok(chipCss.includes("background: hsl(40 92% 61%) !important;"));
+  assert.ok(dashboard.includes('backgroundColor: "hsl(40 92% 61%)"'));
+  assert.ok(dashboard.includes("stopColor={entry.color}"), "The donut remains colour-distinct");
+});
