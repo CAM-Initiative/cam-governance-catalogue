@@ -29,9 +29,14 @@ export function clauseAssessmentRows(analysis) {
         observation_title: statement.title,
         source_record_refs: clause.source_record_refs,
         taxonomy_relationships: selected,
-        adjudication_status: clause.adjudication_status === "unresolved" && selected.some(item => item.canonical_taxonomy_mapping !== true && String(item.relationship || "").includes("candidate"))
-          ? "unresolved"
-          : selected.some(item => item.canonical_taxonomy_mapping === true) ? "mapped" : "resolved-no-mapping",
+        // A statement projection must not close an unresolved source clause
+        // merely because this statement has no canonical relationship. Only
+        // an explicit positive mapping resolves that statement as mapped.
+        adjudication_status: selected.some(item => item.canonical_taxonomy_mapping === true)
+          ? "mapped"
+          : clause.adjudication_status === "taxonomy-gap" || clause.adjudication_status === "unresolved"
+            ? clause.adjudication_status
+            : "resolved-no-mapping",
       });
     }
   }
