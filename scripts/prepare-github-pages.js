@@ -555,8 +555,7 @@ for (const { document } of taxonomyFamilies) {
     <h2>Classification boundary</h2>
     <p><strong>Include when:</strong> ${escapeHtml(family.inclusion_rule || "Not stated.")}</p>
     <p><strong>Exclude when:</strong> ${escapeHtml(family.exclusion_rule || "Not stated.")}</p>
-    <h2>Fidelity classes</h2>
-    <ul>${familyClasses.map((item) => `<li><a href="/observatory/alignment-taxonomy/${encodeURIComponent(item.class_id)}">${escapeHtml(item.name || item.class_id)}</a> <code>${escapeHtml(item.class_id)}</code></li>`).join("")}</ul>
+    <p>Individual Fidelity Classes have dedicated reference pages. Use the interactive taxonomy Contents navigation to open a class.</p>
   </main>`;
   writeRoute(
     familyRoute,
