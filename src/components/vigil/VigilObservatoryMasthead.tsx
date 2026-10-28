@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { vigilDarkMastheadArtwork } from "@/lib/vigilMastheadArtwork";
 
 export type VigilObservatoryMastheadMode = "collection" | "reference" | "record";
 export type VigilObservatoryMastheadVisual = "cases" | "taxonomy" | "harm" | "policy" | "standards" | "knowledge" | "datasets";
@@ -40,13 +41,25 @@ export function VigilObservatoryMasthead({
   ariaLive = "off",
   className,
 }: VigilObservatoryMastheadProps) {
+  const [isDark, setIsDark] = useState(
+    () => typeof document !== "undefined" && document.documentElement.dataset.theme === "dark"
+  );
+  useEffect(() => {
+    const sync = () => setIsDark(document.documentElement.dataset.theme === "dark");
+    window.addEventListener("cam-theme-change", sync);
+    sync();
+    return () => window.removeEventListener("cam-theme-change", sync);
+  }, []);
+
+  const selectedArtwork = artworkSrc && isDark ? vigilDarkMastheadArtwork(artworkSrc) : artworkSrc;
   const classes = ["vigil-observatory-masthead", artworkSrc ? "has-artwork" : "", className].filter(Boolean).join(" ");
   const showContext = Boolean(contextLabel && metadata.length);
 
   return <header id={id} className={classes} data-mode={mode} data-visual={visual} aria-labelledby={titleId}>
-    {artworkSrc ? <img
+    {selectedArtwork ? <img
+      key={selectedArtwork}
       className="vigil-observatory-masthead-artwork"
-      src={artworkSrc}
+      src={selectedArtwork}
       alt=""
       aria-hidden="true"
       loading="eager"
