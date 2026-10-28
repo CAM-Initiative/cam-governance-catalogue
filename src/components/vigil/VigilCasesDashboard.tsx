@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { Globe2, HeartPulse, Layers3, ShieldAlert } from "lucide-react";
+import { Globe2, HeartPulse, Layers3, ShieldAlert, X } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
@@ -12,6 +12,26 @@ import { AdSenseRail } from "@/components/advertising/AdSenseRail";
 import "./VigilCasesDashboard.css";
 
 const EarthGlobe3D = lazy(() => import("./EarthGlobe3D"));
+
+/** Close a Case Files information disclosure without losing keyboard focus. */
+function DashboardInfoClose({ label }: { label: string }) {
+  return (
+    <button
+      type="button"
+      className="vigil-dashboard-panel-info-close"
+      aria-label={`Close ${label} information`}
+      title="Close information"
+      onClick={event => {
+        const disclosure = event.currentTarget.closest("details") as HTMLDetailsElement | null;
+        if (!disclosure) return;
+        disclosure.open = false;
+        disclosure.querySelector("summary")?.focus();
+      }}
+    >
+      <X size={16} aria-hidden="true" />
+    </button>
+  );
+}
 
 type Country = { id: string; name: string; lat: number; lon: number };
 type Location = Country & { count: number };
@@ -336,7 +356,7 @@ function SeverityBars({ records, selected, onSelect }: { records: VigilIndexReco
           disabled={count === 0 && !isSelected}>
           <span className="vigil-dashboard-bar-plot" aria-hidden="true">
             <span className="vigil-dashboard-bar-fill"
-              style={{ height: `${(count / maxCount) * 82}%`, backgroundColor: entry.color }}>
+              style={{ height: `${(count / maxCount) * 82}%`, backgroundColor: "hsl(40 92% 61%)" }}>
               <span className="vigil-dashboard-bar-value">{count}</span>
             </span>
           </span>
@@ -396,6 +416,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         <details className="vigil-dashboard-geo-disclosure vigil-dashboard-panel-info">
           <summary aria-label="Globe data and imagery information" title="Globe data information">i</summary>
           <div className="vigil-dashboard-geo-disclosure-body vigil-dashboard-panel-info-body">
+            <DashboardInfoClose label="globe" />
             <p>{geographyNote}</p>
             <p>Choose multiple countries on the globe or with the keyboard selector. Case Files match any selected country and are counted once. Country beacons represent reviewed jurisdiction associations, not incident coordinates. Earth imagery: NASA Blue Marble.</p>
             {!geographyAvailable && <p>Geographic data is unavailable for the selected source. Case Files remain searchable.</p>}
@@ -407,7 +428,8 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Harm severity chart information" title="Harm severity information">i</summary>
           <div className="vigil-dashboard-panel-info-body">
-            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a bar, donut segment, or connected label to filter. The codes and colours mean:</p>
+            <DashboardInfoClose label="harm severity" />
+            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a bar, donut segment, or connected label to filter. The bar colours match the Case Files severity labels. The donut uses separate colours to distinguish slices; the severity codes themselves describe the assessed harm:</p>
             <dl className="vigil-dashboard-severity-legend">
               {SEVERITIES.map(entry => <div key={entry.code}>
                 <dt><span className="vigil-dashboard-severity-legend-dot" style={{ backgroundColor: entry.color }} aria-hidden="true" />{entry.code}</dt>
@@ -434,6 +456,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Harm type count information" title="Harm type information">i</summary>
           <div className="vigil-dashboard-panel-info-body">
+            <DashboardInfoClose label="harm types" />
             <p>Counts represent distinct matching incidents with an explicitly assessed S2–S5 band in each Harm Impact dimension. They are not numbers of victims or severities summed together. An incident may have several evidenced harm types.</p>
             <p>S1 assessments are retained in the sparse index but excluded from evidenced materialised harm counts. Unreported and insufficient-evidence dimensions are not findings of no harm.</p>
             <p>Solid bars denote assessed specific consequences; the striped portion represents separately modelled Aggregate Harm. Aggregate exposure is not a confirmed individual injury. Select a type to filter the other charts and Case Files without reordering this ranking.</p>
@@ -472,6 +495,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Taxonomy intelligence counts information" title="Taxonomy counts information">i</summary>
           <div className="vigil-dashboard-panel-info-body">
+            <DashboardInfoClose label="taxonomy counts" />
             <p>Rankings reflect the current search, severity, jurisdiction and metadata filters, but exclude the failure class you select here. Selecting a class filters the Case Files and other charts without reordering this list. Counts represent distinct Case Files, not mentions or evidence-source citations.</p>
           </div>
         </details>
