@@ -415,7 +415,7 @@ function ClassManualSection({
     <div className="vigil-taxonomy-single-class-context">
       <p>Fidelity class</p>
       <Link href={`/observatory/alignment-taxonomy/${parent.family.family_id}/`}>
-        View family · {parent.family.name}
+        View whole family · {parent.family.name}
       </Link>
     </div>
     <h2 id={`${item.class_id.toLowerCase()}-view-heading`} className="sr-only">{item.name}</h2>
