@@ -1,4 +1,5 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { useEffect } from "react";
+import { Switch, Route, useLocation, Router as WouterRouter } from "wouter";
 import "./polish.css";
 import "./vigil-storyboard.css";
 import "./vigil-ux-v2.css";
@@ -30,6 +31,21 @@ import Policy from "@/pages/policy";
 import Privacy from "@/pages/privacy";
 
 function Router() {
+  const [location] = useLocation();
+  useEffect(() => {
+    const detail = /^\/observatory\/(?:alignment-taxonomy|ai-governance-standards)\/[^/]+\/?$/.test(location);
+    let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    if (detail) {
+      if (!robots) {
+        robots = document.createElement("meta");
+        robots.name = "robots";
+        document.head.appendChild(robots);
+      }
+      robots.content = "noindex, follow";
+    } else if (robots?.content === "noindex, follow") {
+      robots.remove();
+    }
+  }, [location]);
   return (
     <Switch>
       <Route path="/" component={Home} />
