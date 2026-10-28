@@ -25,6 +25,32 @@ const [
   readFile(new URL("../src/index.css", import.meta.url), "utf8"),
 ]);
 
+// A statement projection cannot turn a still-unresolved material observation
+// or a taxonomy-gap into a completed reviewed/no-mapping conclusion.
+const { clauseAssessmentRows } = await import("../src/lib/vigilClauseRows.mjs");
+const split = (status, relationshipFlags) => clauseAssessmentRows({
+  clauses: [{
+    episode_id: "E001",
+    adjudication_status: status,
+    source_paraphrase: "Material occurrence with distinguishable statements",
+    taxonomy_relationships: relationshipFlags.map(mapped => ({
+      class_id: mapped ? "VIGIL-FC-000001" : "VIGIL-FC-000002",
+      canonical_taxonomy_mapping: mapped,
+      relationship: mapped ? "failure-occurrence" : "candidate boundary",
+    })),
+    statement_analysis: relationshipFlags.map((_, index) => ({
+      source_paraphrase: "Statement " + index,
+      taxonomy_relationship_indices: [index],
+    })),
+  }],
+}).filter(row => !row.display_context);
+assert.deepEqual(split("taxonomy-gap", [false]).map(row => row.adjudication_status), ["taxonomy-gap"]);
+assert.deepEqual(split("unresolved", [false]).map(row => row.adjudication_status), ["unresolved"]);
+assert.deepEqual(split("taxonomy-gap", [true, false]).map(row => row.adjudication_status), ["mapped", "taxonomy-gap"]);
+assert.deepEqual(split("unresolved", [true, false]).map(row => row.adjudication_status), ["mapped", "unresolved"]);
+assert.deepEqual(split("mapped", [true, false]).map(row => row.adjudication_status), ["mapped", "resolved-no-mapping"]);
+assert.deepEqual(split("resolved-no-mapping", [false]).map(row => row.adjudication_status), ["resolved-no-mapping"]);
+
 // A reviewed, no-mapping source clause may have no separate adjudication_note or
 // taxonomy_relationships. Its recovered interpretation must still appear in the
 // public Incident analysis column rather than rendering an unexplained dash.
