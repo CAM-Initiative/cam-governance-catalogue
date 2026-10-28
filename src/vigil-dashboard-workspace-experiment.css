@@ -193,10 +193,9 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-col
   background: linear-gradient(145deg, hsl(38 45% 99%), hsl(37 28% 97%));
   box-shadow: 0 .38rem 1.1rem hsl(28 25% 16% / .035);
 }
-/* The masthead's peach effect is composited from grey backing, artwork and
-   a translucent veil. These light-mode instruments deliberately do NOT
-   imitate that image layering: quiet neutral paper contrasts with the hero
-   and gives dense analytical content a separate, accessible reading plane. */
+/* The Observatory fascia artwork is now untinted in light mode.
+   These analytical instruments remain quiet neutral paper, distinct from
+   the illustrated masthead, for a readable high-density evidence surface. */
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel {
   --vd-ink: hsl(25 10% 13%);
   --vd-muted: hsl(26 8% 23%);
