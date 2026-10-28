@@ -377,10 +377,10 @@ test("Light-mode analytic cards use pale neutrals distinct from the image-layere
     source("src/vigil-dashboard-workspace-experiment.css"),
     source("src/vigil-observatory-masthead.css"),
   ]);
-  assert.match(masthead, /soft-grey/);
-  assert.match(masthead, /hsl\(30 4% 88%\)/);
-  assert.match(masthead, /--masthead-artwork-opacity: 0\.82/);
-  assert.match(styles, /masthead's peach effect is composited from grey backing/);
+  assert.match(masthead, /Light appearance shows the Registry fascia at its original colours/);
+  assert.match(masthead, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \{[^}]*--masthead-artwork-opacity: 1;/);
+  assert.match(masthead, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork \{[^}]*filter: none;/);
+  assert.match(styles, /These analytical instruments remain quiet neutral paper/);
   assert.match(styles, /hsl\(27 7% 98%\)/);
   assert.match(styles, /hsl\(28 10% 94%\)/);
   assert.doesNotMatch(styles, /hsl\(26 15% 82%\)|hsl\(27 16% 79%\)/);
@@ -823,8 +823,15 @@ test("Sparse HIM join honours record versions and excludes S1/unreported from po
 test("Real sparse harm sidecar remains tiny and joins current canonical index entries", async () => {
   const projection = JSON.parse(await source("docs/data/vigil-harm-dimensions.json"));
   assert.equal(projection.registry_type, "vigil_harm_dimensions");
-  assert.equal(projection.record_count, 200);
-  assert.equal(projection.assessed_record_count, 137);
+  const registry = JSON.parse(await source("docs/data/vigil-registry-fallback.json"));
+  const canonicalVersions = new Map(registry.records.map(record => [record.id, record.record_version]));
+  assert.equal(projection.record_count, registry.records.length);
+  assert.equal(projection.assessed_record_count, projection.entries.length);
+  assert.ok(projection.assessed_record_count > 0);
+  assert.ok(projection.assessed_record_count <= projection.record_count);
+  assert.ok(projection.entries.every(entry =>
+    canonicalVersions.has(entry.id) && (!entry.v || entry.v === canonicalVersions.get(entry.id))
+  ));
   assert.ok(projection.entries.every(x => /^VIGIL-INC-\d{6}$/.test(x.id) && x.d.every(row => row.length === 2 && /^S[1-5]$/.test(row[1]))));
   assert.ok((await source("docs/data/vigil-harm-dimensions.json")).length < 60_000);
 });
