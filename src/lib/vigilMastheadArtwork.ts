@@ -2,7 +2,7 @@
    Pinning every fascia to one Registry commit gives the browser a new URL when
    artwork is refreshed and keeps the full masthead family on one deterministic
    visual snapshot. Bump this revision when the Registry artwork set changes. */
-export const VIGIL_FASCIA_REGISTRY_REVISION = "cb04f4ff442dc2af7bb0108a77a933d690f758c0";
+export const VIGIL_FASCIA_REGISTRY_REVISION = "c84a2bf10274e043f644df22563f76af5d2c618a";
 
 const fasciaBase =
   `https://raw.githubusercontent.com/CAM-Initiative/Registry/${VIGIL_FASCIA_REGISTRY_REVISION}/Images/Website`;
