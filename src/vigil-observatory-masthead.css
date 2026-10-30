@@ -628,8 +628,29 @@ html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
     inset 0 1px 0 hsl(0 0% 100% / 0.4);
 }
 
+/* On desktop, place a soft neutral veil ABOVE the light-mode artwork and
+   BELOW the headings and metadata (z-index 2/3). Preserve the archival objects
+   on the left while reducing drafting-line contrast behind the text.
+   Do not alter dark appearance or the image-free mobile treatment. */
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork::before {
   display: none;
+}
+
+@media (min-width: 821px) {
+  html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork::before {
+    display: block;
+    z-index: 1;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      hsl(0 0% 94% / 0) 0%,
+      hsl(0 0% 94% / 0.06) 25%,
+      hsl(0 0% 94% / 0.48) 38%,
+      hsl(0 0% 94% / 0.65) 65%,
+      hsl(0 0% 94% / 0.77) 100%
+    );
+    pointer-events: none;
+  }
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {

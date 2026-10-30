@@ -1668,3 +1668,21 @@ test("INC-129-style Discussion is a sibling Section 05 subsection with source-pr
   assert.match(webCss, /\.vigil-case-file-page \.vigil-conclusion-subsection\.is-discussion/);
   assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-conclusion-subsection\.is-discussion/);
 });
+
+test("light-only Observatory fascia veil improves desktop readability without changing dark or mobile", async () => {
+  const [masthead, styles, component, mobile, entry] = await Promise.all([
+    read("src/vigil-observatory-masthead.css"),
+    read("src/vigil-observatory-masthead.css"),
+    read("src/components/vigil/VigilObservatoryMasthead.tsx"),
+    read("src/mobile-responsive-polish.css"),
+    read("src/main.tsx"),
+  ]);
+  assert.match(masthead, /@media \(min-width: 821px\) \{\s*html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork::before/);
+  assert.match(styles, /hsl\(0 0% 94% \/ 0\.48\)/);
+  assert.match(styles, /hsl\(0 0% 94% \/ 0\.77\)/);
+  assert.match(styles, /z-index: 1;[\s\S]*pointer-events: none;/);
+  assert.match(styles, /html\[data-theme="dark"\] \.vigil-observatory-masthead\.has-artwork/);
+  assert.match(mobile, /@media \(max-width: 820px\)[\s\S]*\.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork \{\s*display: none !important;/);
+  assert.doesNotMatch(component, /data-masthead-layout|vigil-observatory-masthead-visual/);
+  assert.doesNotMatch(entry, /vigil-masthead-layout-experiment\.css/);
+});
