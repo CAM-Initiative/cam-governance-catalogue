@@ -114,29 +114,42 @@ function incidentClassificationLabel(
   coverage?: AdjudicationCoverageStatus,
   exemplarEligible?: boolean,
 ) {
-  if (coverage === "partial") return "Adjudication incomplete";
-  if (status === "classification-disputed") return "Disputed";
-  if (status === "requires-human-review") return "Under review";
-  if (status === "unclassified") return "Unclassified";
-
+  // Never publish a final Incident outcome when material adjudication is unfinished.
+  if (coverage === "partial" || status === "classification-disputed" || status === "requires-human-review") return "Review incomplete";
+  if (status === "unclassified") return "No classification assigned";
   const hasFailure = roles.includes("failure-occurrence");
   const hasInvariantHeld = roles.includes("successful-invariant");
   const hasAmbiguousBoundary = roles.includes("ambiguous-boundary");
-  if (hasFailure && hasInvariantHeld) return "Combination";
-  if (hasAmbiguousBoundary && (hasFailure || hasInvariantHeld)) return "Combination";
-  if (hasAmbiguousBoundary) return "Boundary unresolved";
-  if (hasInvariantHeld && !hasFailure) {
-    // Eligibility is not admission to the taxonomy exemplar collection.
-    return "Invariant held";
-  }
-  if (hasFailure && !hasInvariantHeld) return "Classified";
+  if (hasFailure) return "Failures found";
+  if (hasInvariantHeld) return "Safeguards worked";
+  if (hasAmbiguousBoundary) return "Outcome unclear";
+  if (fallbackRole === "successful-invariant") return "Safeguards worked";
+  if (fallbackRole === "ambiguous-boundary") return "Outcome unclear";
+  if (fallbackRole === "failure-occurrence" || status === "classified" || status === "provisionally-classified") return "Failures found";
+  return "No classification assigned";
+}
 
-  if (fallbackRole === "successful-invariant") {
-    // Eligibility is not admission to the taxonomy exemplar collection.
-    return "Invariant held";
-  }
-  if (status === "classified" || status === "provisionally-classified") return "Classified";
-  return "Unclassified";
+export function taxonomyIncidentMappingCounts(record: UnknownRecord) {
+  const directFallback = text(record.classification_role) as TaxonomyClassificationRole | undefined;
+  const hasDirect = isObject(record.primary_classification)
+    || (Array.isArray(record.secondary_classifications) && record.secondary_classifications.some(isObject));
+  const classification = taxonomyClassification(record);
+  const nestedFallback = text(classification?.classification_role) as TaxonomyClassificationRole | undefined;
+  const roles = hasDirect
+    ? mappingRoles(record, directFallback ?? "failure-occurrence")
+    : classification
+      ? mappingRoles(classification, nestedFallback ?? "failure-occurrence")
+      : [];
+  return {
+    failures: roles.filter(role => role === "failure-occurrence").length,
+    safeguards: roles.filter(role => role === "successful-invariant").length,
+    unresolved: roles.filter(role => role === "ambiguous-boundary").length,
+  };
+}
+
+export function taxonomyIncidentHasDispute(record: UnknownRecord) {
+  const status = text(record.classification_status) ?? text(taxonomyClassification(record)?.classification_status);
+  return status === "classification-disputed";
 }
 
 function classLabel(value: unknown) {
@@ -151,9 +164,6 @@ function familyLabel(value: unknown) {
 
 export function taxonomyAlignmentOutcomeLabel(record: UnknownRecord) {
   const status = taxonomyFailureTypeLabel(record);
-  if (status === "Classified") return "Failure evidenced";
-  if (status === "Exemplar") return "Invariant held";
-  if (status === "Combination") return "Mixed alignment";
   return status;
 }
 

@@ -487,20 +487,47 @@ function publicMappingRoleLabel(role) {
 }
 
 function publicAlignmentOutcome(record) {
-  if (record.adjudication_coverage?.status === "partial") return "Adjudication incomplete";
-  if (record.classification_status === "classification-disputed") return "Disputed";
-  if (record.classification_status === "requires-human-review") return "Under review";
-  if (record.classification_status === "unclassified") return "Unclassified";
-  const roles = [record.primary_classification?.classification_role || record.classification_role, ...(record.secondary_classifications || []).map(item => item.classification_role)].filter(Boolean);
-  if (new Set(roles).size > 1) return "Mixed alignment";
-  if (record.classification_role === "failure-occurrence") return "Failure evidenced";
-  if (record.classification_role === "successful-invariant") return "Invariant held";
-  if (record.classification_role === "ambiguous-boundary") return "Boundary unresolved";
-  if (record.classification_status === "classified" || record.classification_status === "provisionally-classified") return "Failure evidenced";
-  if (record.classification_status === "classification-disputed") return "Disputed";
-  if (record.classification_status === "requires-human-review") return "Under review";
-  if (record.classification_status === "unclassified") return "Unclassified";
-  return record.classification_status || "not stated";
+  const taxonomy = record.taxonomy_classification || {};
+  const status = record.classification_status || taxonomy.classification_status;
+  const coverage = record.adjudication_coverage?.status || taxonomy.adjudication_coverage?.status;
+  if (coverage === "partial" || status === "classification-disputed" || status === "requires-human-review") return "Review incomplete";
+  if (status === "unclassified") return "No classification assigned";
+  const primary = record.primary_classification || taxonomy.primary_classification;
+  const secondary = record.secondary_classifications || taxonomy.secondary_classifications || [];
+  const fallback = record.classification_role || taxonomy.classification_role;
+  const roles = [primary?.classification_role || (primary ? fallback || "failure-occurrence" : null),
+    ...secondary.filter(Boolean).map(item => item.classification_role || fallback || "failure-occurrence")].filter(Boolean);
+  if (roles.includes("failure-occurrence")) return "Failures found";
+  if (roles.includes("successful-invariant")) return "Safeguards worked";
+  if (roles.includes("ambiguous-boundary")) return "Outcome unclear";
+  if (fallback === "successful-invariant") return "Safeguards worked";
+  if (fallback === "ambiguous-boundary") return "Outcome unclear";
+  if (fallback === "failure-occurrence" || status === "classified" || status === "provisionally-classified") return "Failures found";
+  return "No classification assigned";
+}
+
+function publicCaseOutcomeSummaryHtml(record, canonical) {
+  const outcome = publicAlignmentOutcome(record);
+  const copy = {
+    "Failures found": ["We found one or more failures.", "Our review found that at least one rule or safeguard failed in this incident. Other safeguards may have worked, or some results may still be unclear.", "This result does not tell us how much harm was caused. We look at harm separately."],
+    "Safeguards worked": ["We found safeguards that worked.", "Our review found that one or more safeguards worked as they should. We did not confirm a failure. Some other results may still be unclear.", "This does not mean that everything about the incident went well."],
+    "Outcome unclear": ["We could not tell whether the safeguards worked.", "We looked at the available information, but it was not enough to decide whether the safeguards worked or failed.", "We are not counting an unclear result as either a success or a failure."],
+    "No classification assigned": ["We could not assign a classification.", "We finished reviewing this incident, but the findings could not be placed in any of our current classification categories.", "This does not mean nothing happened or that everything worked."],
+    "Review incomplete": ["We have not finished reviewing this incident.", "Some important parts still need a final decision. We can show the findings recorded so far, but we cannot give this incident a final overall result yet.", "Any failures, working safeguards or unclear results shown below are individual findings, not a final result for the incident."],
+  }[outcome];
+  if (!copy) return "";
+  const item = canonical || record;
+  const taxonomy = item.taxonomy_classification || {};
+  const primary = item.primary_classification || taxonomy.primary_classification;
+  const secondary = item.secondary_classifications || taxonomy.secondary_classifications || [];
+  const fallback = item.classification_role || taxonomy.classification_role || "failure-occurrence";
+  const roles = [primary?.classification_role || (primary ? fallback : null), ...secondary.filter(Boolean).map(entry => entry.classification_role || fallback)].filter(Boolean);
+  const failures = roles.filter(role => role === "failure-occurrence").length;
+  const safeguards = roles.filter(role => role === "successful-invariant").length;
+  const unresolved = roles.filter(role => role === "ambiguous-boundary").length;
+  const findingText = roles.length ? "<p>Fidelity Class findings: " + failures + " " + (failures === 1 ? "failure" : "failures") + " · " + safeguards + " " + (safeguards === 1 ? "safeguard worked" : "safeguards worked") + " · " + unresolved + " unresolved</p>" : "";
+  const dispute = (item.classification_status || taxonomy.classification_status) === "classification-disputed" ? "<p>Some accounts or interpretations are disputed. See Classification for the details.</p>" : "";
+  return "<section aria-label=\"Case File outcome\"><p>Case File outcome · " + escapeHtml(outcome) + "</p><h2>" + escapeHtml(copy[0]) + "</h2><p>" + escapeHtml(copy[1]) + "</p><p>" + escapeHtml(copy[2]) + "</p>" + findingText + dispute + "</section>";
 }
 
 function taxonomyCaseLinkHtml(example) {
@@ -706,13 +733,14 @@ for (const record of incidentRecords) {
     ${incidentArtefactsHtml(canonical)}
     <nav aria-label="VIGIL Observatory resources"><p><a href="/observatory/cases/">All Case Files</a> · <a href="/observatory/alignment-taxonomy/">Alignment Taxonomy</a> · <a href="/observatory/ai-governance-standards/">AI Governance Standards</a></p></nav>
     <dl>
-      <dt>VIGIL Observatory alignment outcome</dt><dd>${escapeHtml(publicAlignmentOutcome(record))}</dd>
+      <dt>Case File outcome</dt><dd>${escapeHtml(publicAlignmentOutcome(record))}</dd>
       <dt>VIGIL Observatory primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
       <dt>VIGIL Observatory secondary classifications</dt>${secondaryClassificationHtml(record)}
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
       <dt>Vendor / platform</dt><dd>${escapeHtml(record.platform_or_vendor || "not stated")}</dd>
     </dl>
-    ${publicAlignmentOutcome(record) === "Disputed" ? disputedAssessmentHtml() : ""}
+    ${(record.classification_status || record.taxonomy_classification?.classification_status) === "classification-disputed" ? disputedAssessmentHtml() : ""}
+    ${publicCaseOutcomeSummaryHtml(record, canonical)}
     ${externalAssessmentsHtml(canonical)}
     ${clauseAssessmentsHtml(canonical)}
     ${classificationHtml(canonical)}

@@ -1,4 +1,3 @@
-import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
@@ -62,36 +61,11 @@ const CASE_FILE_STAGES = [
 ] as const;
 
 const CASE_FILE_INDEX_CLASSIFICATIONS = [
-  {
-    key: "failure",
-    label: "Failure evidenced",
-    description: "The Incident has one or more failure-occurrence mappings and no unresolved or invariant-held combination that changes the whole-record summary.",
-  },
-  {
-    key: "exemplar",
-    label: "Invariant held",
-    description: "The mapped governance boundary or boundaries held and the Incident has complete adjudication coverage. These Case Files may be presented as alignment exemplars when no failure or unresolved boundary changes that result.",
-  },
-  {
-    key: "incomplete",
-    label: "Adjudication incomplete",
-    description: "One or more material incident observations still require a final taxonomy determination. VIGIL does not assign a whole-Incident alignment classification until adjudication coverage is complete.",
-  },
-  {
-    key: "mixed",
-    label: "Mixed alignment",
-    description: "The Incident contains both failure and invariant-held mappings, or an unresolved boundary, so a single aligned or misaligned label would hide material differences.",
-  },
-  {
-    key: "disputed",
-    label: "Disputed",
-    description: [VIGIL_DISPUTED_COPY.explanation, VIGIL_DISPUTED_COPY.boundary, VIGIL_DISPUTED_COPY.qualification].join(" "),
-  },
-  {
-    key: "unclassified",
-    label: "Unclassified",
-    description: "The available evidence does not yet support a defensible taxonomy classification for the Incident.",
-  },
+  { key: "failures", label: "Failures found", description: "At least one failure was confirmed. Other safeguards may have worked, and some results may still be unclear." },
+  { key: "safeguards", label: "Safeguards worked", description: "At least one safeguard worked and no failure was confirmed. Other results may still be unclear." },
+  { key: "unclear", label: "Outcome unclear", description: "The review found only results that remain uncertain. It could not establish whether the safeguards worked or failed." },
+  { key: "none", label: "No classification assigned", description: "The review is complete, but no finding could be placed in the current classification categories." },
+  { key: "review", label: "Review incomplete", description: "An important part of the review is unfinished or disputed. Recorded findings remain visible, but no final Case File outcome is given." },
 ] as const;
 
 const knowledgeRail = [
@@ -197,7 +171,7 @@ export default function VigilKnowledgeHub() {
 
               <div className="vigil-knowledge-classification-layer">
                 <h3>Case File index classification</h3>
-                <p>The current public Case File index combines those mapping-level results into whole-Incident outcome labels only after adjudication coverage is complete. While coverage is partial, the Case File is shown simply as <strong>Adjudication incomplete</strong>; resolved mapping-level findings remain separately visible inside the Case File.</p>
+                <p>The Case File outcome brings those individual findings together. A confirmed failure takes priority; otherwise a working safeguard takes priority over an unclear result. An unfinished or disputed review is shown as <strong>Review incomplete</strong>, not as a final incident result. All individual findings remain visible. Disputes and confirmed exemplar status are separate from the five outcome categories.</p>
                 <div className="vigil-knowledge-index-classifications" aria-label="Case File index classification states">
                   {CASE_FILE_INDEX_CLASSIFICATIONS.map((item) => <article key={item.key}>
                     <span className="vigil-knowledge-index-state">{item.label}</span>

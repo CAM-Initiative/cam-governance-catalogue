@@ -536,41 +536,25 @@ test("Case Files expose scalable numbered pagination with first and last navigat
   assert.match(caseLibraryCss, /\.vigil-pagination-arrow\.is-boundary/);
 });
 
-test("Case File classification labels derive public state from mapping-local roles", async () => {
+test("Case File outcomes use the five approved labels and one shared summary source", async () => {
   const taxonomy = await read("src/lib/vigilTaxonomyClassification.ts");
-  assert.match(taxonomy, /hasDirectPrimary \|\| hasDirectSecondary/);
-  assert.match(taxonomy, /return mappingRoles\(record, directFallback \?\? "failure-occurrence"\)/);
-  assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
-  assert.match(taxonomy, /taxonomyAdjudicationCoverageStatus/);
-  assert.match(taxonomy, /taxonomyAlignmentExemplarEligible/);
-  assert.match(taxonomy, /coverage === "partial"\) return "Adjudication incomplete"/);
-  assert.match(taxonomy, /hasAmbiguousBoundary\) return "Boundary unresolved"/);
-  assert.doesNotMatch(taxonomy, /exemplarEligible === true\) return "Exemplar"/);
-  assert.match(taxonomy, /hasFailure && !hasInvariantHeld\) return "Classified"/);
-  assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
-  assert.match(taxonomy, /status === "requires-human-review"\) return "Under review"/);
-  assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
+  const caseFile = await read("src/pages/vigil-case-file.tsx");
+  const report = await read("src/pages/evidence-chain-report-deterministic.tsx");
+  const copy = await read("src/lib/vigilCaseOutcomeCopy.ts");
+  const contract = await read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md");
+  for (const label of ["Failures found", "Safeguards worked", "Outcome unclear", "No classification assigned", "Review incomplete"]) {
+    assert.ok(copy.includes(label), label);
+  }
+  assert.ok(taxonomy.includes('if (hasFailure) return "Failures found"'));
+  assert.ok(taxonomy.includes('if (hasInvariantHeld) return "Safeguards worked"'));
+  assert.ok(taxonomy.includes('if (hasAmbiguousBoundary) return "Outcome unclear"'));
+  assert.ok(!taxonomy.includes('return "Combination"'));
+  for (const surface of [caseFile, report]) {
+    assert.ok(surface.includes("caseFileOutcomeCopy(classificationDisplay)"));
+    assert.ok(surface.includes("Fidelity Class findings: {countText}"));
+  }
+  assert.ok(contract.includes("five plain-English outcomes"));
 });
-
-test("mixed Case Files explain alignment outcomes with the informational affordance", async () => {
-  const [taxonomy, classification, caseFile, contract] = await Promise.all([
-    read("src/lib/vigilTaxonomyClassification.ts"),
-    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
-    read("src/pages/vigil-case-file.tsx"),
-    read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
-  ]);
-  assert.match(taxonomy, /"ambiguous-boundary"/);
-  assert.match(taxonomy, /hasAmbiguousBoundary/);
-  assert.match(classification, /Secondary unresolved boundary/);
-  assert.match(caseFile, /const isCombination = classification === "Combination"/);
-  assert.match(caseFile, /<Info \/>/);
-  assert.match(caseFile, /Different assessed boundaries have different outcomes/);
-  assert.doesNotMatch(caseFile, /Compliance shows the external standards, regulations and guidance connected to the governance issues identified in this Case File/);
-  assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
-  assert.match(caseFile, /VIGIL_DISPUTED_COPY/);
-  assert.match(contract, /informational mixed-record affordance/);
-});
-
 
 test("Knowledge Base keeps the dedicated six-stage Case File method as plain document rows", async () => {
   const [hub, about, homeMenuCss, sections] = await Promise.all([
@@ -606,11 +590,11 @@ test("Knowledge Base withholds whole-Incident classification until adjudication 
   assert.match(hub, /Mapping-level outcomes[\s\S]*<VigilAlignmentLegend detailed \/>/);
   assert.match(classification, /Failure occurred[\s\S]*Aligned[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
-  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
-  assert.match(hub, /only after adjudication coverage is complete[\s\S]*Adjudication incomplete/);
-  assert.match(hub, /does not assign a whole-Incident alignment classification until adjudication coverage is complete/);
-  assert.match(hub, /One or more material incident observations still require a final taxonomy determination/);
-  assert.match(hub, /VIGIL_DISPUTED_COPY/);
+  assert.ok(["Failures found", "Safeguards worked", "Outcome unclear", "No classification assigned", "Review incomplete"].every(label => hub.includes(label)));
+  assert.ok(hub.includes("An unfinished or disputed review is shown as"));
+  assert.ok(hub.includes("no final Case File outcome is given"));
+  assert.ok(hub.includes("An important part of the review is unfinished or disputed"));
+  assert.ok(hub.includes("Disputes and confirmed exemplar status are separate"));
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
   assert.match(css, /\.vigil-knowledge-index-classifications[\s\S]*\.vigil-knowledge-index-state \{[\s\S]*background: hsl\(var\(--primary\) \/ 0\.045\)/);
   assert.doesNotMatch(css, /\.vigil-knowledge-index-state\.is-(?:failure|exemplar|mixed|disputed|unclassified)/);
@@ -1206,7 +1190,7 @@ test("Knowledge Base owns VIGIL method, classification and CAELESTIS architectur
   assert.ok(methodStart >= 0 && harmSeparation > methodStart && stageList > harmSeparation);
   assert.ok(classificationStart > stageList && architectureStart > classificationStart);
   assert.match(hub, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Compliance[\s\S]*Conclusion[\s\S]*References/);
-  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.ok(["Failures found", "Safeguards worked", "Outcome unclear", "No classification assigned", "Review incomplete"].every(label => hub.includes(label)));
   assert.match(hub, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
   assert.match(hub, /VIGIL Observatory Alignment Taxonomy uses the CAELESTIS Architecture Model as a source for taxonomy development and evaluation/);
   assert.match(hub, /does not create or amend CAELESTIS doctrine/);
@@ -1417,9 +1401,9 @@ test("Knowledge Base introduces Harm Impact Assessment plainly and distinguishes
   assert.match(hub, /VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /reviews twelve harm dimensions/);
   assert.match(hub, /Harm Impact Assessment describes materialised consequence and severity/);
-  assert.match(hub, /VIGIL_DISPUTED_COPY/);
-  assert.match(caseFile, /VIGIL_DISPUTED_COPY/);
-  assert.match(report, /VIGIL_DISPUTED_COPY/);
+  assert.ok(hub.includes("Disputes and confirmed exemplar status are separate"));
+  assert.match(caseFile, /taxonomyIncidentHasDispute/);
+  assert.match(report, /taxonomyIncidentHasDispute/);
   assert.doesNotMatch(hub, /classify materialised harm/);
 });
 
@@ -1503,19 +1487,16 @@ test("taxonomy textbook distinguishes case-study examples from governing class t
 });
 
 
-test("shared disputed assessment copy distinguishes evidence conflicts, assessment differences and gaps", async () => {
+test("disputed assessments remain visible without becoming a sixth Case File outcome", async () => {
   assert.match(VIGIL_DISPUTED_COPY.explanation, /conflicting accounts/);
   assert.match(VIGIL_DISPUTED_COPY.explanation, /differing assessments/);
-  assert.match(VIGIL_DISPUTED_COPY.explanation, /does not require litigation/);
-  assert.match(VIGIL_DISPUTED_COPY.boundary, /without disputing that the reported event occurred/);
-  assert.match(VIGIL_DISPUTED_COPY.qualification, /Missing information alone does not make a record Disputed/);
   for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
     const source = await read(path);
-    for (const field of ["heading", "explanation", "boundary", "qualification"]) assert.ok(source.includes(`VIGIL_DISPUTED_COPY.${field}`), `${path}: ${field}`);
+    assert.ok(source.includes("taxonomyIncidentHasDispute"));
+    assert.ok(source.includes("Some accounts or interpretations are disputed"));
   }
   const pages = await read("scripts/prepare-github-pages.js");
-  assert.match(pages, /publicAlignmentOutcome\(record\) === "Disputed" \? disputedAssessmentHtml/);
-  assert.match(pages, /<h1>Knowledge Base<\/h1>[\s\S]*?disputedAssessmentHtml/);
+  assert.ok(pages.includes('"classification-disputed" ? disputedAssessmentHtml'));
 });
 
 test("static source clauses retain quotations, context, rationale order and escaping", async () => {
@@ -1594,10 +1575,10 @@ test("occurrence summaries use reading paragraphs and boundary notices retain th
   const pages = await read("scripts/prepare-github-pages.js");
   assert.match(pages, /assessmentProseHtml\(summary\)/);
   const source = await read("src/pages/vigil-case-file.tsx");
-  const boundary = source.match(/\{isBoundaryUnresolved && <section[\s\S]*?<\/section>/)?.[0] ?? "";
-  assert.match(boundary, /vigil-exemplar-callout-icon[\s\S]*?<Info \/>/);
-  assert.match(boundary, /vigil-exemplar-callout-copy/);
-  assert.match(boundary, /aria-labelledby="vigil-boundary-heading"/);
+  const outcomeText = source.slice(source.indexOf("{outcomeCopy && <section"), source.indexOf('<div className="vigil-case-manual-layout">'));
+  assert.ok(outcomeText.includes("vigil-exemplar-callout-icon"));
+  assert.ok(outcomeText.includes("vigil-exemplar-callout-copy"));
+  assert.ok(outcomeText.includes('aria-labelledby="vigil-outcome-heading"'));
 });
 
 

@@ -73,10 +73,21 @@ const classificationSource=await readFile(new URL('../src/lib/vigilTaxonomyClass
 const compiled=ts.transpileModule(classificationSource,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/^import .*;\n/gm,'');
 const classification=await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
 const classified=role=>({record_type:'incident',classification_status:'classified',classification_role:role,adjudication_coverage:{status:'complete'},alignment_exemplar_eligible:true});
-test('Complete successful holding and eligibility do not imply admitted exemplar status',()=>{assert.equal(classification.taxonomyFailureTypeLabel(classified('successful-invariant')),'Invariant held');});
-test('An ambiguous boundary alone is not a mixed outcome',()=>{assert.equal(classification.taxonomyFailureTypeLabel(classified('ambiguous-boundary')),'Boundary unresolved');});
-test('Incomplete coverage retains completed mapping findings without a whole-Incident outcome',()=>{assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),adjudication_coverage:{status:'partial'}}),'Adjudication incomplete');});
-test('Distinct failure and held mappings produce a mixed outcome',()=>{assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),primary_classification:{classification_role:'failure-occurrence'},secondary_classifications:[{classification_role:'successful-invariant'}]}),'Combination');});
+test('Complete successful holding and eligibility do not imply admitted exemplar status',()=>{assert.equal(classification.taxonomyFailureTypeLabel(classified('successful-invariant')),'Safeguards worked');});
+test('An ambiguous boundary alone is not a mixed outcome',()=>{assert.equal(classification.taxonomyFailureTypeLabel(classified('ambiguous-boundary')),'Outcome unclear');});
+test('Incomplete coverage retains completed mapping findings without a whole-Incident outcome',()=>{assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),adjudication_coverage:{status:'partial'}}),'Review incomplete');});
+test('Failure remains the Case File outcome beside successful safeguards',()=>{assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),primary_classification:{classification_role:'failure-occurrence'},secondary_classifications:[{classification_role:'successful-invariant'}]}),'Failures found');});
+test('Unresolved results cannot erase confirmed failure or working safeguards',()=>{
+ assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),primary_classification:{classification_role:'failure-occurrence'},secondary_classifications:[{classification_role:'ambiguous-boundary'}]}),'Failures found');
+ assert.equal(classification.taxonomyFailureTypeLabel({...classified('successful-invariant'),primary_classification:{classification_role:'successful-invariant'},secondary_classifications:[{classification_role:'ambiguous-boundary'}]}),'Safeguards worked');
+});
+test('Disputes and required human review prevent a final outcome',()=>{
+ assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),classification_status:'classification-disputed'}),'Review incomplete');
+ assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),classification_status:'requires-human-review'}),'Review incomplete');
+});
+test('No applicable mapping after a complete review is not treated as a success',()=>{
+ assert.equal(classification.taxonomyFailureTypeLabel({...classified('failure-occurrence'),classification_status:'unclassified',classification_role:undefined}),'No classification assigned');
+});
 
 // The static crawl pages must preserve the same assessments as the interactive view.
 import vm from 'node:vm';

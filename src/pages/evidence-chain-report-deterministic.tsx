@@ -1,6 +1,6 @@
 import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
 import { assessmentParagraphs, assessmentSections } from "@/lib/vigilAssessmentParagraphs.mjs";
-import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
+import { caseFileOutcomeCopy, caseFileFindingCountText } from "@/lib/vigilCaseOutcomeCopy";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
@@ -16,7 +16,7 @@ import {
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import { taxonomyAlignmentOutcomeLabel, taxonomyIncidentMappingCounts, taxonomyIncidentHasDispute } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { IncidentContextSection, IncidentContextLimitations } from "@/components/vigil/IncidentContextSection";
@@ -190,17 +190,6 @@ function severityDisplay(value?: string) {
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
 }
 
-function exemplarExecutionStatus(record?: VigilIndexRecord) {
-  if (!record) return undefined;
-  return firstText(record.raw, [
-    "vigil_assessment.exemplar_execution.status",
-    "vigil_assessment.exemplar_execution",
-    "vigil_assessment.exemplar_execution_status",
-    "exemplar_execution.status",
-    "exemplar_execution",
-  ])?.trim().toLowerCase().replace(/[_\s]+/g, "-");
-}
-
 function Field({ label, value }: { label: string; value?: ReactNode }) {
   if (!value) return null;
   return <div className="report-field"><dt className="report-label">{label}</dt><dd className="report-value">{value}</dd></div>;
@@ -263,17 +252,12 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
   const title = incident?.title ?? "VIGIL Observatory Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
-  const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
-  const adjudicationIncomplete = classification === "Adjudication incomplete";
-  const isExemplar = classification === "Exemplar";
-  const isInvariantHeld = isExemplar || classification === "Invariant held";
-  const isFailure = classification === "Classified";
-  const isCombination = classification === "Combination";
-  const isBoundaryUnresolved = classification === "Boundary unresolved";
-  const isDisputed = classification === "Disputed";
-  const exemplarExecution = exemplarExecutionStatus(incident);
-  const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
+  const outcomeCopy = caseFileOutcomeCopy(classificationDisplay);
+  const countText = incident ? caseFileFindingCountText(taxonomyIncidentMappingCounts(incident.raw)) : undefined;
+  const isFailure = classificationDisplay === "Failures found";
+  const isSafeguard = classificationDisplay === "Safeguards worked";
+  const isDisputed = incident ? taxonomyIncidentHasDispute(incident.raw) : false;
 
   const evidenceReferences = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
@@ -302,64 +286,19 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
           <Field label="Classification" value={classificationDisplay} />
-          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={incident ? <VigilStatusChip value={incident.severity} /> : undefined} />
           <Field label="Updated" value={updated} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>
       </header>
 
-      {isFailure && <section className="report-exemplar-callout is-failure" aria-labelledby="report-failure-heading">
-        <p className="report-exemplar-kicker">Alignment outcome · Failure evidenced</p>
-        <h2 id="report-failure-heading">Failure is evidenced at an assessed governance boundary.</h2>
-        <p>This Case File contains one or more mappings where failure is evidenced under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
-        <p className="report-exemplar-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
-      </section>}
-
-      {isBoundaryUnresolved && <section className="report-exemplar-callout is-combination" aria-labelledby="report-boundary-heading">
-        <p className="report-exemplar-kicker">Boundary assessment</p>
-        <h2 id="report-boundary-heading">A governance boundary remains unresolved.</h2>
-        <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
-      </section>}
-
-      {isCombination && <section className="report-exemplar-callout is-combination" aria-labelledby="report-combination-heading">
-        <p className="report-exemplar-kicker">Mixed alignment outcome</p>
-        <h2 id="report-combination-heading">Different assessed boundaries have different outcomes.</h2>
-        <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary.</p>
-        <p className="report-exemplar-boundary">Unresolved boundaries remain explicitly unresolved rather than being presented as failures; invariant-held mappings remain visible as evidence of boundaries that held.</p>
-      </section>}
-
-      {isDisputed && <section className="report-exemplar-callout is-disputed" aria-labelledby="report-disputed-heading">
-        <p className="report-exemplar-kicker">{VIGIL_DISPUTED_COPY.kicker}</p>
-        <h2 id="report-disputed-heading">{VIGIL_DISPUTED_COPY.heading}</h2>
-        <p>{VIGIL_DISPUTED_COPY.explanation}</p>
-        <p className="report-exemplar-boundary">{VIGIL_DISPUTED_COPY.boundary}</p>
-        <p>{VIGIL_DISPUTED_COPY.qualification}</p>
-      </section>}
-
-      {adjudicationIncomplete && <section className="report-exemplar-callout is-incomplete-adjudication" aria-labelledby="report-adjudication-incomplete-heading">
-        <p className="report-exemplar-kicker">Adjudication status</p>
-        <h2 id="report-adjudication-incomplete-heading">Adjudication is incomplete.</h2>
-        <p>VIGIL has not assigned a whole-Incident alignment classification because one or more material incident observations still require a final taxonomy determination.</p>
-        <p className="report-exemplar-boundary">Completed mapping-level findings remain visible in Section 03 for transparency, but they do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete.</p>
-      </section>}
-
-      {isInvariantHeld && !isExemplar && <section className="report-exemplar-callout is-incomplete-adjudication" aria-labelledby="report-invariant-held-heading">
-        <p className="report-exemplar-kicker">Alignment finding · Invariant held</p>
-        <h2 id="report-invariant-held-heading">A governance invariant held.</h2>
-        <p>This Case File contains evidence that a specific governance boundary held under the conditions assessed. That finding is limited to the mapped boundary and does not mean the Incident as a whole was aligned.</p>
-        <p className="report-exemplar-boundary">An invariant-held finding does not by itself establish admission as a taxonomy exemplar.</p>
-      </section>}
-
-      {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">
-        <p className="report-exemplar-kicker">{hasMixedExecution ? "Alignment finding · mixed execution" : "Alignment exemplar · Invariant held"}</p>
-        <h2 id="report-exemplar-heading">{hasMixedExecution ? "A governance invariant held within a mixed outcome." : "The adjudicated governance boundary held."}</h2>
-        {hasMixedExecution
-          ? <p>This Case File contains evidence that a specific governance invariant held, while other parts of the occurrence produced a different or unresolved result.</p>
-          : <p>This Case File is fully adjudicated against the current taxonomy, and the mapped governance invariant held under the conditions assessed.</p>}
-        <p className="report-exemplar-boundary">{hasMixedExecution
-          ? "The invariant-held finding is bounded to the governance boundary assessed and does not override other failure or unresolved findings in the Incident."
-          : "Exemplar status is limited to the governance boundary and evidence in this occurrence; it does not mean every aspect of the system or Incident was successful."}</p>
+      {outcomeCopy && <section className={`report-exemplar-callout${isFailure ? " is-failure" : isSafeguard ? " is-exemplar" : " is-combination"}`} aria-labelledby="report-outcome-heading">
+        <p className="report-exemplar-kicker">Case File outcome · {classificationDisplay}</p>
+        <h2 id="report-outcome-heading">{outcomeCopy.heading}</h2>
+        <p>{outcomeCopy.summary}</p>
+        <p className="report-exemplar-boundary">{outcomeCopy.note}</p>
+        {countText && <p className="report-exemplar-boundary">Fidelity Class findings: {countText}</p>}
+        {isDisputed && <p className="report-exemplar-boundary">Some accounts or interpretations are disputed. See Classification for the details.</p>}
       </section>}
 
       <div className="report-flow">
