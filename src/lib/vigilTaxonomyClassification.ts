@@ -129,24 +129,6 @@ function incidentClassificationLabel(
   return "No classification assigned";
 }
 
-export function taxonomyIncidentMappingCounts(record: UnknownRecord) {
-  const directFallback = text(record.classification_role) as TaxonomyClassificationRole | undefined;
-  const hasDirect = isObject(record.primary_classification)
-    || (Array.isArray(record.secondary_classifications) && record.secondary_classifications.some(isObject));
-  const classification = taxonomyClassification(record);
-  const nestedFallback = text(classification?.classification_role) as TaxonomyClassificationRole | undefined;
-  const roles = hasDirect
-    ? mappingRoles(record, directFallback ?? "failure-occurrence")
-    : classification
-      ? mappingRoles(classification, nestedFallback ?? "failure-occurrence")
-      : [];
-  return {
-    failures: roles.filter(role => role === "failure-occurrence").length,
-    safeguards: roles.filter(role => role === "successful-invariant").length,
-    unresolved: roles.filter(role => role === "ambiguous-boundary").length,
-  };
-}
-
 export function taxonomyIncidentHasDispute(record: UnknownRecord) {
   const status = text(record.classification_status) ?? text(taxonomyClassification(record)?.classification_status);
   return status === "classification-disputed";

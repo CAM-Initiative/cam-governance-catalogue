@@ -1,6 +1,6 @@
 import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
 import { assessmentParagraphs, assessmentSections } from "@/lib/vigilAssessmentParagraphs.mjs";
-import { caseFileOutcomeCopy, caseFileFindingCountText } from "@/lib/vigilCaseOutcomeCopy";
+import { caseFileOutcomeCopy } from "@/lib/vigilCaseOutcomeCopy";
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
@@ -32,7 +32,6 @@ import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyAlignmentOutcomeLabel,
-  taxonomyIncidentMappingCounts,
   taxonomyIncidentHasDispute,
   type TaxonomyReferenceTarget,
 } from "@/lib/vigilTaxonomyClassification";
@@ -543,7 +542,6 @@ export default function VigilCaseFile() {
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const outcomeCopy = caseFileOutcomeCopy(classificationDisplay);
-  const countText = incident ? caseFileFindingCountText(taxonomyIncidentMappingCounts(incident.raw)) : undefined;
   const isFailure = classificationDisplay === "Failures found";
   const isSafeguard = classificationDisplay === "Safeguards worked";
   const isDisputed = incident ? taxonomyIncidentHasDispute(incident.raw) : false;
@@ -835,15 +833,14 @@ export default function VigilCaseFile() {
       ]}
     />
 
-    {outcomeCopy && <section className={`vigil-exemplar-callout${isFailure ? " is-failure" : isSafeguard ? " is-exemplar" : " is-combination"}`} aria-labelledby="vigil-outcome-heading">
+    {outcomeCopy && <section className={`vigil-exemplar-callout vigil-case-outcome${isFailure ? " is-failure" : isSafeguard ? " is-exemplar" : " is-combination"}`} aria-labelledby="vigil-outcome-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{isFailure ? <CircleX /> : isSafeguard ? <CircleCheckBig /> : <Info />}</div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Case File outcome · {classificationDisplay}</p>
         <h2 id="vigil-outcome-heading">{outcomeCopy.heading}</h2>
         <p>{outcomeCopy.summary}</p>
-        <p className="vigil-exemplar-callout-boundary">{outcomeCopy.note}</p>
-        {countText && <p className="vigil-exemplar-callout-boundary">Fidelity Class findings: {countText}</p>}
-        {isDisputed && <p className="vigil-exemplar-callout-boundary">Some accounts or interpretations are disputed. See Classification for the details.</p>}
+        <p className="vigil-exemplar-callout-boundary vigil-case-outcome-note">{outcomeCopy.note}</p>
+        {isDisputed && <p className="vigil-exemplar-callout-boundary vigil-case-outcome-dispute">Some accounts or interpretations are disputed. See Classification for the details.</p>}
       </div>
     </section>}
 

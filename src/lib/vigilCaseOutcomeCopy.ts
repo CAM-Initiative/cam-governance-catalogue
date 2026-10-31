@@ -33,10 +33,3 @@ export function caseFileOutcomeCopy(outcome?: string) {
     : undefined;
 }
 
-export function caseFileFindingCountText(counts: { failures: number; safeguards: number; unresolved: number }) {
-  const total = counts.failures + counts.safeguards + counts.unresolved;
-  if (!total) return undefined;
-  return String(counts.failures) + (counts.failures === 1 ? " failure" : " failures")
-    + " · " + counts.safeguards + (counts.safeguards === 1 ? " safeguard worked" : " safeguards worked")
-    + " · " + counts.unresolved + " unresolved";
-}

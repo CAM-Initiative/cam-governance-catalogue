@@ -551,7 +551,9 @@ test("Case File outcomes use the five approved labels and one shared summary sou
   assert.ok(!taxonomy.includes('return "Combination"'));
   for (const surface of [caseFile, report]) {
     assert.ok(surface.includes("caseFileOutcomeCopy(classificationDisplay)"));
-    assert.ok(surface.includes("Fidelity Class findings: {countText}"));
+    assert.ok(!surface.includes("Fidelity Class findings: {countText}"));
+    assert.ok(!surface.includes("caseFileFindingCountText"));
+    assert.ok(surface.includes("outcomeCopy.note"));
   }
   assert.ok(contract.includes("five plain-English outcomes"));
 });

@@ -1,0 +1,118 @@
+/* Case File outcome: plain-English conclusion, not a second classification table.
+   The detailed result chips remain in Section 03. */
+.vigil-case-file-page .vigil-exemplar-callout.vigil-case-outcome {
+  --case-outcome-accent: var(--status-neutral);
+  grid-template-columns: 2.35rem minmax(0, 1fr) !important;
+  gap: 1rem !important;
+  margin: 1.05rem 0 1.5rem !important;
+  padding: 1.4rem 1.6rem !important;
+  border: 1px solid hsl(var(--border) / 0.76) !important;
+  border-left: 4px solid hsl(var(--case-outcome-accent) / 0.88) !important;
+  border-radius: 0.75rem !important;
+  background: hsl(var(--card)) !important;
+  box-shadow: 0 6px 20px hsl(var(--foreground) / 0.045) !important;
+}
+.vigil-case-file-page .vigil-case-outcome.is-failure {
+  --case-outcome-accent: var(--destructive);
+}
+.vigil-case-file-page .vigil-case-outcome.is-exemplar {
+  --case-outcome-accent: var(--status-success);
+}
+.vigil-case-file-page .vigil-case-outcome .vigil-exemplar-callout-icon {
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid hsl(var(--case-outcome-accent) / 0.26) !important;
+  border-radius: 0.65rem !important;
+  background: hsl(var(--case-outcome-accent) / 0.07) !important;
+  color: hsl(var(--case-outcome-accent)) !important;
+  box-shadow: none !important;
+}
+.vigil-case-file-page .vigil-case-outcome .vigil-exemplar-callout-icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.vigil-case-file-page .vigil-case-outcome .vigil-exemplar-callout-kicker {
+  margin: 0 0 0.35rem;
+  color: hsl(var(--case-outcome-accent)) !important;
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+}
+.vigil-case-file-page .vigil-case-outcome h2 {
+  max-width: 50ch;
+  margin: 0 !important;
+  font-size: clamp(1.28rem, 1.6vw, 1.68rem) !important;
+  line-height: 1.24 !important;
+  white-space: normal !important;
+  text-wrap: balance;
+}
+.vigil-case-file-page .vigil-case-outcome .vigil-exemplar-callout-copy > p:not(.vigil-exemplar-callout-kicker):not(.vigil-exemplar-callout-boundary) {
+  max-width: 72ch;
+  margin-top: 0.72rem;
+  line-height: 1.65;
+}
+.vigil-case-file-page .vigil-case-outcome .vigil-case-outcome-note {
+  max-width: 72ch;
+  margin-top: 0.85rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid hsl(var(--border) / 0.74) !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 0.9rem !important;
+  font-weight: 450 !important;
+  line-height: 1.55 !important;
+}
+.vigil-case-file-page .vigil-case-outcome .vigil-case-outcome-dispute {
+  max-width: 72ch;
+  margin-top: 0.5rem;
+  padding-top: 0;
+  border-top: 0 !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 0.9rem;
+  font-weight: 450;
+}
+@media (max-width: 620px) {
+  .vigil-case-file-page .vigil-exemplar-callout.vigil-case-outcome {
+    grid-template-columns: 1fr !important;
+    gap: 0.7rem !important;
+    padding: 1.05rem 1.15rem !important;
+  }
+}
+
+/* Preserve the same restrained editorial hierarchy in reports and PDFs. */
+.vigil-deterministic-report-host .report-exemplar-callout.report-case-outcome,
+.report-document .report-exemplar-callout.report-case-outcome {
+  --case-outcome-accent: var(--status-neutral);
+  border: 1px solid hsl(var(--report-rule)) !important;
+  border-left: 4px solid hsl(var(--case-outcome-accent) / 0.85) !important;
+  border-radius: 0.6rem !important;
+  background: hsl(var(--report-paper)) !important;
+  box-shadow: none !important;
+}
+.vigil-deterministic-report-host .report-case-outcome.is-failure,
+.report-document .report-case-outcome.is-failure {
+  --case-outcome-accent: var(--destructive);
+}
+.vigil-deterministic-report-host .report-case-outcome.is-exemplar,
+.report-document .report-case-outcome.is-exemplar {
+  --case-outcome-accent: var(--status-success);
+}
+.vigil-deterministic-report-host .report-case-outcome h2,
+.report-document .report-case-outcome h2 {
+  white-space: normal !important;
+}
+.vigil-deterministic-report-host .report-case-outcome .report-case-outcome-note,
+.report-document .report-case-outcome .report-case-outcome-note {
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 0.9rem !important;
+  font-weight: 450 !important;
+  border-top-color: hsl(var(--report-rule)) !important;
+}
+@media print {
+  .report-document .report-exemplar-callout.report-case-outcome {
+    border: 1px solid #d6d4d0 !important;
+    border-left: 3px solid #777 !important;
+    background: #fff !important;
+  }
+  .report-document .report-case-outcome .report-case-outcome-note {
+    color: #565656 !important;
+  }
+}

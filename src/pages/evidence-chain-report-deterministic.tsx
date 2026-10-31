@@ -1,6 +1,6 @@
 import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
 import { assessmentParagraphs, assessmentSections } from "@/lib/vigilAssessmentParagraphs.mjs";
-import { caseFileOutcomeCopy, caseFileFindingCountText } from "@/lib/vigilCaseOutcomeCopy";
+import { caseFileOutcomeCopy } from "@/lib/vigilCaseOutcomeCopy";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
@@ -16,7 +16,7 @@ import {
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { taxonomyAlignmentOutcomeLabel, taxonomyIncidentMappingCounts, taxonomyIncidentHasDispute } from "@/lib/vigilTaxonomyClassification";
+import { taxonomyAlignmentOutcomeLabel, taxonomyIncidentHasDispute } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { IncidentContextSection, IncidentContextLimitations } from "@/components/vigil/IncidentContextSection";
@@ -254,7 +254,6 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const outcomeCopy = caseFileOutcomeCopy(classificationDisplay);
-  const countText = incident ? caseFileFindingCountText(taxonomyIncidentMappingCounts(incident.raw)) : undefined;
   const isFailure = classificationDisplay === "Failures found";
   const isSafeguard = classificationDisplay === "Safeguards worked";
   const isDisputed = incident ? taxonomyIncidentHasDispute(incident.raw) : false;
@@ -292,13 +291,12 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         </dl>
       </header>
 
-      {outcomeCopy && <section className={`report-exemplar-callout${isFailure ? " is-failure" : isSafeguard ? " is-exemplar" : " is-combination"}`} aria-labelledby="report-outcome-heading">
+      {outcomeCopy && <section className={`report-exemplar-callout report-case-outcome${isFailure ? " is-failure" : isSafeguard ? " is-exemplar" : " is-combination"}`} aria-labelledby="report-outcome-heading">
         <p className="report-exemplar-kicker">Case File outcome · {classificationDisplay}</p>
         <h2 id="report-outcome-heading">{outcomeCopy.heading}</h2>
         <p>{outcomeCopy.summary}</p>
-        <p className="report-exemplar-boundary">{outcomeCopy.note}</p>
-        {countText && <p className="report-exemplar-boundary">Fidelity Class findings: {countText}</p>}
-        {isDisputed && <p className="report-exemplar-boundary">Some accounts or interpretations are disputed. See Classification for the details.</p>}
+        <p className="report-exemplar-boundary report-case-outcome-note">{outcomeCopy.note}</p>
+        {isDisputed && <p className="report-exemplar-boundary report-case-outcome-dispute">Some accounts or interpretations are disputed. See Classification for the details.</p>}
       </section>}
 
       <div className="report-flow">

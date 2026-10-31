@@ -125,7 +125,7 @@ assert.match(report, /className="report-hero"/);
 assert.match(report, /const outcomeCopy = caseFileOutcomeCopy/);
 assert.match(report, /const isFailure = classificationDisplay === "Failures found"/);
 assert.match(report, /const isSafeguard = classificationDisplay === "Safeguards worked"/);
-assert.match(report, /caseFileFindingCountText/);
+assert.doesNotMatch(report, /caseFileFindingCountText|Fidelity Class findings:/);
 assert.match(report, /Some accounts or interpretations are disputed/);
 assert.match(report, /Case File outcome · \{classificationDisplay\}/);
 assert.doesNotMatch(report, /isIncompleteInvariant|hasMixedExecution/);

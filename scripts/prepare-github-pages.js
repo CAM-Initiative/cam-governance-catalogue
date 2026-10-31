@@ -518,16 +518,8 @@ function publicCaseOutcomeSummaryHtml(record, canonical) {
   if (!copy) return "";
   const item = canonical || record;
   const taxonomy = item.taxonomy_classification || {};
-  const primary = item.primary_classification || taxonomy.primary_classification;
-  const secondary = item.secondary_classifications || taxonomy.secondary_classifications || [];
-  const fallback = item.classification_role || taxonomy.classification_role || "failure-occurrence";
-  const roles = [primary?.classification_role || (primary ? fallback : null), ...secondary.filter(Boolean).map(entry => entry.classification_role || fallback)].filter(Boolean);
-  const failures = roles.filter(role => role === "failure-occurrence").length;
-  const safeguards = roles.filter(role => role === "successful-invariant").length;
-  const unresolved = roles.filter(role => role === "ambiguous-boundary").length;
-  const findingText = roles.length ? "<p>Fidelity Class findings: " + failures + " " + (failures === 1 ? "failure" : "failures") + " · " + safeguards + " " + (safeguards === 1 ? "safeguard worked" : "safeguards worked") + " · " + unresolved + " unresolved</p>" : "";
   const dispute = (item.classification_status || taxonomy.classification_status) === "classification-disputed" ? "<p>Some accounts or interpretations are disputed. See Classification for the details.</p>" : "";
-  return "<section aria-label=\"Case File outcome\"><p>Case File outcome · " + escapeHtml(outcome) + "</p><h2>" + escapeHtml(copy[0]) + "</h2><p>" + escapeHtml(copy[1]) + "</p><p>" + escapeHtml(copy[2]) + "</p>" + findingText + dispute + "</section>";
+  return "<section aria-label=\"Case File outcome\"><p>Case File outcome · " + escapeHtml(outcome) + "</p><h2>" + escapeHtml(copy[0]) + "</h2><p>" + escapeHtml(copy[1]) + "</p><p>" + escapeHtml(copy[2]) + "</p>" + dispute + "</section>";
 }
 
 function taxonomyCaseLinkHtml(example) {

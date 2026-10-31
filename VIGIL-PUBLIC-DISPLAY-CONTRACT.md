@@ -22,7 +22,7 @@ The Case File shows only five plain-English outcomes, selected in this order:
 4. **Outcome unclear** — mapped results consist only of unresolved boundaries.
 5. **No classification assigned** — the completed review produces no applicable mapping.
 
-These are summaries of what was found, not claims that every aspect of an Incident failed or succeeded. The public Case File and report MUST show the separate number of failure, success, and unresolved mappings when mappings exist. All mapping-local results and their evidence stay unchanged. Exemplar admission and disputes are separate from the five outcome categories. Eligibility alone cannot make a Case File an admitted exemplar. An unfinished review MUST NOT be published as a completed whole-Incident outcome; mapped findings may remain visible. Harm severity is assessed separately.
+These are summaries of what was found, not claims that every aspect of an Incident failed or succeeded. The counts and roles for separate failure, successful-safeguard and unresolved findings belong in Section 03 Classification; the outcome summary MUST NOT duplicate those counts. All mapping-local results and their evidence stay unchanged. Exemplar admission and disputes are separate from the five outcome categories. Eligibility alone cannot make a Case File an admitted exemplar. An unfinished review MUST NOT be published as a completed whole-Incident outcome; mapped findings may remain visible. Harm severity is assessed separately.
 
 ## Harm Impact version and assessment-pathway gate
 
