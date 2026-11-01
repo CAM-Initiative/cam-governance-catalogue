@@ -705,8 +705,10 @@ test("Alignment Taxonomy pages distinguish failure-linked cases from invariant-h
   assert.doesNotMatch(taxonomyCss, /vigil-taxonomy-family-case-list|vigil-taxonomy-family-exemplars/);
   assert.match(taxonomyPage, /const selectedClass = useMemo/);
   assert.match(taxonomyPage, /selectedClass \? <ClassManualSection/);
-  assert.match(taxonomyPage, /: <FamilyManualSection/);
-  assert.match(taxonomyPage, /View whole family/);
+  assert.match(taxonomyPage, /<FamilyManualSection document=\{selectedFamily\}/);
+  assert.match(taxonomyPage, /<TaxonomyOverview families=\{families\}/);
+  assert.match(taxonomyPage, /vigil-taxonomy-family-cards/);
+  assert.match(taxonomyPage, /All families/);
   assert.match(taxonomyPage, /activeClassId=\{selectedClass\?\.class_id\}/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-manual-contents ul li\.is-active-class > a/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-single-class-view/);
