@@ -708,6 +708,8 @@ test("Alignment Taxonomy pages distinguish failure-linked cases from invariant-h
   assert.match(taxonomyPage, /<FamilyManualSection document=\{selectedFamily\}/);
   assert.match(taxonomyPage, /<TaxonomyOverview families=\{families\}/);
   assert.match(taxonomyPage, /vigil-taxonomy-family-cards/);
+  assert.match(taxonomyPage, /function TaxonomyOverview/);
+  assert.match(taxonomyPage, /document\.classes\.map/);
   assert.match(taxonomyPage, /All families/);
   assert.match(taxonomyPage, /activeClassId=\{selectedClass\?\.class_id\}/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-manual-contents ul li\.is-active-class > a/);
