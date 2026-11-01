@@ -788,3 +788,147 @@
     padding-left: 0;
   }
 }
+
+
+/* Taxonomy reference index and in-family navigation. These are reading
+   surfaces, not a second dashboard or a duplicate of the side contents. */
+.vigil-taxonomy-overview {
+  padding: clamp(1.1rem, 2vw, 1.7rem);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-panel);
+  background: hsl(var(--background));
+}
+.vigil-taxonomy-overview-intro { max-width: 70ch; margin-bottom: 1.3rem; }
+.vigil-taxonomy-overview-intro h2 {
+  margin: 0.35rem 0 0.6rem;
+  font: 500 clamp(1.9rem, 3vw, 2.65rem)/1.12 var(--app-font-serif);
+  letter-spacing: -0.02em;
+}
+.vigil-taxonomy-overview-intro > p:last-child {
+  margin: 0;
+  font-size: 1.03rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground) / 0.78);
+}
+.vigil-taxonomy-family-classes {
+  margin-top: 1.7rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid hsl(var(--border));
+}
+.vigil-taxonomy-family-classes-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+.vigil-taxonomy-family-classes-head h3 {
+  margin: 0;
+  font: 600 clamp(1.4rem, 2vw, 1.85rem)/1.25 var(--app-font-serif);
+}
+.vigil-taxonomy-family-classes-head h3 span {
+  font: 600 0.8rem var(--app-font-mono);
+  color: hsl(var(--muted-foreground));
+}
+.vigil-taxonomy-family-classes-head > a {
+  font-size: 0.88rem;
+  font-weight: 650;
+  color: hsl(var(--primary));
+}
+.vigil-taxonomy-family-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+.vigil-taxonomy-family-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.48rem;
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background: hsl(var(--muted) / 0.14);
+  color: hsl(var(--foreground));
+  text-decoration: none !important;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.vigil-taxonomy-family-card:hover {
+  border-color: hsl(var(--primary) / 0.55);
+  background: hsl(var(--primary) / 0.055);
+}
+.vigil-taxonomy-family-card:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+.vigil-taxonomy-family-card > strong {
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.12rem, 1.4vw, 1.34rem);
+  font-weight: 600;
+  line-height: 1.24;
+  overflow-wrap: anywhere;
+}
+.vigil-taxonomy-family-card-copy {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-taxonomy-family-card-action {
+  margin-top: auto;
+  padding-top: 0.25rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+.vigil-taxonomy-manual-family-hero > h2,
+.vigil-taxonomy-manual-class-top h3 { text-wrap: balance; overflow-wrap: anywhere; }
+.vigil-taxonomy-manual-contents.is-collapsed .vigil-taxonomy-manual-contents-head h2 { display: none; }
+.vigil-taxonomy-manual-contents a:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .vigil-taxonomy-manual-layout,
+  .vigil-taxonomy-manual-layout.is-contents-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .vigil-taxonomy-manual-contents.is-collapsed {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    background: hsl(var(--background));
+  }
+  .vigil-taxonomy-manual-contents.is-collapsed .vigil-taxonomy-manual-contents-head { justify-content: space-between; }
+  .vigil-taxonomy-manual-contents.is-collapsed .vigil-taxonomy-manual-contents-head h2 {
+    display: block;
+    font-size: 0.8rem;
+    color: hsl(var(--foreground));
+  }
+  .vigil-taxonomy-manual-contents:not(.is-collapsed) {
+    position: static;
+    max-height: min(24rem, 60vh);
+    overflow-y: auto;
+    padding: 0.8rem 0.9rem !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: 0.5rem !important;
+    background: hsl(var(--background)) !important;
+  }
+  .vigil-taxonomy-family-cards { grid-template-columns: minmax(0, 1fr); }
+  .vigil-taxonomy-overview { padding: 1rem; }
+  .vigil-taxonomy-manual-meta { display: flex; gap: 0.4rem 0.65rem; }
+  .vigil-taxonomy-manual-meta span { display: none; }
+  .vigil-taxonomy-manual-meta strong { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vigil-taxonomy-family-card { transition: none; }
+}

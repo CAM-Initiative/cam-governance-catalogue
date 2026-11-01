@@ -314,6 +314,25 @@ def validate_vigil_publication_integrity() -> list[str]:
         for loc in sitemap_root.findall("sm:url/sm:loc", namespace)
         if loc.text and loc.text.strip()
     ]
+    # Only overview pages are search landing pages; individual reference
+    # pages stay linkable, but must not be submitted in this sitemap.
+    detail_roots = (
+        "https://www.cam-initiative.org/observatory/alignment-taxonomy/",
+        "https://www.cam-initiative.org/observatory/ai-governance-standards/",
+    )
+    for root_url in detail_roots:
+        if root_url not in sitemap_urls:
+            errors.append(f"Reference overview missing from sitemap: {root_url}")
+        detail_urls = [url for url in sitemap_urls if url.startswith(root_url) and url != root_url]
+        if detail_urls:
+            errors.append(f"Reference detail URLs must not be in sitemap: {detail_urls[:5]}")
+        detail_dir = Path("docs") / root_url.removeprefix("https://www.cam-initiative.org/")
+        if detail_dir.is_dir():
+            for entry in detail_dir.iterdir():
+                html_path = entry / "index.html"
+                if entry.is_dir() and html_path.is_file() and '<meta name="robots" content="noindex, follow" />' not in html_path.read_text():
+                    errors.append(f"Reference page missing noindex: {html_path}")
+
     sitemap_lastmods = {}
     for url_node in sitemap_root.findall("sm:url", namespace):
         loc_node = url_node.find("sm:loc", namespace)

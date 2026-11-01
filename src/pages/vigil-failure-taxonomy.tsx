@@ -210,7 +210,7 @@ function ManualContents({
     aria-label="VIGIL Observatory Alignment Taxonomy contents"
   >
     <div className="vigil-taxonomy-manual-contents-head">
-      {!collapsed ? <h2>Contents</h2> : null}
+      <h2>{collapsed ? "Browse contents" : "Contents"}</h2>
       <button
         type="button"
         className="vigil-taxonomy-manual-collapse"
@@ -413,9 +413,10 @@ function ClassManualSection({
 }) {
   return <section className="vigil-taxonomy-single-class-view" aria-labelledby={`${item.class_id.toLowerCase()}-view-heading`}>
     <div className="vigil-taxonomy-single-class-context">
-      <p>Fidelity class</p>
+      <Link href="/observatory/alignment-taxonomy/">All families</Link>
+      <span aria-hidden="true">/</span>
       <Link href={`/observatory/alignment-taxonomy/${parent.family.family_id}/`}>
-        View whole family · {parent.family.name}
+        {parent.family.name}
       </Link>
     </div>
     <h2 id={`${item.class_id.toLowerCase()}-view-heading`} className="sr-only">{item.name}</h2>
@@ -463,11 +464,41 @@ function FamilyManualSection({ document }: { document: FailureTaxonomyFamilyDocu
         <ul>{family.scope.map((scope) => <li key={scope}>{scope}</li>)}</ul>
       </> : null}
 
-      <p className="vigil-taxonomy-family-navigation">For individual class definitions, recognition conditions and evidence, expand this family in the Contents navigation and open a Fidelity Class reference page.</p>
+      <section className="vigil-taxonomy-family-classes" aria-label="Classes in this Fidelity Family">
+        <div className="vigil-taxonomy-family-classes-head">
+          <h3>Fidelity Classes <span>{document.classes.length}</span></h3>
+          <Link href="/observatory/alignment-taxonomy/">All families</Link>
+        </div>
+        <div className="vigil-taxonomy-family-cards">
+          {document.classes.map((item) => <Link key={item.class_id} href={`/observatory/alignment-taxonomy/${item.class_id}/`} className="vigil-taxonomy-family-card">
+            <span className="vigil-taxonomy-manual-reference-number">{shortTaxonomyId(item.class_id)}</span>
+            <strong>{item.name}</strong>
+            <span className="vigil-taxonomy-family-card-copy">{item.plain_english}</span>
+          </Link>)}
+        </div>
+      </section>
 
     </header>
 
 
+  </section>;
+}
+
+function TaxonomyOverview({ families }: { families: FailureTaxonomyFamilyDocument[] }) {
+  return <section className="vigil-taxonomy-overview" aria-labelledby="taxonomy-overview-title">
+    <header className="vigil-taxonomy-overview-intro">
+      <p className="vigil-taxonomy-manual-eyebrow">Reference index</p>
+      <h2 id="taxonomy-overview-title">Fidelity Families</h2>
+      <p>Browse related governance properties by family. Each family describes a governing invariant and its scope. Select a Fidelity Class to read its success and failure recognition criteria.</p>
+    </header>
+    <div className="vigil-taxonomy-family-cards">
+      {families.map((document) => <Link key={document.family.family_id} href={`/observatory/alignment-taxonomy/${document.family.family_id}/`} className="vigil-taxonomy-family-card">
+        <span className="vigil-taxonomy-manual-reference-number">{shortTaxonomyId(document.family.family_id)} · {document.classes.length} {document.classes.length === 1 ? "class" : "classes"}</span>
+        <strong>{document.family.name}</strong>
+        <span className="vigil-taxonomy-family-card-copy">{document.family.plain_english}</span>
+        <span className="vigil-taxonomy-family-card-action">Explore family <span aria-hidden="true">→</span></span>
+      </Link>)}
+    </div>
   </section>;
 }
 
@@ -476,7 +507,9 @@ export default function VigilFailureTaxonomy() {
   const requestedId = decodeURIComponent(params?.taxonomyId ?? "").trim();
   const [state, setState] = useState<TaxonomyState>({ status: "loading" });
   const [query, setQuery] = useState("");
-  const [contentsCollapsed, setContentsCollapsed] = useState(false);
+  const [contentsCollapsed, setContentsCollapsed] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 760px)").matches,
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -518,12 +551,9 @@ export default function VigilFailureTaxonomy() {
   }, [families, familyByClassId, requestedId]);
 
   useEffect(() => {
-    if (state.status !== "ready" || !requestedId || !selectedFamily) return;
-    const targetId = requestedId.toUpperCase().startsWith("VIGIL-FC-") ? requestedId : selectedFamily.family.family_id;
-    const target = document.getElementById(targetId.toLowerCase());
-    if (!target) return;
-    window.requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
-  }, [requestedId, selectedFamily, state.status]);
+    // A selected reference is a new page, not a jump below its masthead.
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [requestedId]);
 
   const classCount = state.status === "ready"
     ? state.data.index.families.reduce((sum, family) => sum + family.class_count, 0)
@@ -557,19 +587,21 @@ export default function VigilFailureTaxonomy() {
             families={families}
             query={query}
             setQuery={setQuery}
-            activeFamilyId={selectedFamily.family.family_id}
+            activeFamilyId={requestedId ? selectedFamily.family.family_id : undefined}
             activeClassId={selectedClass?.class_id}
             collapsed={contentsCollapsed}
             setCollapsed={setContentsCollapsed}
           />
           <div className="vigil-taxonomy-manual-document" aria-live="polite">
-            {selectedClass ? <ClassManualSection
+            {!requestedId ? <TaxonomyOverview families={families} /> : selectedClass ? <ClassManualSection
               item={selectedClass}
               parent={selectedFamily}
               classById={classById}
               caseFileExamples={state.data.caseFileExamples.classes}
               caseFileExamplesAvailable={state.data.caseFileExamplesAvailable}
-            /> : <FamilyManualSection document={selectedFamily} />}
+            /> : selectedFamily.family.family_id.toUpperCase() === requestedId.toUpperCase()
+              ? <FamilyManualSection document={selectedFamily} />
+              : <div className="vigil-reference-state"><h2>Reference not found</h2><p>This family or class is not in the current taxonomy.</p><Link href="/observatory/alignment-taxonomy/">Browse Fidelity Families</Link></div>}
           </div>
         </div> : null}
       </section>
