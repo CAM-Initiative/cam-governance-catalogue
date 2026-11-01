@@ -47,8 +47,9 @@ test("Family pages are family-only entry points; individual class detail is neve
   ]);
   const family = page.split("function FamilyManualSection(")[1]?.split("export default function VigilFailureTaxonomy()")[0] ?? "";
   assert.ok(family, "Family manual component is present");
-  assert.doesNotMatch(family, /<ClassManualCard|document\.classes\.map|allowed_class_ids/);
-  assert.match(family, /Contents navigation/);
+  assert.doesNotMatch(family, /<ClassManualCard|allowed_class_ids/);
+  assert.match(family, /document\.classes\.map/);
+  assert.match(family, /vigil-taxonomy-family-classes/);
   assert.match(page, /<ClassManualCard item=\{item\}/);
   const staticFamily = publisher.split("const familyBody = `")[1]?.split("  </main>`;")[0] ?? "";
   assert.ok(staticFamily, "Static family fallback is present");
