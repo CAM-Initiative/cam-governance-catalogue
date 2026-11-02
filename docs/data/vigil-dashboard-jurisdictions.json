@@ -1,6 +1,6 @@
 {
   "source": "VIGIL canonical Incident jurisdictional_context.primary_jurisdiction",
-  "record_count": 206,
+  "record_count": 209,
   "records": [
     {
       "id": "VIGIL-INC-000001",
@@ -14,12 +14,12 @@
     },
     {
       "id": "VIGIL-INC-000003",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "jurisdiction": "global"
     },
     {
       "id": "VIGIL-INC-000004",
-      "version": "1.5.0",
+      "version": "1.6.0",
       "jurisdiction": "global"
     },
     {
@@ -224,7 +224,7 @@
     },
     {
       "id": "VIGIL-INC-000049",
-      "version": "1.1.26",
+      "version": "1.2.0",
       "jurisdiction": "Hong Kong / cross-border"
     },
     {
@@ -279,7 +279,7 @@
     },
     {
       "id": "VIGIL-INC-000060",
-      "version": "1.1.30",
+      "version": "1.2.0",
       "jurisdiction": "global"
     },
     {
@@ -374,7 +374,7 @@
     },
     {
       "id": "VIGIL-INC-000081",
-      "version": "0.1.24",
+      "version": "0.2.0",
       "jurisdiction": "United States"
     },
     {
@@ -564,7 +564,7 @@
     },
     {
       "id": "VIGIL-INC-000120",
-      "version": "0.1.19",
+      "version": "0.1.20",
       "jurisdiction": "Russia"
     },
     {
@@ -589,7 +589,7 @@
     },
     {
       "id": "VIGIL-INC-000125",
-      "version": "0.1.21",
+      "version": "0.2.0",
       "jurisdiction": "Not applicable — controlled simulation"
     },
     {
@@ -609,7 +609,7 @@
     },
     {
       "id": "VIGIL-INC-000130",
-      "version": "0.3.19",
+      "version": "0.3.20",
       "jurisdiction": "Not applicable — controlled training"
     },
     {
@@ -649,7 +649,7 @@
     },
     {
       "id": "VIGIL-INC-000138",
-      "version": "0.1.19",
+      "version": "0.1.20",
       "jurisdiction": "Not applicable — controlled training"
     },
     {
@@ -674,7 +674,7 @@
     },
     {
       "id": "VIGIL-INC-000144",
-      "version": "0.1.15",
+      "version": "0.2.0",
       "jurisdiction": "California, United States"
     },
     {
@@ -704,7 +704,7 @@
     },
     {
       "id": "VIGIL-INC-000150",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "jurisdiction": "Australia"
     },
     {
@@ -789,7 +789,7 @@
     },
     {
       "id": "VIGIL-INC-000167",
-      "version": "0.3.8",
+      "version": "0.3.9",
       "jurisdiction": "United States / Oregon"
     },
     {
@@ -809,7 +809,7 @@
     },
     {
       "id": "VIGIL-INC-000171",
-      "version": "0.2.9",
+      "version": "0.3.0",
       "jurisdiction": "British Columbia, Canada"
     },
     {
@@ -819,12 +819,12 @@
     },
     {
       "id": "VIGIL-INC-000173",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "jurisdiction": "Cross-border / multiple jurisdictions"
     },
     {
       "id": "VIGIL-INC-000174",
-      "version": "0.2.10",
+      "version": "0.3.0",
       "jurisdiction": "New South Wales, Australia"
     },
     {
@@ -834,7 +834,7 @@
     },
     {
       "id": "VIGIL-INC-000176",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "jurisdiction": "not established"
     },
     {
@@ -919,7 +919,7 @@
     },
     {
       "id": "VIGIL-INC-000193",
-      "version": "0.1.11",
+      "version": "0.2.0",
       "jurisdiction": "United States"
     },
     {
@@ -959,7 +959,7 @@
     },
     {
       "id": "VIGIL-INC-000201",
-      "version": "0.1.6",
+      "version": "0.2.0",
       "jurisdiction": "Not established"
     },
     {
@@ -979,12 +979,12 @@
     },
     {
       "id": "VIGIL-INC-000205",
-      "version": "0.1.4",
+      "version": "0.2.0",
       "jurisdiction": "United States; OpenAI internal evaluation and development"
     },
     {
       "id": "VIGIL-INC-000206",
-      "version": "0.1.4",
+      "version": "0.2.0",
       "jurisdiction": "United States; OpenAI internal evaluation and development"
     },
     {
@@ -994,7 +994,7 @@
     },
     {
       "id": "VIGIL-INC-000208",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "jurisdiction": "United States / Japan / Australia / Canada"
     },
     {
@@ -1004,33 +1004,48 @@
     },
     {
       "id": "VIGIL-INC-000210",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "jurisdiction": "United States"
     },
     {
       "id": "VIGIL-INC-000211",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "jurisdiction": ""
     },
     {
       "id": "VIGIL-INC-000212",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "jurisdiction": "Australia"
     },
     {
       "id": "VIGIL-INC-000213",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "jurisdiction": "Netherlands"
     },
     {
       "id": "VIGIL-INC-000214",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "jurisdiction": "International"
     },
     {
       "id": "VIGIL-INC-000215",
+      "version": "0.2.0",
+      "jurisdiction": "Not established"
+    },
+    {
+      "id": "VIGIL-INC-000216",
+      "version": "0.1.2",
+      "jurisdiction": "Not established"
+    },
+    {
+      "id": "VIGIL-INC-000217",
       "version": "0.1.0",
       "jurisdiction": "Not established"
+    },
+    {
+      "id": "VIGIL-INC-000218",
+      "version": "0.1.0",
+      "jurisdiction": "United States"
     }
   ]
 }

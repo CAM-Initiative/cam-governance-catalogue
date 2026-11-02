@@ -1,5 +1,5 @@
 {
-  "assessed_record_count": 139,
+  "assessed_record_count": 140,
   "entries": [
     {
       "d": [
@@ -33,7 +33,7 @@
       ],
       "id": "VIGIL-INC-000003",
       "p": "specific_consequence",
-      "v": "0.9.0"
+      "v": "0.10.0"
     },
     {
       "d": [
@@ -44,7 +44,7 @@
       ],
       "id": "VIGIL-INC-000004",
       "p": "specific_consequence",
-      "v": "1.5.0"
+      "v": "1.6.0"
     },
     {
       "d": [
@@ -463,7 +463,7 @@
       ],
       "id": "VIGIL-INC-000049",
       "p": "specific_consequence",
-      "v": "1.1.26"
+      "v": "1.2.0"
     },
     {
       "d": [
@@ -1223,7 +1223,7 @@
       ],
       "id": "VIGIL-INC-000144",
       "p": "specific_consequence",
-      "v": "0.1.15"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -1301,7 +1301,7 @@
       ],
       "id": "VIGIL-INC-000150",
       "p": "specific_consequence",
-      "v": "0.4.0"
+      "v": "0.5.0"
     },
     {
       "d": [
@@ -1513,7 +1513,7 @@
       ],
       "id": "VIGIL-INC-000171",
       "p": "specific_consequence",
-      "v": "0.2.9"
+      "v": "0.3.0"
     },
     {
       "d": [
@@ -1524,7 +1524,7 @@
       ],
       "id": "VIGIL-INC-000173",
       "p": "specific_consequence",
-      "v": "0.4.0"
+      "v": "0.5.0"
     },
     {
       "d": [
@@ -1535,7 +1535,7 @@
       ],
       "id": "VIGIL-INC-000174",
       "p": "specific_consequence",
-      "v": "0.2.10"
+      "v": "0.3.0"
     },
     {
       "d": [
@@ -1550,7 +1550,7 @@
       ],
       "id": "VIGIL-INC-000176",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.3.0"
     },
     {
       "d": [
@@ -1620,7 +1620,7 @@
       ],
       "id": "VIGIL-INC-000193",
       "p": "specific_consequence",
-      "v": "0.1.11"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -1735,7 +1735,7 @@
       ],
       "id": "VIGIL-INC-000208",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.3.0"
     },
     {
       "d": [
@@ -1757,7 +1757,7 @@
       ],
       "id": "VIGIL-INC-000213",
       "p": "specific_consequence",
-      "v": "0.1.1"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -1768,7 +1768,18 @@
       ],
       "id": "VIGIL-INC-000214",
       "p": "specific_consequence",
-      "v": "0.1.1"
+      "v": "0.1.2"
+    },
+    {
+      "d": [
+        [
+          "physical-health-safety",
+          "S5"
+        ]
+      ],
+      "id": "VIGIL-INC-000218",
+      "p": "specific_consequence",
+      "v": "0.1.0"
     }
   ],
   "generated_notice": "Deterministically projected from canonical VIGIL Harm Impact assessments. Only assessment_status=assessed dimensions are included. Omitted dimensions are not findings of no harm.",
@@ -1783,7 +1794,7 @@
       "vigil/records/incidents/"
     ]
   },
-  "record_count": 206,
+  "record_count": 209,
   "registry_type": "vigil_harm_dimensions",
   "source": "vigil/records/incidents/",
   "version": 1
