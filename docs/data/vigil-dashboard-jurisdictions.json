@@ -1,6 +1,6 @@
 {
   "source": "VIGIL canonical Incident jurisdictional_context.primary_jurisdiction",
-  "record_count": 209,
+  "record_count": 233,
   "records": [
     {
       "id": "VIGIL-INC-000001",
@@ -1046,6 +1046,126 @@
       "id": "VIGIL-INC-000218",
       "version": "0.1.0",
       "jurisdiction": "United States"
+    },
+    {
+      "id": "VIGIL-INC-000219",
+      "version": "0.2.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000220",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000221",
+      "version": "0.1.0",
+      "jurisdiction": "India"
+    },
+    {
+      "id": "VIGIL-INC-000222",
+      "version": "0.2.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000223",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000224",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000225",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000226",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000227",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000228",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000229",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000230",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000231",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000232",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000233",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000234",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000235",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000236",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000237",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000238",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000239",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000240",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000241",
+      "version": "0.1.0",
+      "jurisdiction": ""
+    },
+    {
+      "id": "VIGIL-INC-000242",
+      "version": "0.1.0",
+      "jurisdiction": ""
     }
   ]
 }

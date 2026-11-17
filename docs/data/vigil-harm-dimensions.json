@@ -1,5 +1,5 @@
 {
-  "assessed_record_count": 140,
+  "assessed_record_count": 153,
   "entries": [
     {
       "d": [
@@ -1780,6 +1780,161 @@
       "id": "VIGIL-INC-000218",
       "p": "specific_consequence",
       "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ],
+        [
+          "financial-economic",
+          "S2"
+        ],
+        [
+          "service-operational-infrastructure",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000219",
+      "p": "specific_consequence",
+      "v": "0.2.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ],
+        [
+          "financial-economic",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000220",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000221",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000222",
+      "p": "specific_consequence",
+      "v": "0.2.0"
+    },
+    {
+      "d": [
+        [
+          "reputation-dignity",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000224",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S4"
+        ]
+      ],
+      "id": "VIGIL-INC-000225",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000230",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S3"
+        ]
+      ],
+      "id": "VIGIL-INC-000233",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "property-asset-damage",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000234",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000236",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000237",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000239",
+      "p": "specific_consequence",
+      "v": "0.1.0"
+    },
+    {
+      "d": [
+        [
+          "privacy-confidentiality",
+          "S2"
+        ]
+      ],
+      "id": "VIGIL-INC-000241",
+      "p": "specific_consequence",
+      "v": "0.1.0"
     }
   ],
   "generated_notice": "Deterministically projected from canonical VIGIL Harm Impact assessments. Only assessment_status=assessed dimensions are included. Omitted dimensions are not findings of no harm.",
@@ -1794,7 +1949,7 @@
       "vigil/records/incidents/"
     ]
   },
-  "record_count": 209,
+  "record_count": 233,
   "registry_type": "vigil_harm_dimensions",
   "source": "vigil/records/incidents/",
   "version": 1
