@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 const source = file => readFile(new URL(`../${file}`, import.meta.url), "utf8");
 import { globePosition, globeRotationForLongitude } from "../src/lib/vigilGlobeCoordinates.mjs";
-import { failureClassIds, topFailureClasses, severityDistribution } from "../src/lib/vigilDashboardMetrics.mjs";
+import { classOutcomePairs, classOutcomeCounts, failureClassIds, topFailureClasses, severityDistribution } from "../src/lib/vigilDashboardMetrics.mjs";
 import { donutSegmentAppearance } from "../src/lib/vigilDonutSelection.mjs";
 import { matchesClassificationSelection, toggleClassificationSelection } from "../src/lib/vigilClassificationFilter.mjs";
 import { INDEX_FACETS, NOT_INDEXED, indexFacetValues, indexFacetOptions, matchesIndexFacets, toggleIndexFacetSelection, facetOptionLabel } from "../src/lib/vigilIndexFacets.mjs";
@@ -23,6 +23,42 @@ test("counts only explicitly failure-role mappings, once per Incident", () => {
   assert.deepEqual(failureClassIds(raw), ["VIGIL-FC-000072"]);
   assert.deepEqual(topFailureClasses([{ raw }, { raw: { primary_classification: { class_id: "VIGIL-FC-000072", classification_role: "failure-occurrence" } } }]), [{ id: "VIGIL-FC-000072", count: 2 }]);
 });
+test("one Incident may report one per class-role even when many episodes share the role", () => {
+  const classId = "VIGIL-FC-000091";
+  const a = { id: "VIGIL-INC-TEST-A", raw: {
+    primary_classification: { class_id: classId, classification_role: "failure-occurrence" },
+    secondary_classifications: [
+      { class_id: classId, classification_role: "successful-invariant" },
+      { class_id: classId, classification_role: "ambiguous-boundary" },
+      { class_id: classId, classification_role: "failure-occurrence" }, // invalid upstream duplicate: don't double-count
+    ],
+  } };
+  const b = { id: "VIGIL-INC-TEST-B", raw: {
+    primary_classification: { class_id: classId, classification_role: "failure-occurrence" },
+    secondary_classifications: [{ class_id: "VIGIL-FC-000025", classification_role: "successful-invariant" }],
+  } };
+  assert.deepEqual(classOutcomePairs(a.raw), [
+    { classId, role: "failure-occurrence" },
+    { classId, role: "successful-invariant" },
+    { classId, role: "ambiguous-boundary" },
+  ]);
+  assert.deepEqual(classOutcomeCounts([a, b, a]), {
+    "failure-occurrence": 2,
+    "successful-invariant": 2,
+    "ambiguous-boundary": 1,
+    distinctIncidents: 2,
+  });
+  assert.deepEqual(failureClassIds(a.raw), [classId]);
+  assert.deepEqual(topFailureClasses([a, b]), [{ id: classId, count: 2 }]);
+});
+
+test("classification role filters match any evidenced role, not only the incident headline", () => {
+  assert.equal(matchesClassificationSelection(["failuresfound", "safeguardsworked"], ["safeguardsworked"]), true);
+  assert.equal(matchesClassificationSelection(["failuresfound", "safeguardsworked"], ["outcomeunclear"]), false);
+  assert.equal(matchesClassificationSelection("outcomeunclear", ["outcomeunclear"]), true);
+  assert.equal(matchesClassificationSelection(["failuresfound"], []), true);
+});
+
 test("unknown severity remains visibly unassessed instead of being inferred", () => {
   const d = severityDistribution([{ severity: "S4" }, {}, { severity: "unknown" }]);
   assert.equal(d.find(v => v.code === "S4").count, 1);
