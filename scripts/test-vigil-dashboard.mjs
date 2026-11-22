@@ -59,6 +59,13 @@ test("classification role filters match any evidenced role, not only the inciden
   assert.equal(matchesClassificationSelection(["failuresfound"], []), true);
 });
 
+test("the Case Files dashboard reports each class role and overlapping outcome filters", async () => {
+  const page = await source("src/pages/vigil-cases.tsx");
+  assert.match(page, /classificationOutcomeLabels\(record\)/);
+  assert.match(page, /classOutcomeCounts\(filtered\)/);
+  assert.match(page, /Each Incident and Fidelity Class is counted once per outcome/);
+});
+
 test("unknown severity remains visibly unassessed instead of being inferred", () => {
   const d = severityDistribution([{ severity: "S4" }, {}, { severity: "unknown" }]);
   assert.equal(d.find(v => v.code === "S4").count, 1);
