@@ -248,9 +248,9 @@ assert.match(taxonomyAssessment, /Incident evidence is broken into discrete obse
 assert.match(taxonomyAssessment, /mapped to the \{taxonomyReferenceNumber && taxonomyReferenceHref[\s\S]*VIGIL Alignment Taxonomy \[\{taxonomyReferenceNumber\}\][\s\S]*for formal adjudication\./);
 assert.match(taxonomyAssessment, /taxonomyReferenceHref/);
 assert.doesNotMatch(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
-assert.doesNotMatch(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
+assert.match(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
 assert.doesNotMatch(taxonomyAssessment, /Canonical mapping/);
-assert.doesNotMatch(taxonomyAssessment, /\/observatory\/alignment-taxonomy\//);
+assert.match(taxonomyAssessment, /\/observatory\/alignment-taxonomy\//);
 assert.match(caseFile, /vigil-diagnosis-factual-basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} taxonomyReferenceNumber=\{taxonomyReferenceNumber\} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);
 assert.match(caseFile, /if \(stageId === "conclusion"\)[\s\S]*Governance significance/);
 assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} taxonomyReferenceNumber=\{taxonomyReferenceNumber\} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);
