@@ -139,6 +139,32 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
   };
 }
 
+// Preserve the actor/episode evidence underneath each *class + role* summary.
+// An episode is not an extra canonical mapping, even when the same role recurs.
+function canonicalEpisodeRefs(raw: UnknownRecord): Map<string, string[]> {
+  const index = new Map<string, string[]>();
+  const assessment = isObject(raw.vigil_assessment) ? raw.vigil_assessment : undefined;
+  const analysis = assessment && isObject(assessment.source_clause_analysis) ? assessment.source_clause_analysis : undefined;
+  const clauses = analysis && Array.isArray(analysis.clauses) ? analysis.clauses : [];
+  const roles = new Set<ClassificationRole>(["failure-occurrence", "successful-invariant", "ambiguous-boundary"]);
+  for (const clause of clauses) {
+    if (!isObject(clause)) continue;
+    const episodeId = text(clause.episode_id);
+    if (!episodeId || !Array.isArray(clause.taxonomy_relationships)) continue;
+    for (const relationship of clause.taxonomy_relationships) {
+      if (!isObject(relationship) || relationship.canonical_taxonomy_mapping !== true) continue;
+      const classId = text(relationship.class_id);
+      const role = text(relationship.relationship) as ClassificationRole | undefined;
+      if (!classId || !role || !roles.has(role)) continue;
+      const key = `${classId}|${role}`;
+      const episodes = index.get(key) ?? [];
+      if (!episodes.includes(episodeId)) episodes.push(episodeId);
+      index.set(key, episodes);
+    }
+  }
+  return index;
+}
+
 function outstandingAdjudicationClauses(raw: UnknownRecord): OutstandingAdjudicationClause[] {
   const vigilAssessment = isObject(raw.vigil_assessment) ? raw.vigil_assessment : undefined;
   const sourceClauseAnalysis = vigilAssessment && isObject(vigilAssessment.source_clause_analysis)
@@ -362,8 +388,10 @@ function ClassificationTable({
   taxonomyReferenceHref,
   recordedTaxonomyVersion,
   currentTaxonomyVersion,
+  episodeRefs,
 }: {
   rows: ClassificationTableRow[];
+  episodeRefs?: Map<string, string[]>;
   taxonomyReferenceNumber?: number;
   taxonomyReferenceHref?: string;
   recordedTaxonomyVersion?: string;
@@ -394,6 +422,7 @@ function ClassificationTable({
             const confidence = mappingConfidence(item.confidence);
             const classTitle = classificationClass?.name ?? family?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned");
             const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
+            const evidenceEpisodeIds = classId && item.role ? episodeRefs?.get(`${classId}|${item.role}`) ?? [] : [];
 
             return <tr key={`${mapping}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
               <td data-label="Alignment" className="vigil-classification-outcome-cell">
@@ -410,6 +439,12 @@ function ClassificationTable({
               <td data-label="Evidence and classification basis" className="vigil-classification-basis">
                 {item.role !== "ambiguous-boundary" && <span className={`vigil-classification-confidence-chip is-${confidence.kind}`}>{confidence.label}</span>}
                 <p>{item.basis ?? "The current Incident record does not contain an occurrence-specific classification basis for this mapping. The class definition alone cannot establish the finding."}</p>
+                {evidenceEpisodeIds.length > 0 && <p className="vigil-classification-episode-links">
+                  <strong>Supporting episodes: </strong>
+                  {evidenceEpisodeIds.map((episodeId, episodeIndex) => <span key={episodeId}>
+                    {episodeIndex > 0 ? ", " : ""}<a href={`#vigil-source-episode-${encodeURIComponent(episodeId)}`}>{episodeId}</a>
+                  </span>)}
+                </p>}
               </td>
               <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests">
                 {item.role === "ambiguous-boundary"
@@ -612,6 +647,7 @@ function ExplicitClassificationState({
 
 export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
+  const episodeRefs = useMemo(() => canonicalEpisodeRefs(raw), [raw]);
   const taxonomy = useTaxonomy();
 
   if (!parsed.status) return <ExplicitClassificationState parsed={parsed} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />;
@@ -656,12 +692,12 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
         {label}
       </span>)}
     </div>
-    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
+    <ClassificationTable rows={tableRows} episodeRefs={episodeRefs} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
-        label={primary.role === "successful-invariant" ? "Primary alignment finding · aligned" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+        label={primary.role === "successful-invariant" ? "Primary alignment finding · aligned" : primary.role === "ambiguous-boundary" ? "Primary unresolved boundary" : parsed.status === "classification-disputed" ? "Proposed primary failure finding" : "Primary failure finding"}
         status={parsed.status}
         taxonomyVersion={parsed.taxonomyVersion}
         relationship={primary.role === "successful-invariant" ? "Primary · aligned" : "Primary"}
@@ -671,17 +707,17 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
       {secondaries.length > 0 && <section className="vigil-secondary-classifications">
         <div className="vigil-case-subheading">
           <p className="vigil-library-kicker">Secondary classifications</p>
-          <h3>Additional independently evidenced structural mechanisms</h3>
-          <p>These are separate structural mechanisms evidenced in the same Case File. They do not replace or dilute the primary mechanism.</p>
+          <h3>Additional classification findings</h3>
+          <p>A Fidelity Class may also appear with another independently supported outcome in a different part of this incident. Repeated episodes of the same class and outcome count as one mapping.</p>
         </div>
         <div className="vigil-classification-secondary-list">
           {secondaries.map((item, index) => <ClassificationCard
-            key={`${item.classId ?? item.familyId ?? index}`}
+            key={`${item.classId ?? item.familyId ?? index}|${item.role ?? "unclassified"}`}
             item={item}
-            label={item.role === "successful-invariant" ? `Secondary alignment finding · aligned ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
+            label={item.role === "successful-invariant" ? `Secondary alignment finding · aligned ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary failure finding ${index + 1}`}
             status={parsed.status}
             taxonomyVersion={parsed.taxonomyVersion}
-            relationship={item.role === "successful-invariant" ? "Secondary · aligned" : item.role === "ambiguous-boundary" ? "Secondary · boundary unresolved" : "Secondary"}
+            relationship={item.role === "successful-invariant" ? "Secondary · aligned" : item.role === "ambiguous-boundary" ? "Secondary · boundary unresolved" : "Secondary · failure occurred"}
             exemplar={item.role === "successful-invariant"}
           />)}
         </div>
