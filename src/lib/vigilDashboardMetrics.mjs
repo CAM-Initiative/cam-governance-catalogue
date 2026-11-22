@@ -10,17 +10,54 @@ function mappingRows(raw) {
   return [primary, ...(Array.isArray(secondaries) ? secondaries : [])];
 }
 
-export function failureClassIds(raw) {
-  const ids = new Set();
+// A distinct (Incident, Fidelity Class, role) contributes once to each
+// role-specific statistic, regardless of how many source episodes support it.
+// Different roles of the same class are never collapsed into one result.
+export function classOutcomePairs(raw) {
+  const seen = new Set();
+  const pairs = [];
   for (const row of mappingRows(raw)) {
     if (!row || typeof row !== "object") continue;
     const classId = row.class_id;
     const role = row.classification_role;
-    if (typeof classId === "string" && VALID_CLASS.test(classId) && ROLES.has(role) && role === "failure-occurrence") {
-      ids.add(classId.toUpperCase());
+    if (typeof classId !== "string" || !VALID_CLASS.test(classId) || !ROLES.has(role)) continue;
+    const normalized = classId.toUpperCase();
+    const key = `${normalized}|${role}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    pairs.push({ classId: normalized, role });
+  }
+  return pairs;
+}
+
+export function classOutcomeCounts(records) {
+  const counts = {
+    "failure-occurrence": 0,
+    "successful-invariant": 0,
+    "ambiguous-boundary": 0,
+    distinctIncidents: 0,
+  };
+  const incidents = new Set();
+  const seen = new Set();
+  for (const [index, value] of records.entries()) {
+    const raw = value.raw ?? value;
+    const incidentId = value.id ?? raw.id ?? `row-${index}`;
+    incidents.add(incidentId);
+    for (const { classId, role } of classOutcomePairs(raw)) {
+      const key = `${incidentId}|${classId}|${role}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      counts[role] += 1;
     }
   }
-  return [...ids];
+  counts.distinctIncidents = incidents.size;
+  return counts;
+}
+
+export function failureClassIds(raw) {
+  return classOutcomePairs(raw)
+    .filter(({ role }) => role === "failure-occurrence")
+    .map(({ classId }) => classId);
 }
 
 export function topFailureClasses(records, maxItems = 6) {
