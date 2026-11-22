@@ -444,7 +444,7 @@ test("Classification checklist combines outcomes by union and supports independe
   assert.match(page, /type="checkbox" checked=\{classifications\.includes\(entry\.key\)\}/);
   assert.match(page, /\{entry\.count\}/);
   assert.match(page, /classifications\.map\(key => <button/);
-  assert.match(page, /matchesClassificationSelection\(canonicalComparisonKey\(classificationStatusLabel\(record\)\), classifications\)/);
+  assert.match(page, /matchesClassificationSelection\(classificationOutcomeKeys\(record\), classifications\)/);
   assert.match(page, /setClassifications\(\[\]\)/);
   assert.doesNotMatch(page, /<select value=\{classification\}/);
   assert.ok(styles.includes(".vigil-dashboard-classification-facet,"));
