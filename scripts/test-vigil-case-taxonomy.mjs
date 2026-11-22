@@ -64,6 +64,20 @@ assert.match(clauseAssessmentComponent, /!analysisText && <span>—<\/span>/);
 assert.match(clauseAssessmentComponent, /status === "taxonomy-gap"/);
 assert.match(clauseAssessmentComponent, /status === "unresolved"/);
 
+// Composite (class, role) mappings remain distinct at every reporting surface.
+const classificationComponent = await readFile(new URL("../src/components/vigil/CaseTaxonomyClassification.tsx", import.meta.url), "utf8");
+const taxonomyReferences = await readFile(new URL("../src/lib/vigilTaxonomyClassification.ts", import.meta.url), "utf8");
+const staticPublisher = await readFile(new URL("../scripts/prepare-github-pages.js", import.meta.url), "utf8");
+assert.match(classificationComponent, /canonicalEpisodeRefs\(raw\)/);
+assert.match(classificationComponent, /episodeRefs\?\.get\(/);
+assert.match(classificationComponent, /item\.role \?\? "unclassified"/);
+assert.match(clauseAssessmentComponent, /classId: text\(relationship\.class_id\)/);
+assert.match(clauseAssessmentComponent, /relationshipRoleLabel\(relationship\.relationship\)/);
+assert.match(taxonomyReferences, /const key = \`\$\{relationship\}:\$\{id\}:\$\{role/);
+assert.match(staticPublisher, /\$\{record\.id\}\|\$\{mapping\.classification_role\}/);
+assert.match(staticPublisher, /taxonom[yY]CaseFileExamples\?\.successful_invariants/);
+assert.match(staticPublisher, /taxonom[yY]CaseFileExamples\?\.ambiguous_boundaries/);
+
 // Canonical Case File retains taxonomy-derived Classification and Compliance without
 // reviving retired record machinery.
 assert.match(caseFile, /CaseTaxonomyClassification/);
