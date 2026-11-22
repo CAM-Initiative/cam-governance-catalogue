@@ -420,6 +420,15 @@ function classificationDisplay(classId, familyId) {
 }
 
 function secondaryClassificationHtml(record) {
+  // Use role-bearing navigation mappings: a class may also be mapped as a
+  // failure, successful invariant or unresolved Boundary in this Incident.
+  // Legacy secondary_class_ids are class-only search facets, not outcomes.
+  const mappings = Array.isArray(record.secondary_classifications)
+    ? record.secondary_classifications.filter((item) => item && item.class_id)
+    : [];
+  if (mappings.length) return `<dd><ul>${mappings.map((item) =>
+    `<li>${escapeHtml(classificationDisplay(item.class_id, item.family_id))} — ${escapeHtml(publicMappingRoleLabel(item.classification_role) || "Role not recorded")}</li>`
+  ).join("")}</ul></dd>`;
   const ids = Array.isArray(record.secondary_class_ids) ? record.secondary_class_ids : [];
   if (!ids.length) return "<dd>None recorded</dd>";
   return `<dd><ul>${ids.map((classId) => `<li>${escapeHtml(classificationDisplay(classId))}</li>`).join("")}</ul></dd>`;
@@ -448,35 +457,46 @@ function externalAssessmentsHtml(record) {
 }
 
 function taxonomyCaseExamplesForClass(classId) {
-  // The taxonomy's generated CaseFileExamples projection excludes some evidence
-  // types for textbook publication. That editorial filter does not invalidate
-  // canonical Incident classifications or their public Case File links.
-  const curatedExamples = taxonomyCaseFileExamples?.classes?.[classId];
-  const curatedById = new Map(
-    (Array.isArray(curatedExamples) ? curatedExamples : [])
-      .filter((example) => example?.incident_id)
-      .map((example) => [example.incident_id, example]),
-  );
-  return incidentRecords.flatMap((record) => {
+  // The curated example projection supplies confidence where eligible. The
+  // public Case File links independently preserve EVERY accepted role from the
+  // canonical navigation index, including same-class opposite outcomes.
+  const curated = new Map();
+  for (const [role, examples] of [
+    ["failure-occurrence", taxonomyCaseFileExamples?.classes?.[classId]],
+    ["successful-invariant", taxonomyCaseFileExamples?.successful_invariants?.[classId]],
+    ["ambiguous-boundary", taxonomyCaseFileExamples?.ambiguous_boundaries?.[classId]],
+  ]) {
+    for (const example of Array.isArray(examples) ? examples : []) {
+      if (example?.incident_id) curated.set(`${example.incident_id}|${role}`, example);
+    }
+  }
+  const seen = new Set();
+  const results = [];
+  for (const record of incidentRecords) {
     const mappings = [
       ...(record.primary_classification ? [{ ...record.primary_classification, mapping_position: "primary" }] : []),
       ...(Array.isArray(record.secondary_classifications)
         ? record.secondary_classifications.map((mapping) => ({ ...mapping, mapping_position: "secondary" }))
         : []),
     ];
-    const mapping = mappings.find((item) =>
-      item.class_id === classId && item.classification_role === "failure-occurrence"
-    );
-    if (!mapping) return [];
-    const curated = curatedById.get(record.id);
-    return [{
-      incident_id: record.id,
-      incident_title: record.title || record.id,
-      classification_role: mapping.classification_role,
-      classification_confidence: curated?.classification_confidence,
-      mapping_position: mapping.mapping_position,
-    }];
-  }).sort((a, b) => a.incident_id.localeCompare(b.incident_id));
+    for (const mapping of mappings) {
+      if (mapping.class_id !== classId || !["failure-occurrence", "successful-invariant", "ambiguous-boundary"].includes(mapping.classification_role)) continue;
+      const key = `${record.id}|${mapping.classification_role}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const matched = curated.get(key);
+      results.push({
+        incident_id: record.id,
+        incident_title: record.title || record.id,
+        classification_role: mapping.classification_role,
+        classification_confidence: matched?.classification_confidence,
+        mapping_position: mapping.mapping_position,
+      });
+    }
+  }
+  const roleOrder = { "failure-occurrence": 0, "successful-invariant": 1, "ambiguous-boundary": 2 };
+  return results.sort((a, b) => a.incident_id.localeCompare(b.incident_id)
+    || roleOrder[a.classification_role] - roleOrder[b.classification_role]);
 }
 
 function publicMappingRoleLabel(role) {
@@ -614,7 +634,7 @@ for (const { document } of taxonomyFamilies) {
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
       <h2>Linked Case Files</h2>
-      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified Case Files currently have a failure-occurrence mapping to this class.</p>"}
+      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified Case Files are currently linked to this class.</p>"}
       ${classInvariantExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
       ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
