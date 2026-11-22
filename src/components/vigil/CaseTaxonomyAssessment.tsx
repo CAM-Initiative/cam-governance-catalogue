@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
 type ClauseRelationship = {
+  classId?: string;
   relationship?: string;
   canonical: boolean;
   rationale?: string;
@@ -49,6 +50,7 @@ function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
       ? value.taxonomy_relationships.flatMap((relationship) => {
           if (!isObject(relationship)) return [];
           return [{
+            classId: text(relationship.class_id),
             relationship: text(relationship.relationship),
             canonical: relationship.canonical_taxonomy_mapping === true,
             rationale: text(relationship.rationale),
@@ -106,6 +108,7 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
 
 function SourceClause({ clause }: { clause: ClauseAssessment }) {
   return <div className="vigil-taxonomy-source-wording">
+    {clause.episodeId && <span className="vigil-source-episode-id">Episode {clause.episodeId}</span>}
     {clause.title && <strong className="vigil-source-observation-title">{clause.title}</strong>}
     {clause.sourceAnchor ? <div className="vigil-source-passage">
       {clause.sourceParaphrase && <strong className="vigil-source-label">Original wording</strong>}
@@ -129,6 +132,13 @@ function clauseClassificationState(status?: string) {
   if (status === "adjudication_incomplete") return { label: "Not yet classified", detail: "Adjudication incomplete", tone: "pending" };
   if (status === "unresolved") return { label: "Not yet classified", detail: "Boundary unresolved", tone: "pending" };
   return { label: "Not yet classified", detail: "Adjudication status not stated", tone: "pending" };
+}
+
+function relationshipRoleLabel(role?: string) {
+  if (role === "failure-occurrence") return "Failure occurred";
+  if (role === "successful-invariant") return "Aligned";
+  if (role === "ambiguous-boundary") return "Boundary unresolved";
+  return "Classification relationship";
 }
 
 function RelationshipStack({
@@ -191,7 +201,14 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
                 {clause.relationships.length > 0
                   ? <RelationshipStack
                       relationships={clause.relationships}
-                      render={(relationship) => <div className="vigil-assessment-prose">{assessmentParagraphs(relationship.rationale ?? taxonomyAssessmentSummary([relationship])).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>}
+                      render={(relationship) => <div className="vigil-assessment-prose">
+                        {relationship.classId && <p className="vigil-taxonomy-relationship-identity">
+                          {relationship.canonical
+                            ? <><a href={`/observatory/alignment-taxonomy/${encodeURIComponent(relationship.classId)}/`}>{relationship.classId}</a> · <strong>{relationshipRoleLabel(relationship.relationship)}</strong></>
+                            : <><span>{relationship.classId}</span> · Considered, not canonically mapped</>}
+                        </p>}
+                        {assessmentParagraphs(relationship.rationale ?? taxonomyAssessmentSummary([relationship])).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+                      </div>}
                     />
                   : !analysisText && <span>—</span>}
               </td>

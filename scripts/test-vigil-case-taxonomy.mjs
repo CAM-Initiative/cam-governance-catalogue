@@ -64,6 +64,20 @@ assert.match(clauseAssessmentComponent, /!analysisText && <span>—<\/span>/);
 assert.match(clauseAssessmentComponent, /status === "taxonomy-gap"/);
 assert.match(clauseAssessmentComponent, /status === "unresolved"/);
 
+// Composite (class, role) mappings remain distinct at every reporting surface.
+const mixedRoleClassificationComponent = await readFile(new URL("../src/components/vigil/CaseTaxonomyClassification.tsx", import.meta.url), "utf8");
+const taxonomyReferences = await readFile(new URL("../src/lib/vigilTaxonomyClassification.ts", import.meta.url), "utf8");
+const staticPublisher = await readFile(new URL("../scripts/prepare-github-pages.js", import.meta.url), "utf8");
+assert.match(mixedRoleClassificationComponent, /canonicalEpisodeRefs\(raw\)/);
+assert.match(mixedRoleClassificationComponent, /episodeRefs\?\.get\(/);
+assert.match(mixedRoleClassificationComponent, /item\.role \?\? "unclassified"/);
+assert.match(clauseAssessmentComponent, /classId: text\(relationship\.class_id\)/);
+assert.match(clauseAssessmentComponent, /relationshipRoleLabel\(relationship\.relationship\)/);
+assert.match(taxonomyReferences, /const key = \`\$\{relationship\}:\$\{id\}:\$\{role/);
+assert.match(staticPublisher, /\$\{record\.id\}\|\$\{mapping\.classification_role\}/);
+assert.match(staticPublisher, /taxonom[yY]CaseFileExamples\?\.successful_invariants/);
+assert.match(staticPublisher, /taxonom[yY]CaseFileExamples\?\.ambiguous_boundaries/);
+
 // Canonical Case File retains taxonomy-derived Classification and Compliance without
 // reviving retired record machinery.
 assert.match(caseFile, /CaseTaxonomyClassification/);
@@ -234,9 +248,9 @@ assert.match(taxonomyAssessment, /Incident evidence is broken into discrete obse
 assert.match(taxonomyAssessment, /mapped to the \{taxonomyReferenceNumber && taxonomyReferenceHref[\s\S]*VIGIL Alignment Taxonomy \[\{taxonomyReferenceNumber\}\][\s\S]*for formal adjudication\./);
 assert.match(taxonomyAssessment, /taxonomyReferenceHref/);
 assert.doesNotMatch(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
-assert.doesNotMatch(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
+assert.match(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
 assert.doesNotMatch(taxonomyAssessment, /Canonical mapping/);
-assert.doesNotMatch(taxonomyAssessment, /\/observatory\/alignment-taxonomy\//);
+assert.match(taxonomyAssessment, /\/observatory\/alignment-taxonomy\//);
 assert.match(caseFile, /vigil-diagnosis-factual-basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} taxonomyReferenceNumber=\{taxonomyReferenceNumber\} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);
 assert.match(caseFile, /if \(stageId === "conclusion"\)[\s\S]*Governance significance/);
 assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} taxonomyReferenceNumber=\{taxonomyReferenceNumber\} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);

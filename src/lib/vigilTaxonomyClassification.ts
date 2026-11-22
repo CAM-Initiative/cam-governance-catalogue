@@ -247,7 +247,7 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
     if (!targetFamilyId || !indexEntry) return;
 
     const id = targetClassId ?? targetFamilyId;
-    const key = `${relationship}:${id}`;
+    const key = `${relationship}:${id}:${role ?? ""}`;
     if (seen.has(key)) return;
     seen.add(key);
 

@@ -10,9 +10,9 @@ import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vig
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
 import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
-import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import VigilCasesDashboard, { countryDisplayName, countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
-import { failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
+import { classOutcomeCounts, classOutcomePairs, failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
 import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
 import { countryLookupFromProjection, matchesSelectedCountries, toggleSelectedCountry } from "@/lib/vigilDashboardGeography.mjs";
 import { matchesClassificationSelection, toggleClassificationSelection } from "@/lib/vigilClassificationFilter.mjs";
@@ -48,15 +48,35 @@ function classificationStatusLabel(record: VigilIndexRecord) {
   return taxonomyFailureTypeLabel(record.raw);
 }
 
+const CLASS_ROLE_LABELS: Record<string, string> = {
+  "failure-occurrence": "Failures found",
+  "successful-invariant": "Safeguards worked",
+  "ambiguous-boundary": "Outcome unclear",
+};
+
+function classificationOutcomeLabels(record: VigilIndexRecord): string[] {
+  // Retain the summary/review-state filter, but also expose every separately
+  // evidenced outcome. One Incident can therefore match multiple checkboxes.
+  const labels = new Set([classificationStatusLabel(record)]);
+  for (const { role } of classOutcomePairs(record.raw)) {
+    if (CLASS_ROLE_LABELS[role]) labels.add(CLASS_ROLE_LABELS[role]);
+  }
+  return [...labels];
+}
+
+function classificationOutcomeKeys(record: VigilIndexRecord): string[] {
+  return classificationOutcomeLabels(record).map(canonicalComparisonKey);
+}
+
 function classificationStatusCounts(records: VigilIndexRecord[]): ClassificationStatusCount[] {
   const counts = new Map<string, ClassificationStatusCount>();
   for (const record of records) {
-    const status = classificationStatusLabel(record);
-    const label = taxonomyAlignmentOutcomeLabel(record.raw);
-    const key = canonicalComparisonKey(status);
-    const existing = counts.get(key);
-    if (existing) existing.count += 1;
-    else counts.set(key, { key, label, count: 1 });
+    for (const label of classificationOutcomeLabels(record)) {
+      const key = canonicalComparisonKey(label);
+      const existing = counts.get(key);
+      if (existing) existing.count += 1;
+      else counts.set(key, { key, label, count: 1 });
+    }
   }
   return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
 }
@@ -393,7 +413,7 @@ export default function VigilCases() {
   // selecting a failure must not promote it to first place or replace the top six.
   const rankingBaseCases = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
-    if (!matchesClassificationSelection(canonicalComparisonKey(classificationStatusLabel(record)), classifications)) return false;
+    if (!matchesClassificationSelection(classificationOutcomeKeys(record), classifications)) return false;
     if (!matchesIndexFacets(record, indexFacets)) return false;
     return true;
   }), [classifications, indexFacets, records, search]);
@@ -425,6 +445,7 @@ export default function VigilCases() {
   ), [distributionRecords, severity]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
+  const mappedOutcomeCounts = useMemo(() => classOutcomeCounts(filtered), [filtered]);
 
   useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, harmType, indexFacets, sort]);
   const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass || harmType || Object.keys(indexFacets).length);
@@ -505,6 +526,10 @@ export default function VigilCases() {
                   ))}
                  </div>}
                  <p className="vigil-dashboard-filter-match-count" aria-live="polite" aria-atomic="true"><strong>{sorted.length} matching {sorted.length === 1 ? "case file" : "case files"}</strong></p>
+                 <p className="vigil-dashboard-role-counts" aria-label="Mapped Fidelity Class outcomes in matching incidents">
+                   <strong>Mapped class outcomes:</strong> {mappedOutcomeCounts["failure-occurrence"]} failures · {mappedOutcomeCounts["successful-invariant"]} aligned · {mappedOutcomeCounts["ambiguous-boundary"]} unresolved boundaries.
+                   <span> Each Incident and Fidelity Class is counted once per outcome; one class may have multiple different outcomes.</span>
+                 </p>
                  {hasActiveFilters && <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>}
                </div>
                 <div className="vigil-dashboard-filter-search" role="search" aria-label="Search Case Files">
@@ -530,6 +555,7 @@ export default function VigilCases() {
                     </span>
                   </summary>
                   <div className="vigil-dashboard-facet-options" role="group" aria-label="Choose classification outcomes">
+                    <p className="vigil-dashboard-facet-explanation">One Case File can have more than one mapped outcome. Filter counts may overlap.</p>
                     <label className="vigil-dashboard-facet-option">
                       <input type="checkbox" checked={classifications.length === 0}
                         onChange={() => setClassifications([])} />
