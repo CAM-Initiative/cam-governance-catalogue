@@ -31,6 +31,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -47,13 +48,23 @@ jobs:
           fi
           test -n "$sha"
           echo "deployment_sha=$sha" >> "$GITHUB_OUTPUT"
-          gh api -H "Accept: application/vnd.github.raw+json" "repos/$GITHUB_REPOSITORY/contents/docs/observatory/cases/index.html?ref=$sha" > expected.html
+          git -C "$GITHUB_WORKSPACE" show "$sha:docs/observatory/cases/index.html" > expected.html
+          node -e 'const fs=require("fs"),cp=require("child_process"),crypto=require("crypto"); const sha=process.argv[1], html=fs.readFileSync("expected.html","utf8"), asset=html.match(/<script type="module"[^>]*src="(\/assets\/[^"]+\.js)"/)?.[1]; if(!asset)throw Error("Expected entry bundle not found"); const paths=[asset,"/data/vigil-registry-fallback.json","/data/vigil-dashboard-jurisdictions.json","/data/vigil-harm-dimensions.json"]; const manifest=Object.fromEntries(paths.map(p=>[p,crypto.createHash("sha256").update(cp.execFileSync("git",["-C",process.env.GITHUB_WORKSPACE,"show",sha+":docs"+p],{maxBuffer:32*1024*1024})).digest("hex")]));fs.writeFileSync("manifest.json",JSON.stringify(manifest,null,2))' "$sha"
           gh api "repos/$GITHUB_REPOSITORY/commits/$sha/pulls" --jq '[.[] | {number, html_url, title}]' > prs.json
+          # For automated sync commits with no directly associated PR, find the
+          # most recent associated PR in recent deployed ancestry, not HEAD.
+          cp prs.json recent-prs.json
+          if [ "$(jq length prs.json)" = 0 ]; then
+            for ancestor in $(git -C "$GITHUB_WORKSPACE" rev-list --first-parent --max-count=20 "$sha"); do
+              gh api "repos/$GITHUB_REPOSITORY/commits/$ancestor/pulls" --jq '[.[] | select(.merged_at != null) | {number, html_url, title}]' > recent-prs.json
+              if [ "$(jq length recent-prs.json)" -gt 0 ]; then break; fi
+            done
+          fi
           last_run="$(gh run list -R "$GITHUB_REPOSITORY" --workflow website-health.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
           if [ -n "$last_run" ]; then
             gh run download "$last_run" -R "$GITHUB_REPOSITORY" -n verified-deployment -D previous || echo "::warning::Previous verified deployment artifact unavailable"
           fi
-          node -e 'const fs=require("fs"); fs.writeFileSync("verified.json",JSON.stringify({deployment_sha:process.argv[1],associated_pull_requests:JSON.parse(fs.readFileSync("prs.json")),verification_run:process.env.GITHUB_RUN_ID,verified_at_utc:new Date().toISOString()},null,2))' "$sha"
+          node -e 'const fs=require("fs"); fs.writeFileSync("verified.json",JSON.stringify({deployment_sha:process.argv[1],associated_pull_requests:JSON.parse(fs.readFileSync("prs.json")),recent_ancestry_pull_requests:JSON.parse(fs.readFileSync("recent-prs.json")),publication_file_sha256:JSON.parse(fs.readFileSync("manifest.json")),verification_run:process.env.GITHUB_RUN_ID},null,2))' "$sha"
       - name: Install isolated browser test tooling
         run: |
           npm install --prefix "$RUNNER_TEMP/vigil-health" --no-save --no-package-lock playwright@1.56.1
@@ -61,9 +72,14 @@ jobs:
       - name: Verify live rendering and fallback
         env:
           HEALTH_EXPECTED_HTML: ${{ runner.temp }}/vigil-health/expected.html
+          HEALTH_EXPECTED_MANIFEST: ${{ runner.temp }}/vigil-health/manifest.json
         run: |
           cp scripts/check-live-website.mjs "$RUNNER_TEMP/vigil-health/check-live-website.mjs"
           node "$RUNNER_TEMP/vigil-health/check-live-website.mjs"
+      - name: Stamp successful verification
+        run: |
+          cd "$RUNNER_TEMP/vigil-health"
+          node -e 'const fs=require("fs"),p="verified.json",v=JSON.parse(fs.readFileSync(p));v.verified_at_utc=new Date().toISOString();fs.writeFileSync(p,JSON.stringify(v,null,2))'
       - name: Record verified deployment
         if: success()
         uses: actions/upload-artifact@v4
@@ -87,6 +103,9 @@ jobs:
             echo
             echo "Associated pull requests (if any):"
             cat "$RUNNER_TEMP/vigil-health/prs.json" 2>/dev/null || echo "Unavailable"
+            echo
+            echo "Most recent associated PRs found in up to 20 first-parent commits of the selected deployment:"
+            cat "$RUNNER_TEMP/vigil-health/recent-prs.json" 2>/dev/null || echo "Unavailable"
             echo
             echo "Last independently verified good deployment:"
             cat "$RUNNER_TEMP/vigil-health/previous/verified.json" 2>/dev/null || echo "No retained verified baseline; do not infer one."
