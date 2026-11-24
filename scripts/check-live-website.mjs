@@ -8,6 +8,14 @@ const target = "/observatory/cases/";
 const expectedHtml = await readFile(process.env.HEALTH_EXPECTED_HTML, "utf8");
 const digest = value => createHash("sha256").update(value).digest("hex");
 const url = (path) => new URL(path, origin).href;
+if (process.env.HEALTH_EXPECTED_MANIFEST) {
+  const manifest = JSON.parse(await readFile(process.env.HEALTH_EXPECTED_MANIFEST, "utf8"));
+  for (const [path, expected] of Object.entries(manifest)) {
+    const response = await fetch(url(path) + "?health=" + Date.now(), { signal: AbortSignal.timeout(30_000) });
+    assert.ok(response.ok, "Published asset unavailable: " + path);
+    assert.equal(digest(Buffer.from(await response.arrayBuffer())), expected, "Publication fingerprint mismatch: " + path);
+  }
+}
 const row = ".vigil-case-table-row-link";
 const errors = [];
 const deadline = 30_000;
