@@ -12,3 +12,9 @@ export function retireStaticPublicationFallback(kind: StaticPublicationFallbackK
   if (typeof document === "undefined") return;
   document.querySelector(fallbackSelector(kind))?.remove();
 }
+
+export function reportStaticPublicationFailure(kind: StaticPublicationFallbackKind) {
+  if (typeof document === "undefined") return;
+  const status = document.querySelector(fallbackSelector(kind) + " [data-vigil-fallback-status]");
+  if (status) status.textContent = "The interactive view is unavailable. You can continue reading the published basic version below, or retry.";
+}
