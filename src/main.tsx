@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { PublicationErrorBoundary, PublicationRecovery } from "./components/PublicationErrorBoundary";
 import "./vigil-reference-metadata";
 import "./vigil-observatory-surface-cleanup";
 import "./index.css";
@@ -50,4 +51,10 @@ import "./mobile-responsive-polish.css";
 import "./vigil-dashboard-workspace-experiment.css";
 import "./vigil-case-outcome-clarity.css";
 
-createRoot(document.getElementById("root")!).render(<App />);
+const basicView = new URLSearchParams(window.location.search).get("view") === "static"
+  && Boolean(document.querySelector("[data-static-publication-fallback]"));
+if (!basicView) {
+  createRoot(document.getElementById("root")!).render(
+    <PublicationErrorBoundary fallback={<PublicationRecovery />}><App /></PublicationErrorBoundary>
+  );
+}
