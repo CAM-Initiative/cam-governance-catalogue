@@ -131,7 +131,7 @@ function pageHtml({ route, title, description, body = "", canonicalRoute = route
     html = persistentFallbackKind
       ? html.replace(
           '<div id="root"></div>',
-          `<div data-static-publication-fallback="${escapeHtml(persistentFallbackKind)}">${body}</div>\n    <div id="root"></div>`,
+          `<div data-static-publication-fallback="${escapeHtml(persistentFallbackKind)}"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="${escapeHtml(route.replace(/\/?$/, "/"))}?view=static">Keep basic view</a> · <a href="${escapeHtml(route.replace(/\/?$/, "/"))}">Retry interactive view</a></p></aside>${body}</div>\n    <div id="root"></div>`,
         )
       : html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
   }
