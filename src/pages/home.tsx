@@ -26,6 +26,9 @@ const diagnosticStages = [
   { label: "Compare", title: "Where does it recur?", detail: "Compare the same mechanisms and boundaries across the Case File corpus." },
 ] as const;
 
+type IncidentTickerItem = { id: string; title: string };
+type TaxonomySticker = { classId: string; name: string };
+
 const fallbackTickerItems: IncidentTickerItem[] = [
   { id: "VIGIL-INC-000149", title: "DPD disabled AI chatbot after profanity and company criticism" },
   { id: "VIGIL-INC-000147", title: "Waymo robotaxi diverted and temporarily stranded a passenger" },
