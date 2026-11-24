@@ -9,7 +9,7 @@ import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
-import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
+import { hasStaticPublicationFallback, reportStaticPublicationFailure, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import VigilCasesDashboard, { countryDisplayName, countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
 import { classOutcomeCounts, classOutcomePairs, failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
@@ -473,6 +473,7 @@ export default function VigilCases() {
   const staticPublicationFallbackAvailable = hasStaticPublicationFallback("vigil-case-index");
   useEffect(() => {
     if (state.status === "ready") retireStaticPublicationFallback("vigil-case-index");
+    else if (state.status === "error") reportStaticPublicationFailure("vigil-case-index");
   }, [state.status]);
 
   if (state.status !== "ready" && staticPublicationFallbackAvailable) return null;
@@ -585,7 +586,7 @@ export default function VigilCases() {
 
 
              {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
-            {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
+            {state.status === "error" && <div role="alert" className="vigil-registry-notice is-error">The interactive Case Files are unavailable. <a href="/observatory/cases/?view=static">Open basic Case Files</a> · <a href="/observatory/cases/">Retry</a></div>}
             {state.status === "ready" && state.notice && <div className="vigil-registry-notice">{state.notice}</div>}
 
             <section className="vigil-case-table" aria-label="AI Incident Case Files">
