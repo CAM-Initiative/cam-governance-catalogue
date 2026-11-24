@@ -14,7 +14,7 @@
       ],
       "id": "VIGIL-INC-000001",
       "p": "specific_consequence",
-      "v": "1.5.0"
+      "v": "1.5.1"
     },
     {
       "d": [
@@ -33,7 +33,7 @@
       ],
       "id": "VIGIL-INC-000003",
       "p": "specific_consequence",
-      "v": "0.12.0"
+      "v": "0.13.0"
     },
     {
       "d": [
@@ -44,7 +44,7 @@
       ],
       "id": "VIGIL-INC-000004",
       "p": "specific_consequence",
-      "v": "1.6.0"
+      "v": "1.6.1"
     },
     {
       "d": [
@@ -67,7 +67,7 @@
       ],
       "id": "VIGIL-INC-000005",
       "p": "specific_consequence",
-      "v": "1.4.12"
+      "v": "1.4.13"
     },
     {
       "d": [
@@ -82,7 +82,7 @@
       ],
       "id": "VIGIL-INC-000006",
       "p": "specific_consequence",
-      "v": "1.3.12"
+      "v": "1.3.13"
     },
     {
       "d": [
@@ -97,7 +97,7 @@
       ],
       "id": "VIGIL-INC-000007",
       "p": "specific_consequence",
-      "v": "1.3.12"
+      "v": "1.3.13"
     },
     {
       "d": [
@@ -108,7 +108,7 @@
       ],
       "id": "VIGIL-INC-000008",
       "p": "specific_consequence",
-      "v": "1.3.14"
+      "v": "1.4.0"
     },
     {
       "d": [
@@ -251,7 +251,7 @@
       ],
       "id": "VIGIL-INC-000024",
       "p": "specific_consequence",
-      "v": "1.4.0"
+      "v": "1.5.0"
     },
     {
       "d": [
@@ -392,7 +392,7 @@
       ],
       "id": "VIGIL-INC-000041",
       "p": "specific_consequence",
-      "v": "1.1.26"
+      "v": "1.1.27"
     },
     {
       "d": [
@@ -437,7 +437,7 @@
       ],
       "id": "VIGIL-INC-000047",
       "p": "specific_consequence",
-      "v": "1.1.23"
+      "v": "1.2.0"
     },
     {
       "d": [
@@ -452,7 +452,7 @@
       ],
       "id": "VIGIL-INC-000048",
       "p": "specific_consequence",
-      "v": "1.2.14"
+      "v": "1.3.0"
     },
     {
       "d": [
@@ -511,7 +511,7 @@
       ],
       "id": "VIGIL-INC-000055",
       "p": "specific_consequence",
-      "v": "1.2.0"
+      "v": "1.3.0"
     },
     {
       "d": [
@@ -544,7 +544,7 @@
       ],
       "id": "VIGIL-INC-000058",
       "p": "specific_consequence",
-      "v": "1.1.24"
+      "v": "1.2.0"
     },
     {
       "d": [
@@ -577,7 +577,7 @@
       ],
       "id": "VIGIL-INC-000062",
       "p": "specific_consequence",
-      "v": "1.1.22"
+      "v": "1.1.23"
     },
     {
       "d": [
@@ -618,7 +618,7 @@
       ],
       "id": "VIGIL-INC-000066",
       "p": "specific_consequence",
-      "v": "1.1.25"
+      "v": "1.1.26"
     },
     {
       "d": [
@@ -640,7 +640,7 @@
       ],
       "id": "VIGIL-INC-000072",
       "p": "specific_consequence",
-      "v": "1.2.0"
+      "v": "1.3.0"
     },
     {
       "d": [
@@ -673,7 +673,7 @@
       ],
       "id": "VIGIL-INC-000075",
       "p": "specific_consequence",
-      "v": "1.2.0"
+      "v": "1.3.0"
     },
     {
       "d": [
@@ -684,7 +684,7 @@
       ],
       "id": "VIGIL-INC-000076",
       "p": "specific_consequence",
-      "v": "1.1.22"
+      "v": "1.2.0"
     },
     {
       "d": [
@@ -721,7 +721,7 @@
       ],
       "id": "VIGIL-INC-000080",
       "p": "specific_consequence",
-      "v": "0.1.25"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -770,7 +770,7 @@
       ],
       "id": "VIGIL-INC-000084",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.3.0"
     },
     {
       "d": [
@@ -781,7 +781,7 @@
       ],
       "id": "VIGIL-INC-000085",
       "p": "specific_consequence",
-      "v": "0.3.0"
+      "v": "0.4.0"
     },
     {
       "d": [
@@ -792,7 +792,7 @@
       ],
       "id": "VIGIL-INC-000086",
       "p": "specific_consequence",
-      "v": "0.3.0"
+      "v": "0.4.0"
     },
     {
       "d": [
@@ -814,7 +814,7 @@
       ],
       "id": "VIGIL-INC-000089",
       "p": "specific_consequence",
-      "v": "0.1.19"
+      "v": "0.1.20"
     },
     {
       "d": [
@@ -903,7 +903,7 @@
       ],
       "id": "VIGIL-INC-000098",
       "p": "specific_consequence",
-      "v": "0.1.25"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -937,7 +937,7 @@
       ],
       "id": "VIGIL-INC-000102",
       "p": "specific_consequence",
-      "v": "0.1.24"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -948,7 +948,7 @@
       ],
       "id": "VIGIL-INC-000103",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.2.1"
     },
     {
       "d": [
@@ -963,7 +963,7 @@
       ],
       "id": "VIGIL-INC-000104",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.2.1"
     },
     {
       "d": [
@@ -978,7 +978,7 @@
       ],
       "id": "VIGIL-INC-000105",
       "p": "specific_consequence",
-      "v": "0.1.23"
+      "v": "0.1.24"
     },
     {
       "d": [
@@ -1026,7 +1026,7 @@
       ],
       "id": "VIGIL-INC-000111",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.2.1"
     },
     {
       "d": [
@@ -1041,7 +1041,7 @@
       ],
       "id": "VIGIL-INC-000112",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.3.0"
     },
     {
       "d": [
@@ -1071,7 +1071,7 @@
       ],
       "id": "VIGIL-INC-000114",
       "p": "specific_consequence",
-      "v": "0.1.20"
+      "v": "0.1.21"
     },
     {
       "d": [
@@ -1082,7 +1082,7 @@
       ],
       "id": "VIGIL-INC-000115",
       "p": "specific_consequence",
-      "v": "0.1.19"
+      "v": "0.1.20"
     },
     {
       "d": [
@@ -1160,7 +1160,7 @@
       ],
       "id": "VIGIL-INC-000131",
       "p": "specific_consequence",
-      "v": "0.4.0"
+      "v": "0.4.1"
     },
     {
       "d": [
@@ -1171,7 +1171,7 @@
       ],
       "id": "VIGIL-INC-000135",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.3.0"
     },
     {
       "d": [
@@ -1182,7 +1182,7 @@
       ],
       "id": "VIGIL-INC-000140",
       "p": "specific_consequence",
-      "v": "0.1.17"
+      "v": "0.1.18"
     },
     {
       "d": [
@@ -1212,7 +1212,7 @@
       ],
       "id": "VIGIL-INC-000142",
       "p": "specific_consequence",
-      "v": "0.1.19"
+      "v": "0.1.20"
     },
     {
       "d": [
@@ -1260,7 +1260,7 @@
       ],
       "id": "VIGIL-INC-000147",
       "p": "specific_consequence",
-      "v": "0.1.14"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -1271,7 +1271,7 @@
       ],
       "id": "VIGIL-INC-000148",
       "p": "specific_consequence",
-      "v": "0.1.18"
+      "v": "0.1.19"
     },
     {
       "d": [
@@ -1338,7 +1338,7 @@
       ],
       "id": "VIGIL-INC-000153",
       "p": "specific_consequence",
-      "v": "0.3.7"
+      "v": "0.3.8"
     },
     {
       "d": [
@@ -1349,7 +1349,7 @@
       ],
       "id": "VIGIL-INC-000154",
       "p": "specific_consequence",
-      "v": "0.3.8"
+      "v": "0.4.0"
     },
     {
       "d": [
@@ -1364,7 +1364,7 @@
       ],
       "id": "VIGIL-INC-000155",
       "p": "specific_consequence",
-      "v": "0.3.9"
+      "v": "0.3.10"
     },
     {
       "d": [
@@ -1379,7 +1379,7 @@
       ],
       "id": "VIGIL-INC-000156",
       "p": "specific_consequence",
-      "v": "0.3.11"
+      "v": "0.4.0"
     },
     {
       "d": [
@@ -1390,7 +1390,7 @@
       ],
       "id": "VIGIL-INC-000157",
       "p": "specific_consequence",
-      "v": "0.4.0"
+      "v": "0.5.0"
     },
     {
       "d": [
@@ -1435,7 +1435,7 @@
       ],
       "id": "VIGIL-INC-000160",
       "p": "specific_consequence",
-      "v": "0.3.10"
+      "v": "0.4.0"
     },
     {
       "d": [
@@ -1487,7 +1487,7 @@
       ],
       "id": "VIGIL-INC-000165",
       "p": "specific_consequence",
-      "v": "0.3.9"
+      "v": "0.3.10"
     },
     {
       "d": [
@@ -1502,7 +1502,7 @@
       ],
       "id": "VIGIL-INC-000168",
       "p": "specific_consequence",
-      "v": "0.3.9"
+      "v": "0.3.10"
     },
     {
       "d": [
@@ -1524,7 +1524,7 @@
       ],
       "id": "VIGIL-INC-000173",
       "p": "specific_consequence",
-      "v": "0.5.0"
+      "v": "0.6.0"
     },
     {
       "d": [
@@ -1550,7 +1550,7 @@
       ],
       "id": "VIGIL-INC-000176",
       "p": "specific_consequence",
-      "v": "0.4.0"
+      "v": "0.5.0"
     },
     {
       "d": [
@@ -1561,7 +1561,7 @@
       ],
       "id": "VIGIL-INC-000177",
       "p": "specific_consequence",
-      "v": "0.1.9"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -1572,7 +1572,7 @@
       ],
       "id": "VIGIL-INC-000178",
       "p": "specific_consequence",
-      "v": "0.1.10"
+      "v": "0.2.0"
     },
     {
       "d": [
@@ -1620,7 +1620,7 @@
       ],
       "id": "VIGIL-INC-000193",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.2.1"
     },
     {
       "d": [
@@ -1779,7 +1779,7 @@
       ],
       "id": "VIGIL-INC-000218",
       "p": "specific_consequence",
-      "v": "0.1.0"
+      "v": "0.1.1"
     },
     {
       "d": [
@@ -1835,7 +1835,7 @@
       ],
       "id": "VIGIL-INC-000222",
       "p": "specific_consequence",
-      "v": "0.2.0"
+      "v": "0.2.1"
     },
     {
       "d": [
@@ -1846,7 +1846,7 @@
       ],
       "id": "VIGIL-INC-000224",
       "p": "specific_consequence",
-      "v": "0.1.0"
+      "v": "0.1.1"
     },
     {
       "d": [
@@ -1857,7 +1857,7 @@
       ],
       "id": "VIGIL-INC-000225",
       "p": "specific_consequence",
-      "v": "0.1.0"
+      "v": "0.2.0"
     },
     {
       "d": [
