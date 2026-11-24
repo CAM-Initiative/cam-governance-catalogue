@@ -16,6 +16,7 @@ on:
       - "scripts/sync-vigil-dashboard-jurisdictions.mjs"
       - "scripts/vendor-vigil-earth-texture.mjs"
       - "scripts/test-vigil-dashboard.mjs"
+      - "scripts/check-runtime-bindings.mjs"
       - "scripts/test-vigil-dashboard-jurisdictions.mjs"
       - "scripts/test-vigil-public-surfaces.mjs"
       - "scripts/test-vigil-observatory.mjs"
@@ -58,6 +59,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Reject unresolved TypeScript runtime bindings
+        run: node scripts/check-runtime-bindings.mjs
 
       - name: Sync canonical Harm Impact methodology
         run: pnpm run sync:harm
