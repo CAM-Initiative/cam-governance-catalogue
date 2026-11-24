@@ -66,6 +66,15 @@ test("the Case Files dashboard reports each class role and overlapping outcome f
   assert.match(page, /Each Incident and Fidelity Class is counted once per outcome/);
 });
 
+test("Case Files row renderer imports the classification label helper it calls", async () => {
+  const page = await source("src/pages/vigil-cases.tsx");
+  const labelModule = await source("src/lib/vigilTaxonomyClassification.ts");
+  assert.match(page, /const classificationLabel = taxonomyAlignmentOutcomeLabel\(record\.raw\)/);
+  assert.match(page, /import\s*\{[^}]*\btaxonomyAlignmentOutcomeLabel\b[^}]*\}\s*from\s*["']@\/lib\/vigilTaxonomyClassification["']/,
+    "The row renderer must not reference an unbound classification helper (PR #177 regression)");
+  assert.match(labelModule, /export function taxonomyAlignmentOutcomeLabel\(/);
+});
+
 test("unknown severity remains visibly unassessed instead of being inferred", () => {
   const d = severityDistribution([{ severity: "S4" }, {}, { severity: "unknown" }]);
   assert.equal(d.find(v => v.code === "S4").count, 1);
