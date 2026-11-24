@@ -1,0 +1,101 @@
+name: Verify live website health
+
+on:
+  workflow_run:
+    workflows: ["pages build and deployment"]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+  issues: write
+
+concurrency:
+  group: live-website-health
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEALTH_ORIGIN: https://www.cam-initiative.org
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Identify deployment and last verified good
+        id: release
+        env:
+          EVENT_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/vigil-health"
+          cd "$RUNNER_TEMP/vigil-health"
+          sha="$EVENT_SHA"
+          if [ -z "$sha" ]; then
+            sha="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?branch=main&status=success&per_page=100" --jq '[.workflow_runs[] | select(.name == "pages build and deployment")][0].head_sha // empty')"
+          fi
+          test -n "$sha"
+          echo "deployment_sha=$sha" >> "$GITHUB_OUTPUT"
+          gh api -H "Accept: application/vnd.github.raw+json" "repos/$GITHUB_REPOSITORY/contents/docs/observatory/cases/index.html?ref=$sha" > expected.html
+          gh api "repos/$GITHUB_REPOSITORY/commits/$sha/pulls" --jq '[.[] | {number, html_url, title}]' > prs.json
+          last_run="$(gh run list -R "$GITHUB_REPOSITORY" --workflow website-health.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          if [ -n "$last_run" ]; then
+            gh run download "$last_run" -R "$GITHUB_REPOSITORY" -n verified-deployment -D previous || echo "::warning::Previous verified deployment artifact unavailable"
+          fi
+          node -e 'const fs=require("fs"); fs.writeFileSync("verified.json",JSON.stringify({deployment_sha:process.argv[1],associated_pull_requests:JSON.parse(fs.readFileSync("prs.json")),verification_run:process.env.GITHUB_RUN_ID,verified_at_utc:new Date().toISOString()},null,2))' "$sha"
+      - name: Install isolated browser test tooling
+        run: |
+          npm install --prefix "$RUNNER_TEMP/vigil-health" --no-save --no-package-lock playwright@1.56.1
+          "$RUNNER_TEMP/vigil-health/node_modules/.bin/playwright" install --with-deps chromium webkit
+      - name: Verify live rendering and fallback
+        env:
+          HEALTH_EXPECTED_HTML: ${{ runner.temp }}/vigil-health/expected.html
+        run: |
+          cp scripts/check-live-website.mjs "$RUNNER_TEMP/vigil-health/check-live-website.mjs"
+          node "$RUNNER_TEMP/vigil-health/check-live-website.mjs"
+      - name: Record verified deployment
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-deployment
+          path: ${{ runner.temp }}/vigil-health/verified.json
+          retention-days: 90
+      - name: Report operational failure
+        if: failure()
+        env:
+          DEPLOYMENT_SHA: ${{ steps.release.outputs.deployment_sha }}
+        run: |
+          title="Operational health alert: VIGIL public website"
+          body="$RUNNER_TEMP/vigil-health/alert.md"
+          mkdir -p "$(dirname "$body")"
+          {
+            echo "Live website verification failed. This is not proof that any particular PR caused the failure."
+            echo
+            echo "Deployment selected for verification: \`${DEPLOYMENT_SHA:-unknown}\`"
+            echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo
+            echo "Associated pull requests (if any):"
+            cat "$RUNNER_TEMP/vigil-health/prs.json" 2>/dev/null || echo "Unavailable"
+            echo
+            echo "Last independently verified good deployment:"
+            cat "$RUNNER_TEMP/vigil-health/previous/verified.json" 2>/dev/null || echo "No retained verified baseline; do not infer one."
+            echo
+            echo "Inspect the failed step and deployment identity before attempting a rollback."
+          } > "$body"
+          issue="$(gh issue list -R "$GITHUB_REPOSITORY" --state open --search "$title in:title" --json number,title --jq 'map(select(.title == "Operational health alert: VIGIL public website")) | .[0].number // empty')"
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" -R "$GITHUB_REPOSITORY" --body-file "$body"
+          else
+            gh issue create -R "$GITHUB_REPOSITORY" --title "$title" --body-file "$body"
+          fi
