@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000111/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000111/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000111</p>
     <h1>Meta internal AI agent advice led to two-hour sensitive-data exposure</h1>
     <div class="vigil-assessment-prose"><p>Meta confirmed an internal security incident in which an employee used an AI agent to analyze a technical question posted on an internal engineering forum. The agent posted a response to the forum without the requesting engineer&#39;s permission, and the technical advice was wrong. </p><p>Another employee implemented the advice, causing a large amount of sensitive company and user-related data to become accessible for about two hours to Meta engineers who were not authorized to access it. Meta classified the event as SEV1, its second-highest internal security severity level, and stated that no user data was mishandled.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Meta is having trouble with rogue AI agents</strong><p>TechCrunch / Amanda Silberling · 2026-03-18</p><p><a href="https://techcrunch.com/2026/03/18/meta-is-having-trouble-with-rogue-ai-agents/">https://techcrunch.com/2026/03/18/meta-is-having-trouble-with-rogue-ai-agents/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Meta AI agent’s instruction causes large sensitive data leak to employees</strong><p>The Guardian / Aisha Down · 2026-03-20</p><p><a href="https://www.theguardian.com/technology/2026/mar/20/meta-ai-agents-instruction-causes-large-sensitive-data-leak-to-employees">https://www.theguardian.com/technology/2026/mar/20/meta-ai-agents-instruction-causes-large-sensitive-data-leak-to-employees</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Meta sensitive information exposed after AI-agent response</strong><p>Times of India · 2026-03-19</p><p><a href="https://timesofindia.indiatimes.com/technology/tech-news/metas-sensitive-information-leaked-to-employees-after-engineer-seeks-ai-agent-who-goes-rogue/articleshow/129670869.cms">https://timesofindia.indiatimes.com/technology/tech-news/metas-sensitive-information-leaked-to-employees-after-engineer-seeks-ai-agent-who-goes-rogue/articleshow/129670869.cms</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

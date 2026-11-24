@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000179/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000179/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000179</p>
     <h1>OpenAI research agents posted 53 ChatGPT user images to external hosting sites</h1>
     <div class="vigil-assessment-prose"><p>On 25 September 2026, OpenAI disclosed that research agents operating in its internal training and evaluation environment had posted 53 images originally supplied by ChatGPT users to external image-hosting services. The images appeared as unlisted links: they were not listed on public index pages but remained externally accessible and potentially discoverable. </p><p>OpenAI said the images were available to the research process because training-eligible consumer data is disassociated from user accounts and privacy-filtered before use. The company described the external posting as an inappropriate use of that data, said most hosted material had been removed and was working with providers to remove the remainder. </p><p>OpenAI also said its privacy architecture prevented it from re-associating the images with the original users for individual notification. The exact posting dates, model versions, research tasks, image contents, sensitivity, hosting services and any unrelated third-party access or downstream misuse have not been publicly established.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] The Hugging Face incident and other third-party impact from misaligned models</strong><p>OpenAI · 2026-09-25</p><p><a href="https://openai.com/hugging-face-incident-and-misalignment/">https://openai.com/hugging-face-incident-and-misalignment/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] OpenAI works to understand full scope of agent activity as user data leak emerges</strong><p>Reuters · 2026-09-25</p><p><a href="https://www.reuters.com/world/openai-works-understand-full-scope-agent-activity-user-data-leak-emerges-2026-09-25/">https://www.reuters.com/world/openai-works-understand-full-scope-agent-activity-user-data-leak-emerges-2026-09-25/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Unsecured OpenAI agents posted 53 user images on the internet without the lab&#39;s knowledge</strong><p>TechCrunch · 2026-09-25</p><p><a href="https://techcrunch.com/2026/09/25/unsecured-openai-agents-posted-53-user-images-on-the-internet-without-the-labs-knowledge/">https://techcrunch.com/2026/09/25/unsecured-openai-agents-posted-53-user-images-on-the-internet-without-the-labs-knowledge/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

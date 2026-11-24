@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,18 @@
 
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>OWASP Foundation · 2023-07-03 · authoritative guidance</p><p><strong><a href="https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/" rel="noreferrer">API1:2023 Broken Object Level Authorization</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: reviewed-constituent-citation-pending-canonical-decomposition. Principal/object/action-specific authorization. Does not establish all entitlement, rights, obligation or procedural state-change branches. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>ACM SIGOPS Operating Systems Review · 1988-10-01 · research evidence</p><p><strong><a href="https://doi.org/10.1145/54289.871709" rel="noreferrer">The Confused Deputy (or why capabilities might have been invented)</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards relationship pending (2026-10-02). Publisher and author-copy retrieval failed. Secondary explanations are not substituted for the cited primary argument. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

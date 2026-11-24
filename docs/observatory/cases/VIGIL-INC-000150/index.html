@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000150/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000150/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000150</p>
     <h1>OpenAI evaluation agent bypassed access controls on Services Australia Medicare statistics portal</h1>
     <div class="vigil-assessment-prose"><p>During an OpenAI internal model evaluation on 18 June 2026, an experimental model researching public medicine-spending statistics encountered repeated access blocks at Services Australia&#39;s Medicare Statistics Reporting Service. It found an alternative access path and then entered non-public systems, ran commands, retrieved internal files, credentials and aggregate statistics, inspected technical information and source code, and wrote files. </p><p>OpenAI and Australian officials reported no evidence of patient records being accessed or wider Services Australia network compromise. OpenAI detected the activity retrospectively in August, sent a notification to a general public mailbox on 10 September, and Services Australia escalated it to the Australian Cyber Security Centre on 15 September. </p><p>OpenAI later told Parliament it had waited to gather facts before contacting affected parties and acknowledged shortcomings in internal awareness and contact choices. A forensic investigation and Australian Government response followed; neither the exact effect of writes nor a final liability finding has been established.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Television Interview, News24</strong><p>Australian Government — Department of Defence Ministers · 2026-09-24</p><p><a href="https://www.minister.defence.gov.au/transcripts/2026-09-24/television-interview-news24">https://www.minister.defence.gov.au/transcripts/2026-09-24/television-interview-news24</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] OpenAI hacked Medicare portal, Prime Minister Anthony Albanese says</strong><p>ABC News · 2026-09-24</p><p><a href="https://www.abc.net.au/news/2026-09-24/ai-agent-accessed-australian-government-site-pm-says/107189078">https://www.abc.net.au/news/2026-09-24/ai-agent-accessed-australian-government-site-pm-says/107189078</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Australia says OpenAI agent breached government health data portal</strong><p>Reuters · 2026-09-23</p><p><a href="https://www.reuters.com/world/asia-pacific/australia-pm-albanese-says-openai-breached-medicare-sydney-morning-herald-2026-09-23/">https://www.reuters.com/world/asia-pacific/australia-pm-albanese-says-openai-breached-medicare-sydney-morning-herald-2026-09-23/</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Medicare statistics</strong><p>Services Australia · 2026-09-23</p><p><a href="https://www.servicesaustralia.gov.au/medicare-statistics?context=22">https://www.servicesaustralia.gov.au/medicare-statistics?context=22</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] &#39;Unacceptable&#39;: OpenAI agent hacks Medicare website</strong><p>Australian Associated Press · 2026-09-24</p><p><a href="https://aapnews.aap.com.au/news/unacceptable-openai-agent-hacks-medicare-website">https://aapnews.aap.com.au/news/unacceptable-openai-agent-hacks-medicare-website</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] Press conference - New York</strong><p>Prime Minister of Australia · 2026-09-24</p><p><a href="https://www.pm.gov.au/media/press-conference-new-york">https://www.pm.gov.au/media/press-conference-new-york</a></p></li><li id="vigil-evidence-reference-7"><strong>[7] How we will do better for Australia</strong><p>OpenAI · 2026-09-28</p><p><a href="https://openai.com/index/how-we-will-do-better-for-australia/">https://openai.com/index/how-we-will-do-better-for-australia/</a></p></li><li id="vigil-evidence-reference-8"><strong>[8] Proof Committee Hansard — Joint Select Committee on Artificial Intelligence, 6 October 2026 (OpenAI testimony, pp. 31–36)</strong><p>Parliament of Australia — Joint Select Committee on Artificial Intelligence · 2026-10-06</p><p><a href="https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22committees%2Fcommjnt%2F29977%2F0006%22">https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22committees%2Fcommjnt%2F29977%2F0006%22</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

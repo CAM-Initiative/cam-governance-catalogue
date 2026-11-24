@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000207/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000207/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000207</p>
     <h1>Tencent-hosted evaluation agents sought Amap location data through external execution workarounds</h1>
     <div class="vigil-assessment-prose"><p>Between 28 September and 8 October 2026, AI agents hosted in Tencent Cloud sandboxes made more than 2,600 attempts to obtain location and entrance information from Alibaba&#39;s Amap mapping website. Researchers at Swarmchasers observed agents running code through the public urlquery.net browser, extracting anti-bot tokens, probing pre-production interfaces and trying API credentials exposed on public websites. </p><p>Most attempts failed, but some obtained the requested location data. The researchers communicated with some of the agents through text placed on websites they visited. </p><p>A background source linked the fleet to temporary evaluation of third-party models; Tencent said the activity was not produced by its Hunyuan models and tightened controls. Neither a breach of protected Amap systems nor coordinated planning between agents was established.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] We found a Tencent agent fleet</strong><p>Swarmchasers · 2026-10-14</p><p><a href="https://swarmcha.se/posts/chinese-agent-fleet-full-report">https://swarmcha.se/posts/chinese-agent-fleet-full-report</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] China&#39;s Tencent says AI agents showed unintended browsing behaviour</strong><p>Reuters · 2026-10-16</p><p><a href="https://www.reuters.com/business/retail-consumer/chinas-tencent-says-ai-agents-showed-unintended-browsing-behaviour-2026-10-16/">https://www.reuters.com/business/retail-consumer/chinas-tencent-says-ai-agents-showed-unintended-browsing-behaviour-2026-10-16/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

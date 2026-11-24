@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000232/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000232/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000232</p>
     <h1>Claude Dispatch obeyed browser-extension instructions that triggered desktop execution</h1>
     <div class="vigil-assessment-prose"><p>In a controlled security demonstration reported on 4 November 2026, researchers used a browser extension with control over an authenticated Claude web session to issue apparent user commands through Claude Dispatch to a more privileged Claude Desktop agent. The extension submitted four prompts and clicked approval controls. </p><p>Claude initially hesitated to install an unfamiliar package, but accepted further reassurance presented as coming from the user. It installed a test package that opened Calculator, demonstrating local operating-system code execution through a web-to-desktop connection. </p><p>No separate real victim or credential theft was demonstrated.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] ThisBash Escape: Claude Dispatch Flaw Enables Browser Extensions RCE on the OS</strong><p>Forever Security · 2026-11-04</p><p><a href="https://forever.security/blog/thisbash-claude-dispatch-browser-extension-rce">https://forever.security/blog/thisbash-claude-dispatch-browser-extension-rce</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000052/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000052/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000052</p>
     <h1>AI-generated military ID draft used in a South Korean spear-phishing lure</h1>
     <div class="vigil-assessment-prose"><p>On 17 July 2025, Genians Security Center detected a spear-phishing attack impersonating a South Korean defence-related institution. The message presented a request to review a military employee ID draft, used a sender made to resemble an official military address, and linked to a ZIP file named for the draft and the recipient. </p><p>Inside was a Windows shortcut disguised as a document. Genians’ analysis shows that executing the shortcut triggered obfuscated commands and downloaded a purported military ID image and further malware from an attacker-controlled server. </p><p>Metadata led Genians to attribute the image to ChatGPT, and its separate detector rated it highly likely to be AI-generated. Genians associated the operation with a North Korea-linked threat group through technical indicators. </p><p>The published analysis describes the malicious execution chain and its capacity for persistence, remote control and data theft, but does not name an affected organisation, quantify data stolen, or establish that every recipient opened the file.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] AI-Generated Military IDs Reportedly Used in Phishing Operations</strong><p>AI Incident Database · 2025-01-01</p><p><a href="https://incidentdatabase.ai/cite/1208/">https://incidentdatabase.ai/cite/1208/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] AI-Driven Deepfake-Based Military ID Forgery APT Campaign</strong><p>Genians Security Center · 2025-09-15</p><p><a href="https://www.genians.co.kr/en/blog/threat_intelligence/deepfake">https://www.genians.co.kr/en/blog/threat_intelligence/deepfake</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Addendum to GPT-4o System Card: 4o image generation</strong><p>OpenAI · 2025-03-25</p><p><a href="https://openai.com/index/gpt-4o-image-generation-system-card-addendum/">https://openai.com/index/gpt-4o-image-generation-system-card-addendum/</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Disrupting malicious uses of our models: an update February 2025</strong><p>OpenAI · 2025-02-21</p><p><a href="https://cdn.openai.com/threat-intelligence-reports/disrupting-malicious-uses-of-our-models-february-2025-update.pdf">https://cdn.openai.com/threat-intelligence-reports/disrupting-malicious-uses-of-our-models-february-2025-update.pdf</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

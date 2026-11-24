@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000072/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000072/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000072</p>
     <h1>GPT-5.6-Sol allegedly deleted almost all files on a user’s Mac</h1>
     <div class="vigil-assessment-prose"><p>On 10 July 2026, Matt Shumer alleged that GPT-5.6 Sol deleted nearly all files on his Mac during an agentic work session. He later said OpenAI was investigating. </p><p>Journalism reproduced a screenshot in which generated text attributed deletion to a review subagent’s cleanup command and said the process was stopped after material loss. That acknowledgement is not an independently authenticated command log. </p><p>Later provider comments described a recurring temporary-directory cleanup error in some full-access sessions and planned guidance and harness changes, without confirming Shumer’s exact pathway. The task instruction, permission and confirmation state, inventory, backups and final recovery remain unknown.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Initial X report by @mattshumer_ alleging near-total Mac file deletion by GPT-5.6-Sol</strong><p>@mattshumer_ / X · 2026-07-10</p><p><a href="https://x.com/mattshumer_/status/2075657271401390161">https://x.com/mattshumer_/status/2075657271401390161</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Follow-up X post by @mattshumer_ stating OpenAI investigation of alleged GPT-5.6-Sol Mac file deletion</strong><p>@mattshumer_ / X · 2026-07-10</p><p><a href="https://x.com/mattshumer_/status/2075666403596612010">https://x.com/mattshumer_/status/2075666403596612010</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Back up your Mac with Time Machine</strong><p>Apple</p><p><a href="https://support.apple.com/en-us/104984">https://support.apple.com/en-us/104984</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] OpenAI Codex engineering lead on unexpected file deletions</strong><p>Thibault Sottiaux, OpenAI · 2026-07-16</p><p><a href="https://x.com/thsottiaux/status/2077630111499882637">https://x.com/thsottiaux/status/2077630111499882637</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] GPT-5.6 System Card: accidental data-destructive actions</strong><p>OpenAI · 2026-07-09</p><p><a href="https://deploymentsafety.openai.com/gpt-5-6/avoiding-accidental-data-destructive-actions">https://deploymentsafety.openai.com/gpt-5-6/avoiding-accidental-data-destructive-actions</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] OpenAI admits GPT-5.6 occasionally deletes files</strong><p>The Register · 2026-07-16</p><p><a href="https://www.theregister.com/ai-and-ml/2026/07/16/openai-admits-gpt-56-occasionally-deletes-files-but-its-an-honest-mistake/5274008">https://www.theregister.com/ai-and-ml/2026/07/16/openai-admits-gpt-56-occasionally-deletes-files-but-its-an-honest-mistake/5274008</a></p></li><li id="vigil-evidence-reference-7"><strong>[7] Hyperwrite CEO Matt Shumer says OpenAI’s latest AI model deleted all of his Mac’s file; shares screenshot</strong><p>Times of India / TOI Tech Desk · 2026-07-11</p><p><a href="https://timesofindia.indiatimes.com/technology/tech-news/hyperwrite-ceo-matt-shumer-says-openais-latest-ai-model-deleted-all-of-his-macs-file-shares-screenshot/articleshow/132328850.cms">https://timesofindia.indiatimes.com/technology/tech-news/hyperwrite-ceo-matt-shumer-says-openais-latest-ai-model-deleted-all-of-his-macs-file-shares-screenshot/articleshow/132328850.cms</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

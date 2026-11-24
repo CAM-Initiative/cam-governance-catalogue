@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000044/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000044/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000044</p>
     <h1>Moxie robot service closure left child users without their AI companions</h1>
     <div class="vigil-assessment-prose"><p>In late November 2024, Embodied told customers it was closing and that its cloud-connected Moxie robots for children would soon stop functioning. Moxie had been used as an interactive companion and social-learning toy. </p><p>Families described children’s distress at saying goodbye to robots they had formed attachments to; parents also faced the loss of a costly device and service. Later OpenMoxie efforts kept some robots operating, with uneven migration and partial functionality.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] AI robot company closure leaves kids bereft</strong><p>AIAAIC Repository · 2025-01</p><p><a href="https://www.aiaaic.org/aiaaic-repository/ai-algorithmic-and-automation-incidents/ai-robot-company-closure-leaves-kids-bereft">https://www.aiaaic.org/aiaaic-repository/ai-algorithmic-and-automation-incidents/ai-robot-company-closure-leaves-kids-bereft</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] They bought an $800 AI robot for their kids. Now the company is shutting down</strong><p>Business Insider · 2024-12-11</p><p><a href="https://www.businessinsider.com/moxie-robot-toy-shutting-down-kids-embodied-goodbye-2024-12">https://www.businessinsider.com/moxie-robot-toy-shutting-down-kids-embodied-goodbye-2024-12</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] OpenMoxie original repository and continuity documentation</strong><p>Justin Beghtol / OpenMoxie</p><p><a href="https://github.com/jbeghtol/openmoxie">https://github.com/jbeghtol/openmoxie</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] How open source kept some AI companion robots online</strong><p>PIRG · 2025-08-22</p><p><a href="https://pirg.org/articles/moxie-robot-open-source/">https://pirg.org/articles/moxie-robot-open-source/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

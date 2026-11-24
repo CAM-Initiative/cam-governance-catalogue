@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000008/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000008/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000008</p>
     <h1>Francisco Arteaga facial-recognition lead and FRT discovery-access dispute</h1>
     <div class="vigil-assessment-prose"><p>After a 2019 robbery, an initial New Jersey facial-recognition search found no match. Investigators then sent the surveillance video to the NYPD Real Time Crime Center, which offered Francisco Arteaga as a possible match; the robbery victim and a store manager later identified Arteaga from separate photo arrays and he was charged. </p><p>The manager had seen an earlier visit and reviewed footage; she was absent during the robbery. Before trial, Arteaga sought thirteen categories of discovery concerning the facial-recognition process. </p><p>The State produced two categories and the trial court denied the remaining eleven, but the Appellate Division reversed and ordered production because the material was relevant to reliability, possible alternative suspects and the defense&#39;s ability to challenge the State&#39;s case. The appellate opinion addressed discovery access and did not decide whether the facial-recognition result itself was correct.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Facial Recognition Misidentification Allegedly Contributed to Francisco Arteaga&#39;s Prolonged Detention</strong><p>AI Incident Database</p><p><a href="https://incidentdatabase.ai/cite/816/">https://incidentdatabase.ai/cite/816/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] How Wrongful Arrests Based on AI Derailed 3 Men&#39;s Lives</strong><p>Wired · 2024-06-06</p><p><a href="https://www.wired.com/story/wrongful-arrests-ai-derailed-3-mens-lives/">https://www.wired.com/story/wrongful-arrests-ai-derailed-3-mens-lives/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] State of New Jersey v. Francisco Arteaga (A-3078-21)</strong><p>New Jersey Courts — Appellate Division · 2023-06-07</p><p><a href="https://www.njcourts.gov/court-opinion/state-of-new-jersey-vs-francisco-arteaga-21-01-0035-hudson-county-and-statewide">https://www.njcourts.gov/court-opinion/state-of-new-jersey-vs-francisco-arteaga-21-01-0035-hudson-county-and-statewide</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

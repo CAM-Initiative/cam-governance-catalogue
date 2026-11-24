@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000092/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000092/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000092</p>
     <h1>Instinct processed retained Gmail data after Google access was disconnected</h1>
     <div class="vigil-assessment-prose"><p>On 21 August 2026, AI product founder Claire Vo reported that she disconnected the Instinct personal AI assistant from her Google account and nevertheless received an email summary from Instinct about three hours later. Follow-up reporting states that Instinct had retained previously indexed email content and processed those retained copies after the Google connector was disabled. </p><p>The available evidence does not establish that Instinct continued accessing Gmail after revocation; the occurrence concerns continued processing of data retained before disconnection. Provider terms carrying an August 26 revision later distinguished disconnection from a separate request to delete indexed connected-service data.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Instinct’s powerful AI assistant is raising privacy and security concerns</strong><p>TechCrunch · 2026-08-24</p><p><a href="https://techcrunch.com/2026/08/24/instincts-powerful-ai-assistant-is-raising-privacy-and-security-concerns/">https://techcrunch.com/2026/08/24/instincts-powerful-ai-assistant-is-raising-privacy-and-security-concerns/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Incident 1675: Instinct AI Personal Assistant Reportedly Summarized an AI Product Founder&#39;s Retained Emails After Google Access Was Disconnected</strong><p>AI Incident Database / Responsible AI Collaborative · 2026-08-21</p><p><a href="https://incidentdatabase.ai/cite/1675/">https://incidentdatabase.ai/cite/1675/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Instinct AI assistant</strong><p>Instinct</p><p><a href="https://instinct.com/">https://instinct.com/</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Terms of Service</strong><p>Instinct / Spear Street Technology · 2026-08-26</p><p><a href="https://instinct.com/terms">https://instinct.com/terms</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

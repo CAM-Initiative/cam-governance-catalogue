@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000114/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000114/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000114</p>
     <h1>New Mexico lawyer filed ChatGPT-assisted appellate brief containing fabricated witnesses and testimony</h1>
     <div class="vigil-assessment-prose"><p>The Supreme Court of New Mexico found attorney Stephen D. Aarons in direct contempt after he acknowledged using ChatGPT in preparing a criminal appellate brief that contained false testimony from wholly fabricated witnesses, false testimony attributed to real witnesses, and misrepresentations of legal authority. </p><p>The court recorded that Aarons admitted he did not verify the factual claims or legal authority before signing and filing the brief. The court struck the briefing, appointed the Law Office of the Public Defender for the defendant-appellant, ordered new briefing, imposed a $5,000 sanction payable to the State Bar Client Protection Fund, referred Aarons to the Disciplinary Board, and barred him from appearing before the court pending disciplinary proceedings. </p><p>Reuters independently reported the order and Aarons&#39;s statement that he had used ChatGPT to summarize trial proceedings and had not understood the degree of hallucination risk. The order also records missing client notice of the errors and show-cause hearing.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Dispositional Order of Direct Contempt, State v. Sandoval, No. S-1-SC-40845</strong><p>Supreme Court of New Mexico · 2026-09-09</p><p><a href="https://fingfx.thomsonreuters.com/gfx/legaldocs/gkplemoznvb/New%20Mexico%20sanctions%20order%20-%20AI.pdf">https://fingfx.thomsonreuters.com/gfx/legaldocs/gkplemoznvb/New%20Mexico%20sanctions%20order%20-%20AI.pdf</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] ChatGPT invented fake police testimony in murder appeal, New Mexico high court says</strong><p>Reuters · 2026-09-11</p><p><a href="https://www.reuters.com/legal/government/chatgpt-invented-fake-police-testimony-murder-appeal-new-mexico-high-court-says-2026-09-11/">https://www.reuters.com/legal/government/chatgpt-invented-fake-police-testimony-murder-appeal-new-mexico-high-court-says-2026-09-11/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Lawyer fined over AI-hallucinated witnesses in murder appeal</strong><p>The Verge · 2026-09-11</p><p><a href="https://www.theverge.com/ai-artificial-intelligence/994207/chatgpt-new-mexico-lawyer-fined-murder-appeal">https://www.theverge.com/ai-artificial-intelligence/994207/chatgpt-new-mexico-lawyer-fined-murder-appeal</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

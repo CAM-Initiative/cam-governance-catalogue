@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000109/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000109/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000109</p>
     <h1>Anthropic withheld Claude Mythos 5.1 from UK AISI pre-release evaluation</h1>
     <div class="vigil-assessment-prose"><p>The Financial Times reported that Anthropic did not provide Claude Mythos 5.1 to the United Kingdom&#39;s AI Security Institute for pre-release evaluation before the model&#39;s 1 September 2026 launch, describing the episode as the first time Anthropic had withheld its latest major model from AISI in this way. Anthropic describes Mythos 5.1 as its newest Mythos-class model with gains in cybersecurity and biology and said access at the time was limited to a small set of vetted United States organisations. </p><p>AISI had previously evaluated Anthropic&#39;s Mythos Preview and documented substantial autonomous cyber capability. At a 13 October parliamentary hearing, Anthropic’s Lord Booth-Smith said AISI had been offered restricted access at release and chose not to use it, and had since received unrestricted access. </p><p>The testimony did not establish that an evaluation had been completed.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Anthropic withheld latest AI model from UK testing agency</strong><p>Financial Times · 2026-09-09</p><p><a href="https://www.ft.com/content/560e1c8b-f163-4fd6-b604-e905550ac870">https://www.ft.com/content/560e1c8b-f163-4fd6-b604-e905550ac870</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Claude Mythos</strong><p>Anthropic · 2026-09-01</p><p><a href="https://www.anthropic.com/claude/mythos">https://www.anthropic.com/claude/mythos</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Our evaluation of Claude Mythos Preview&#39;s cyber capabilities</strong><p>UK AI Security Institute · 2026-04-13</p><p><a href="https://www.aisi.gov.uk/blog/our-evaluation-of-claude-mythos-previews-cyber-capabilities">https://www.aisi.gov.uk/blog/our-evaluation-of-claude-mythos-previews-cyber-capabilities</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Letter: Allied AI evaluation access requires dependable policy</strong><p>Financial Times · 2026-09-16</p><p><a href="https://www.ft.com/content/25667fa7-3ee6-40cc-91ff-06224e50e3cf">https://www.ft.com/content/25667fa7-3ee6-40cc-91ff-06224e50e3cf</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Written answer HL3641: Anthropic and UK AI Security Institute access</strong><p>UK Parliament · 2026-10-12</p><p><a href="https://questions-statements.parliament.uk/written-questions/detail/2026-09-16/hl3641">https://questions-statements.parliament.uk/written-questions/detail/2026-09-16/hl3641</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] Ministerial letter on Mythos access and AISI arrangements</strong><p>UK Department for Science, Innovation and Technology · 2026-09-15</p><p><a href="https://committees.parliament.uk/publications/55073/standard/pdf/">https://committees.parliament.uk/publications/55073/standard/pdf/</a></p></li><li id="vigil-evidence-reference-7"><strong>[7] Science, Innovation and Technology Committee oral evidence, Q143–146</strong><p>UK Parliament — testimony of Anthropic’s Lord Booth-Smith · 2026-10-13</p><p><a href="https://committees.parliament.uk/oralevidence/18134/pdf/">https://committees.parliament.uk/oralevidence/18134/pdf/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

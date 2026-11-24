@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000080/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000080/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000080</p>
     <h1>Google Maps propagation of U.S. &#39;Lake America&#39; designation</h1>
     <div class="vigil-assessment-prose"><p>A U.S. executive order in August 2026 directed federal maps and the Geographic Names Information System to call Lake Ontario “Lake America.” Google Maps announced that U.S. viewers would see that designation, Canadian viewers “Lake Ontario,” and others both names. </p><p>Nevertheless, embedded Google-powered maps on several Canadian government, transit, utility and retail sites briefly displayed the U.S. label. Ontario officials initiated a website review; Hydro One and Metrolinx acknowledged the incorrect label, and reporting found named sites restored “Lake Ontario” by August 31. </p><p>Google said website developers could set the map region to Canada. The U.S. directive did not rename the lake for Canada, and the native Canadian Maps experience was designed to preserve its label; the observed spillover lay in embedded downstream uses. </p><p>CityNews reported that Enova Power’s map was corrected before 9 a.m. on August 31 after still showing the U.S. label that morning.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Honoring the American History of the Great Lakes and Renaming Lake Ontario as Lake America</strong><p>The White House · 2026-08-27</p><p><a href="https://www.whitehouse.gov/presidential-actions/2026/08/honoring-the-american-history-of-the-great-lakes-and-renaming-lake-ontario-as-lake-america-3a36/">https://www.whitehouse.gov/presidential-actions/2026/08/honoring-the-american-history-of-the-great-lakes-and-renaming-lake-ontario-as-lake-america-3a36/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] How GNIS&#39; Lake Ontario/Lake America name change in the U.S. will appear in Maps</strong><p>Google · 2026-08-29</p><p><a href="https://blog.google/products-and-platforms/products/maps/gnis-lake-ontario-lake-america-name-change/">https://blog.google/products-and-platforms/products/maps/gnis-lake-ontario-lake-america-name-change/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Google Maps now show &#39;Lake America&#39; in US, not &#39;Lake Ontario&#39;</strong><p>Reuters · 2026-08-30</p><p><a href="https://www.reuters.com/world/us/google-maps-will-show-lake-america-us-not-lake-ontario-2026-08-30/">https://www.reuters.com/world/us/google-maps-will-show-lake-america-us-not-lake-ontario-2026-08-30/</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Google changes Lake Ontario to &#39;Lake America&#39; on maps in the US</strong><p>UOL Notícias · 2026-08-30</p><p><a href="https://noticias.uol.com.br/internacional/ultimas-noticias/2026/08/30/google-troca-lago-ontario-por-lake-america-nos-eua.ghtm">https://noticias.uol.com.br/internacional/ultimas-noticias/2026/08/30/google-troca-lago-ontario-por-lake-america-nos-eua.ghtm</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Why some Canadian website maps show Lake America instead of Lake Ontario</strong><p>Global News · 2026-08-31</p><p><a href="https://globalnews.ca/news/12041798/google-maps-canadian-websites-lake-america/">https://globalnews.ca/news/12041798/google-maps-canadian-websites-lake-america/</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] Localize the Map, Maps JavaScript API</strong><p>Google Maps Platform · 2026-09-24</p><p><a href="https://developers.google.com/maps/documentation/javascript/localization">https://developers.google.com/maps/documentation/javascript/localization</a></p></li><li id="vigil-evidence-reference-7"><strong>[7] Websites including Enova Power updated after Google Maps Lake America change</strong><p>Kyle Duggan / The Canadian Press / CityNews Kitchener · 2026-08-30</p><p><a href="https://kitchener.citynews.ca/2026/08/30/google-updates-maps-to-display-lake-ontario-as-lake-america-in-u-s/">https://kitchener.citynews.ca/2026/08/30/google-updates-maps-to-display-lake-ontario-as-lake-america-in-u-s/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

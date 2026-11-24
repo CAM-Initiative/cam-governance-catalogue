@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000095/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000095/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000095</p>
     <h1>Compromised Mistral SDK package executed credential-harvesting payload on import</h1>
     <div class="vigil-assessment-prose"><p>Mistral reported that the Mini Shai-Hulud supply-chain attack on TanStack resulted in compromised Mistral npm and PyPI SDK versions being published. The compromised PyPI package `mistralai==2.4.6` executed malicious code when client modules were imported on Linux, downloading a background payload that harvested credentials from common locations. </p><p>Mistral reported no impact to its global infrastructure and removed the affected releases. Its updated advisory says the compromised npm releases referenced a missing file, preventing their malicious path from running. </p><p>The working PyPI payload was Linux-specific. Mistral later marked mitigation and closed its investigation. </p><p>The repository advisory distinguishes client-module imports from a bare namespace import. It also records quarantine of the Python project.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] TanStack supply chain attack affecting Mistral SDK packages</strong><p>Mistral AI · 2026-05-12</p><p><a href="https://docs.mistral.ai/resources/security-advisories/MAI-2026-002">https://docs.mistral.ai/resources/security-advisories/MAI-2026-002</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Compromised Mistral and TanStack packages may have exposed developer credentials</strong><p>Tom&#39;s Hardware · 2026-05-13</p><p><a href="https://www.tomshardware.com/tech-industry/cyber-security/compromised-mistral-ai-and-tanstack-packages-may-have-exposed-github-cloud-and-ci-cd-credentials-in-mini-shai-hulud-malware-infection-supply-chain-campaign-spreads-across-npm-and-ai-developer-ecosystems-like-wildfire">https://www.tomshardware.com/tech-industry/cyber-security/compromised-mistral-ai-and-tanstack-packages-may-have-exposed-github-cloud-and-ci-cd-credentials-in-mini-shai-hulud-malware-infection-supply-chain-campaign-spreads-across-npm-and-ai-developer-ecosystems-like-wildfire</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Mini Shai-Hulud Is Back: npm Worm Hits over 160 Packages, including Mistral and Tanstack</strong><p>Aikido Security · 2026-05-12</p><p><a href="https://www.aikido.dev/blog/mini-shai-hulud-is-back-tanstack-compromised">https://www.aikido.dev/blog/mini-shai-hulud-is-back-tanstack-compromised</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Malicious dropper in mistralai 2.4.6 PyPI package — GHSA-wx9m-wx4f-4cmg</strong><p>Mistral client-python repository security advisory · 2026-05-12</p><p><a href="https://github.com/mistralai/client-python/security/advisories/GHSA-wx9m-wx4f-4cmg">https://github.com/mistralai/client-python/security/advisories/GHSA-wx9m-wx4f-4cmg</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

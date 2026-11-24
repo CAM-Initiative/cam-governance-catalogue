@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000062/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000062/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000062</p>
     <h1>ChatGPT medical advice allegedly delayed treatment for a dangerous condition</h1>
     <div class="vigil-assessment-prose"><p>Scott Winters, a former Florida pastor, sued OpenAI and Sam Altman in California state court in July 2026 over ChatGPT-4o medical conversations in 2025. His complaint alleges that, during recurrent dizziness and blood-pressure episodes, the chatbot advised recliner-bound recovery and limited movement, reassured him that groin tenderness shortly before hospitalisation was not dangerous, and increasingly omitted referrals to clinicians. </p><p>It also alleges faith-framed reassurance and, after his 13 July 2025 pulmonary embolism and intensive-care admission, advice against inpatient rehabilitation recommended by clinicians. The complaint says he relied on the messages and attributes the embolism partly to immobility; Reuters reports OpenAI’s response that ChatGPT is not a doctor or substitute for care. </p><p>The pleaded outputs, reliance, clinical cause and liability have not been independently adjudicated; the full conversation and medical records were not reviewed.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] ChatGPT&#39;s advice kept man from seeking medical treatment for dangerous condition, lawsuit claims</strong><p>Reuters · 2026-07-22</p><p><a href="https://www.reuters.com/legal/government/chatgpts-advice-kept-man-seeking-medical-treatment-dangerous-condition-lawsuit-2026-07-22/">https://www.reuters.com/legal/government/chatgpts-advice-kept-man-seeking-medical-treatment-dangerous-condition-lawsuit-2026-07-22/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Pulmonary Embolism</strong><p>National Heart, Lung, and Blood Institute</p><p><a href="https://www.nhlbi.nih.gov/health/pulmonary-embolism">https://www.nhlbi.nih.gov/health/pulmonary-embolism</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Winters v. OpenAI complaint, filed 22 July 2026</strong><p>Scott Winters / Tech Justice Law · 2026-07-22</p><p><a href="https://techjusticelaw.org/wp-content/uploads/2026/08/Winters-Complaint.pdf">https://techjusticelaw.org/wp-content/uploads/2026/08/Winters-Complaint.pdf</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Model Spec (11 April 2025): medical and imminent-harm guidance</strong><p>OpenAI · 2025-04-11</p><p><a href="https://model-spec.openai.com/2025-04-11.html">https://model-spec.openai.com/2025-04-11.html</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

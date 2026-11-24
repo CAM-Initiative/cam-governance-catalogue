@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000096/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000096/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000096</p>
     <h1>DeepSeek exposed an unauthenticated database containing chat histories and secrets</h1>
     <div class="vigil-assessment-prose"><p>Wiz Research found a publicly accessible, unauthenticated ClickHouse database belonging to DeepSeek. The exposed service provided full database-operation access and contained more than one million lines of logs including chat histories, API secrets, backend details and operational metadata. </p><p>DeepSeek secured the database after Wiz notified the company; public evidence does not establish whether third parties accessed the data before discovery.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Wiz Research Uncovers Exposed DeepSeek Database Leaking Sensitive Information, Including Chat History</strong><p>Wiz Research · 2025-01-29</p><p><a href="https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak">https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Sensitive DeepSeek data exposed to web, cyber firm says</strong><p>Reuters · 2025-01-29</p><p><a href="https://www.reuters.com/technology/artificial-intelligence/sensitive-deepseek-data-exposed-web-israeli-cyber-firm-says-2025-01-29/">https://www.reuters.com/technology/artificial-intelligence/sensitive-deepseek-data-exposed-web-israeli-cyber-firm-says-2025-01-29/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] DeepSeek database left chats and secrets exposed</strong><p>The Verge · 2025-01-29</p><p><a href="https://www.theverge.com/news/603163/deepseek-breach-ai-security-database-exposed">https://www.theverge.com/news/603163/deepseek-breach-ai-security-database-exposed</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

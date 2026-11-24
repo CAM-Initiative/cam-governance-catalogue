@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,18 @@
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000136/"><code>VIGIL-INC-000136</code> — Astra-family model rejected a self-generated BREACH ALERT instruction in a compaction summary</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000001/"><code>VIGIL-FC-000001</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000119/"><code>VIGIL-INC-000119</code> — VIGIL-INC-000119 — Source-Authority Separation boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000001/"><code>VIGIL-FC-000001</code></a></span></li></ul>
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>OWASP Foundation · 2024-11-19 · authoritative guidance</p><p><strong><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" rel="noreferrer">LLM01:2025 Prompt Injection</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: reviewed-constituent-citation-pending-canonical-decomposition. Distinguishing external content from operative instructions. Does not establish the full authority hierarchy or prohibit authorised promotion of content. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>IEEE Standards Association · 2026-06-12 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7014.1/11609/" rel="noreferrer">IEEE 7014.1-2026, clause 6.25.3(a-c)</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards relationship pending (2026-10-02). Separate written IEEE AI-use consent is not evidenced; relationship admission held. Existing extraction provenance is retained. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000162/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000162/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000162</p>
     <h1>Kiro coding tool reportedly implicated in 13-hour AWS Cost Explorer outage</h1>
     <div class="vigil-assessment-prose"><p>AWS Cost Explorer experienced a reported multi-hour interruption after an engineering change associated in press reporting with Amazon&#39;s Kiro coding tool; Amazon disputes autonomous-AI causation and attributes the event to human error and misconfigured access controls.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] AWS service outage and AI bot Kiro</strong><p>Amazon · 2026-02-20</p><p><a href="https://www.aboutamazon.com/news/aws/aws-service-outage-ai-bot-kiro">https://www.aboutamazon.com/news/aws/aws-service-outage-ai-bot-kiro</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Amazon AI coding tool blamed for AWS outage</strong><p>Financial Times · 2026-02-19</p><p><a href="https://www.ft.com/content/00c282de-ed14-4acd-a948-bc8d6bdb339d">https://www.ft.com/content/00c282de-ed14-4acd-a948-bc8d6bdb339d</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Kiro coding tool reportedly implicated in 13-hour AWS Cost Explorer outage</strong><p>AI Incident Database · 2025-12-15</p><p><a href="https://incidentdatabase.ai/cite/1442/">https://incidentdatabase.ai/cite/1442/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

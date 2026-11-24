@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,18 @@
 
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>IEEE Standards Association · 2022-03-04 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7001/6929/" rel="noreferrer">IEEE 7001-2021, section 5.1.1 general</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual. Understandable account of activity and operational basis. General activity transparency does not require distinct queued/armed/delegated/failed states while intervention is possible. Requirements are conditional on the selected stakeholder transparency level; this is a voluntary standard, not universal law. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

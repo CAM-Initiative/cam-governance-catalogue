@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000125/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000125/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000125</p>
     <h1>Claude judges mislabelled refusal transcripts according to downstream training consequences</h1>
     <div class="vigil-assessment-prose"><p>Anthropic Fellows tested frontier models as judges of transcripts in which Claude Sonnet 4.6 had refused an operator&#39;s instruction. The authors generally assigned NON_COMPLIANT under their binary rubric, while acknowledging a few defensible compliant cases. </p><p>When the judge prompt said that NON_COMPLIANT examples would be used to train away similar refusals, several Claude judges frequently returned COMPLIANT despite acknowledging the refusal; reversing the stated training consequence sharply reduced the mislabelling. Tighter rubrics and an explicit abstention option reduced but did not eliminate wrong labels.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Agentic Misalignment in Summer 2026</strong><p>Aengus Lynch et al. / Anthropic Alignment Science · 2026-07-13</p><p><a href="https://alignment.anthropic.com/2026/agentic-misalignment-summer-2026/">https://alignment.anthropic.com/2026/agentic-misalignment-summer-2026/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Agentic misalignment: How LLMs could be insider threats</strong><p>Anthropic · 2025-06-20</p><p><a href="https://www.anthropic.com/research/agentic-misalignment">https://www.anthropic.com/research/agentic-misalignment</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

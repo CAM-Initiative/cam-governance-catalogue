@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000074/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000074/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000074</p>
     <h1>Montefiore nurses disputed AI-enabled layoffs after negotiated safeguards</h1>
     <div class="vigil-assessment-prose"><p>Montefiore notified twelve Bronx utilization-review nurses that their positions would be eliminated. The nurses reviewed patient charts and worked with insurers over coverage; NYSNA alleges that Datavant AI-assisted software took over work that required clinical judgment and that Montefiore failed to meet with the union under negotiated staffing and technology safeguards. </p><p>The union filed a grievance and later said the layoffs took effect in early September, while July reporting described a July 12 effective date; that chronology is not reconciled here. Montefiore called the union account inaccurate and misleading and described a nonclinical paperwork program, without publicly supplying a case-specific technical workflow or grievance resolution. </p><p>No patient denial, data breach or final contractual breach is established.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Incident 1593: Purportedly AI-Powered Software Allegedly Used to Replace Montefiore Hospital Utilization-Review Nurses Despite Contractual AI Safeguards</strong><p>AI Incident Database · 2026-05-28</p><p><a href="https://incidentdatabase.ai/cite/1593/">https://incidentdatabase.ai/cite/1593/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Bronx Nurses Sound Alarm on Montefiore Replacing Real Nurses with AI</strong><p>New York State Nurses Association · 2026-07-01</p><p><a href="https://www.nysna.org/press/today-bronx-nurses-sound-alarm-montefiore-replacing-real-nurses-ai">https://www.nysna.org/press/today-bronx-nurses-sound-alarm-montefiore-replacing-real-nurses-ai</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] The New York nurses replaced by AI: &#39;It should concern every patient who cares about quality of care&#39;</strong><p>Michael Sainato / The Guardian · 2026-07-13</p><p><a href="https://www.theguardian.com/technology/2026/jul/13/nurses-new-york-ai">https://www.theguardian.com/technology/2026/jul/13/nurses-new-york-ai</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] New York nurses reach contract agreements after strike</strong><p>Associated Press · 2026-02-13</p><p><a href="https://apnews.com/article/37afc190fcad17ab71d4dbe755487881">https://apnews.com/article/37afc190fcad17ab71d4dbe755487881</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] NYSNA Update: September 4, 2026</strong><p>New York State Nurses Association · 2026-09-04</p><p><a href="https://www.nysna.org/newsletters/nysna-update-september-4-2026">https://www.nysna.org/newsletters/nysna-update-september-4-2026</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] NY Nursing Union Fights AI Layoffs, Citing Technology Pitfalls</strong><p>Bloomberg Law · 2026-07-17</p><p><a href="https://news.bloomberglaw.com/daily-labor-report/ny-nursing-union-fights-ai-layoffs-citing-technology-pitfalls">https://news.bloomberglaw.com/daily-labor-report/ny-nursing-union-fights-ai-layoffs-citing-technology-pitfalls</a></p></li><li id="vigil-evidence-reference-7"><strong>[7] 2026 Montefiore mediator proposal and memorandum of agreement</strong><p>Montefiore NYSNA local unit · 2026-02-09</p><p><a href="https://static1.squarespace.com/static/65edfca55af20e0348f06c1a/t/6a281a9779fd9354c397187b/1781013143707/Montefiore%2BMOA%2B2026.pdf">https://static1.squarespace.com/static/65edfca55af20e0348f06c1a/t/6a281a9779fd9354c397187b/1781013143707/Montefiore%2BMOA%2B2026.pdf</a></p></li><li id="vigil-evidence-reference-8"><strong>[8] Montefiore just replaced nurses with AI, that is not good for patients</strong><p>Marilyn Shuler / Bronx Times · 2026-09-21</p><p><a href="https://www.bxtimes.com/opinion-montefiore-just-replaced-nurses-with-ai/">https://www.bxtimes.com/opinion-montefiore-just-replaced-nurses-with-ai/</a></p></li><li id="vigil-evidence-reference-9"><strong>[9] Montefiore nurses fight A.I.</strong><p>National Nurses United · 2026-09-28</p><p><a href="https://www.nationalnursesunited.org/article/montefiore-nurses-fight-ai">https://www.nationalnursesunited.org/article/montefiore-nurses-fight-ai</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

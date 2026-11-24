@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000156/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000156/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000156</p>
     <h1>Waymo robotaxis contributed to San Francisco gridlock during major power outage</h1>
     <div class="vigil-assessment-prose"><p>On 20 December 2025, a major San Francisco power outage disabled traffic signals. Waymo reported crossing more than 7,000 dark signals, but simultaneous remote-confirmation requests created a backlog. </p><p>Delayed vehicles contributed to congestion alongside the wider outage. Later city reporting described a Waymo obstructing the substation fire response, a disabled vehicle delaying an ambulance by 40 minutes, and another blocking a fire-response unit. </p><p>Dispatchers encountered long waits on the Waymo hotline. Seven reported obstructions affected Muni vehicles, including one delayed by 41 minutes. </p><p>Waymo paused service and directed staged fleet retrieval. Reports continued after the pause. </p><p>On 23 December it announced fleet-wide outage-context updates and planned emergency-protocol, city-coordination and responder-training improvements. The city later sought stronger resilience planning and access to stoppage data.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Autonomously navigating the real world</strong><p>Waymo · 2025-12-23</p><p><a href="https://waymo.com/blog/2025/12/autonomously-navigating-the-real-world/">https://waymo.com/blog/2025/12/autonomously-navigating-the-real-world/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Waymo robotaxis contributed to San Francisco gridlock during major power outage</strong><p>AI Incident Database · 2025-12-20</p><p><a href="https://incidentdatabase.ai/cite/1326/">https://incidentdatabase.ai/cite/1326/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Reply comments of SFMTA in response to prehearing conference questions, R.25-08-013</strong><p>San Francisco Municipal Transportation Agency · 2026-02-13</p><p><a href="https://www.sfmta.com/media/44577/download?inline=">https://www.sfmta.com/media/44577/download?inline=</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Waymo Advice Letter 0003 and March 2025 Passenger Safety Plan</strong><p>Waymo LLC · 2025-03-26</p><p><a href="https://www.cpuc.ca.gov/-/media/cpuc-website/divisions/consumer-protection-and-enforcement-division/documents/tlab/av-programs/tcp0038152a-waymo-al-0003_a1b.pdf">https://www.cpuc.ca.gov/-/media/cpuc-website/divisions/consumer-protection-and-enforcement-division/documents/tlab/av-programs/tcp0038152a-waymo-al-0003_a1b.pdf</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] CPUC approval of Waymo Advice Letter 0003</strong><p>California Public Utilities Commission · 2025-05-19</p><p><a href="https://www.cpuc.ca.gov/-/media/cpuc-website/divisions/consumer-protection-and-enforcement-division/documents/tlab/av-programs/waymo-al-3-disposition-letter-20250519.pdf">https://www.cpuc.ca.gov/-/media/cpuc-website/divisions/consumer-protection-and-enforcement-division/documents/tlab/av-programs/waymo-al-3-disposition-letter-20250519.pdf</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

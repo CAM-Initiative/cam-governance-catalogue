@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000082/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000082/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000082</p>
     <h1>AI-generated immigration-attorney impersonation reportedly defrauded Bronx resident of $4,820</h1>
     <div class="vigil-assessment-prose"><p>A Bronx legal resident reported losing $4,820 and providing Social Security and residency documents after responding to an AI-generated social-media advertisement impersonating Miami immigration attorney Angel Leal. Leal said he had no involvement and that his identity had been cloned across thousands of fake profile videos. </p><p>His wife questioned the requests and a friend helped identify the fake. Hernandez said later demands sought more money, and he reported the case to police and federal authorities. </p><p>He described rent and electricity arrears and concern about misuse of his documents.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Legal resident loses thousands seeking citizenship to AI immigration attorney</strong><p>ABC7 New York / WABC · 2026-08-20</p><p><a href="https://abc7ny.com/post/legal-resident-loses-thousands-seeking-citizenship-ai-immigration-attorney-7-side-investiates/19704074/">https://abc7ny.com/post/legal-resident-loses-thousands-seeking-citizenship-ai-immigration-attorney-7-side-investiates/19704074/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Scammers use AI to impersonate immigration attorneys to dupe immigrants with fake legal services</strong><p>WLRN Public Media · 2026-08-20</p><p><a href="https://www.wlrn.org/immigration/2026-08-20/abogado-inmigracion-ai-scam-fraud">https://www.wlrn.org/immigration/2026-08-20/abogado-inmigracion-ai-scam-fraud</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Incident 1660: Purportedly AI-Generated Videos Impersonating Miami Immigration Attorney Were Reportedly Used to Defraud Bronx Resident of $4,820</strong><p>AI Incident Database · 2026-08-19</p><p><a href="https://incidentdatabase.ai/cite/1660">https://incidentdatabase.ai/cite/1660</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Immigration-services scam highlights risks to people seeking legal help</strong><p>The Guardian · 2026-02-21</p><p><a href="https://www.theguardian.com/us-news/2026/feb/21/new-jersey-immigration-scam">https://www.theguardian.com/us-news/2026/feb/21/new-jersey-immigration-scam</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

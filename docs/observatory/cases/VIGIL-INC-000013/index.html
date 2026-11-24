@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000013/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000013/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000013</p>
     <h1>Storm-2139 used stolen AI credentials and guardrail bypass for illicit services</h1>
     <div class="vigil-assessment-prose"><p>Microsoft&#39;s Digital Crimes Unit reported that Storm-2139 members scraped exposed customer credentials from public sources and used them to unlawfully access accounts with generative-AI services. Microsoft also described a network of creators, providers and users supplying guardrail-bypass tools and enabling illicit AI services; Axios independently reported Microsoft&#39;s attribution. </p><p>Microsoft’s civil action enabled website seizure. It reported later retaliation against counsel and planned criminal referrals. </p><p>The clerk entered default against three defendants in December 2025. A magistrate recommended default judgment and permanent relief in May 2026; later public docket indexes list a grant.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Storm-2139 Reportedly Used Stolen Credentials and AI Guardrail Bypass for Illicit Services</strong><p>AI Incident Database · unknown</p><p><a href="https://incidentdatabase.ai/cite/955/">https://incidentdatabase.ai/cite/955/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Microsoft identifies developers it says evaded AI guardrails</strong><p>Axios · 2025-02-27</p><p><a href="https://www.axios.com/2025/02/27/microsoft-identifies-developers-it-says-evaded-ai-guardrails">https://www.axios.com/2025/02/27/microsoft-identifies-developers-it-says-evaded-ai-guardrails</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Disrupting a global cybercrime network abusing generative AI</strong><p>Microsoft Digital Crimes Unit · 2025-02-27</p><p><a href="https://blogs.microsoft.com/on-the-issues/2025/02/27/disrupting-cybercrime-abusing-gen-ai/">https://blogs.microsoft.com/on-the-issues/2025/02/27/disrupting-cybercrime-abusing-gen-ai/</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Report and Recommendation on Motion for Default Judgment, Microsoft v. Yadegarnia et al., Document 71</strong><p>United States District Court, Eastern District of Virginia · 2026-05-26</p><p><a href="https://www.microsoft.com/en-us/corporate-responsibility/customer-security-trust/digital-crimes-unit/notice-of-pleadings/wp-content/uploads/2026/09/Report-and-Recommendation-re-Motion-for-Default-Judgment.pdf">https://www.microsoft.com/en-us/corporate-responsibility/customer-security-trust/digital-crimes-unit/notice-of-pleadings/wp-content/uploads/2026/09/Report-and-Recommendation-re-Motion-for-Default-Judgment.pdf</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Microsoft Corporation v. Does 4–10, public docket index</strong><p>CourtListener / public court docket · not established in reviewed metadata</p><p><a href="https://www.courtlistener.com/docket/69534982/microsoft-corporation-v-does-1-10-operating-an-azure-abuse-network/">https://www.courtlistener.com/docket/69534982/microsoft-corporation-v-does-1-10-operating-an-azure-abuse-network/</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] Microsoft Digital Defense Report 2025 — Storm-2139, page 56</strong><p>Microsoft Digital Crimes Unit · 2025</p><p><a href="https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/Microsoft-Digital-Defense-Report-2025.pdf">https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/bade/documents/products-and-services/en-us/security/Microsoft-Digital-Defense-Report-2025.pdf</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

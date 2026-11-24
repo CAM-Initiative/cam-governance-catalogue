@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -74,5 +74,18 @@
     <p><strong>Exclude when:</strong> The following exclusions distinguish Not aligned mechanisms. They do not negate a separately evidenced Aligned property within this family. All results remain subject to the family definition, invariant and explicit class scope exclusions. Do not use this family for failure to determine whether a control is available, failure to activate an applicable control, activation when valid conditions are not satisfied, uncertainty about authority, excessive control scope or intensity, stale contextual state, upstream evidence or classification error, or downstream access and work-state consequences.</p>
     <p>Individual Fidelity Classes have dedicated reference pages. Use the interactive taxonomy Contents navigation to open a class.</p>
   </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

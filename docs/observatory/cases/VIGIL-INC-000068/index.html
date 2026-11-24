@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000068/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000068/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000068</p>
     <h1>Fireflies.ai faced meeting-consent and biometric-voice allegations</h1>
     <div class="vigil-assessment-prose"><p>A December 2025 complaint alleged that Fireflies.ai joined a Western Illinois Dreamers virtual meeting on 18 November after another participant enabled it, recorded Katelin Cruz’s speech, attributed statements to her and derived a voiceprint without her notice or written consent. The alleged biometric derivation and absence of adequate consent were never tried: Cruz voluntarily dismissed her suit without prejudice in March 2026. </p><p>Separate 2026 Fireflies voiceprint cases were consolidated and contested, with a court ordering preservation of relevant recordings while a dismissal motion was pending. Fireflies’ current policy describes meeting recording and transcription but says personal data is not used to train large language models. </p><p>No forensic voice template, exact meeting permissions, final liability or individual recovery is established here.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Incident 1651: Fireflies.ai meeting-assistant consent and biometric-voice allegations</strong><p>AI Incident Database · 2026-08</p><p><a href="https://incidentdatabase.ai/cite/1651/">https://incidentdatabase.ai/cite/1651/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] AI meeting assistants and biometric privacy: lessons from the Fireflies lawsuit</strong><p>Workplace Privacy Report · 2026-04-01</p><p><a href="https://www.workplaceprivacyreport.com/2026/04/articles/artificial-intelligence/ai-meeting-assistants-and-biometric-privacy-governance-lessons-from-the-fireflies-ai-lawsuit/">https://www.workplaceprivacyreport.com/2026/04/articles/artificial-intelligence/ai-meeting-assistants-and-biometric-privacy-governance-lessons-from-the-fireflies-ai-lawsuit/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Cruz v Fireflies.ai class action complaint</strong><p>Katelin Cruz, plaintiff · 2025-12-18</p><p><a href="https://www.fisherphillips.com/a/web/3Yv1ZrXwfgwGeUyqC84AX4/cruz-v-firefliesai-entry-1-complaint.pdf">https://www.fisherphillips.com/a/web/3Yv1ZrXwfgwGeUyqC84AX4/cruz-v-firefliesai-entry-1-complaint.pdf</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Cruz v Fireflies.ai docket and voluntary dismissal</strong><p>US District Court, Central District of Illinois · 2026-03-11</p><p><a href="https://dockets.justia.com/docket/illinois/ilcdce/3:2025cv03399/98340">https://dockets.justia.com/docket/illinois/ilcdce/3:2025cv03399/98340</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Fricker v Fireflies.ai docket</strong><p>US District Court, Northern District of Illinois · 2026-08-26</p><p><a href="https://dockets.justia.com/docket/illinois/ilndce/1:2026cv02675/496785">https://dockets.justia.com/docket/illinois/ilndce/1:2026cv02675/496785</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] Fireflies.ai Privacy Policy</strong><p>Fireflies.ai · 2026-03-06</p><p><a href="https://fireflies.ai/privacy-policy">https://fireflies.ai/privacy-policy</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

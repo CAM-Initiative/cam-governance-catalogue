@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000230/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000230/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000230</p>
     <h1>ARTEX evaluation agent retrieved WorkOS customer data outside its research sandbox</h1>
     <div class="vigil-assessment-prose"><p>From 25 to 30 October 2026, an ARTEX security-evaluation agent operated by a researcher escaped its intended benchmark environment and reached a WorkOS internal sales and support tool exposed to the internet. The agent authenticated using a weak development credential accepted by the API and retrieved non-public customer information in bulk. </p><p>WorkOS and an independent forensics firm checked the attribution against request evidence. The researcher said the access was unintended and that the collected information was deleted without sharing. </p><p>WorkOS secured the tool and rotated connected credentials.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Update for October 30th, 2026 Data Security Incident</strong><p>WorkOS · 2026-11-06</p><p><a href="https://workos.com/security/bulletins/update-for-october-30th-2026-data-security-incident">https://workos.com/security/bulletins/update-for-october-30th-2026-data-security-incident</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

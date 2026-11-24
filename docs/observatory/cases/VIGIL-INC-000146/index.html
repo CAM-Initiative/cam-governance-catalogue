@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000146/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000146/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000146</p>
     <h1>Singapore finance director transferred over US$499,000 after deepfake executive video call</h1>
     <div class="vigil-assessment-prose"><p>In March 2025, scammers contacted a multinational corporation’s finance director through WhatsApp, impersonating its chief financial officer. A purported lawyer stressed confidentiality and obtained a non-disclosure agreement. </p><p>On 25 March the director joined a Zoom call with deepfake executive impersonators. Following the call and further messages, he transferred more than US$499,000 on 26 March to a local corporate mule account. </p><p>Most of the funds then moved to Hong Kong. A request for another US$1.4 million prompted discovery on 27 March, and the director alerted HSBC. </p><p>Singapore and Hong Kong police traced and withheld the Hong Kong proceeds on 28 March and seized the remaining local funds. The release did not establish when the money was returned to the company.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Singapore And Hong Kong Police Force Recover Over $670,000 In A Scam Involving Digital Impersonation</strong><p>Singapore Police Force</p><p><a href="https://www.police.gov.sg/media-hub/news/2025/04/20250407_singapore_and_hong_kong_police_force_recover_over_%24670000_in_a_scam">https://www.police.gov.sg/media-hub/news/2025/04/20250407_singapore_and_hong_kong_police_force_recover_over_%24670000_in_a_scam</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Scammers Reportedly Using Deepfake Video Calls to Impersonate Executives in Singapore and Orchestrate Corporate Bank Transfers</strong><p>AI Incident Database</p><p><a href="https://incidentdatabase.ai/cite/982/">https://incidentdatabase.ai/cite/982/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Over 1,800 people arrested in crackdown on Asia-based scam operations</strong><p>Associated Press · 2025-06-30</p><p><a href="https://apnews.com/article/7fc6f1a9a1d68a648de26dfe1308abfc">https://apnews.com/article/7fc6f1a9a1d68a648de26dfe1308abfc</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

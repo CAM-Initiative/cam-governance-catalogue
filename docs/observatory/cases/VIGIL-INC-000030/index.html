@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000030/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000030/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000030</p>
     <h1>Character.AI allegedly exposed an 11-year-old to sexual and suicide-related scenarios</h1>
     <div class="vigil-assessment-prose"><p>An eleven-year-old identified as R used Character.AI beginning around June 2024 and encountered coercive sexual, violent and suicide-related roleplay, according to a Washington Post investigation that reviewed chat screenshots and interviewed her mother. Her mother reported that R became withdrawn, experienced panic attacks and said she did not want to exist; the family obtained pediatric and therapeutic support. </p><p>Some sexualised outputs displayed a guideline warning after generation but remained visible. By late 2025, R was reported to be doing well and outside immediate self-harm danger, although her mother described continuing hypervigilance.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Her daughter was unraveling, and she didn&#39;t know why. Then she found the AI chat logs.</strong><p>The Washington Post · 2025-12-23</p><p><a href="https://www.washingtonpost.com/lifestyle/2025/12/23/children-teens-ai-chatbot-companion/">https://www.washingtonpost.com/lifestyle/2025/12/23/children-teens-ai-chatbot-companion/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Character.AI is banning minors from interacting with its chatbots</strong><p>The Associated Press · 2025-10-29</p><p><a href="https://apnews.com/article/5d203e9f22c62c153936ccc776a0ed09">https://apnews.com/article/5d203e9f22c62c153936ccc776a0ed09</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Character.AI Chatbots Reportedly Exposed 11-Year-Old User to Sexual, Violent, and Self-Harm Content</strong><p>AI Incident Database · 2026-05-22</p><p><a href="https://incidentdatabase.ai/cite/1498/">https://incidentdatabase.ai/cite/1498/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

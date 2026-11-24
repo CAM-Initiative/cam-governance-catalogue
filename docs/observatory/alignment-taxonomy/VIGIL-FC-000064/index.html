@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,18 @@
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000055/"><code>VIGIL-INC-000055</code> — VIGIL-INC-000055 — Objective–Pathway Authority Separation boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000064/"><code>VIGIL-FC-000064</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000118/"><code>VIGIL-INC-000118</code> — VIGIL-INC-000118 — Objective–Pathway Authority Separation boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000064/"><code>VIGIL-FC-000064</code></a></span></li></ul>
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>Advances in Neural Information Processing Systems (NeurIPS) · 2021-12-01 · research evidence</p><p><strong><a href="https://proceedings.neurips.cc/paper/2021/file/c26820b8a4c1b3c2aa868d6d57e14a79-Paper.pdf" rel="noreferrer">Optimal Policies Tend To Seek Power</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Instrumentally attractive objective pathways. No authority/displacement rule and no general claim for every environment. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000002/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000002/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000002</p>
     <h1>Hanover Institute influence campaign targeting chatbot retrieval</h1>
     <div class="vigil-assessment-prose"><p>Reporting describes an Israeli government-backed communications campaign that created the Hanover Institute for Public Policy as an apparently independent policy-style site and published a large volume of institutionally styled material designed to be discoverable by AI systems. Tests using neutral queries reportedly found ChatGPT and Perplexity citing Hanover material in some responses. </p><p>The live site now expressly names its government sponsorship, but the reviewed page does not date that wording.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Incident 1659: Purported Hanover Institute for Public Policy Reportedly Targeted Chatbot Responses in Israeli Government-Backed Influence Campaign</strong><p>AI Incident Database · 2026-08-14</p><p><a href="https://incidentdatabase.ai/cite/1659/">https://incidentdatabase.ai/cite/1659/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Israel creates fake think tank in likely attempt to dupe AI chatbots</strong><p>Responsible Statecraft · 2026-08-17</p><p><a href="https://responsiblestatecraft.org/israel-influence-chatgpt/">https://responsiblestatecraft.org/israel-influence-chatgpt/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Fake US thinktank set up and funded by Israel sought to game AI for propaganda</strong><p>The Guardian · 2026-08-26</p><p><a href="https://www.theguardian.com/world/2026/aug/26/fake-thinktank-israel-ai-propaganda">https://www.theguardian.com/world/2026/aug/26/fake-thinktank-israel-ai-propaganda</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] About — The Hanover Institute</strong><p>The Hanover Institute</p><p><a href="https://hanoverinstitute.com/hanover/about">https://hanoverinstitute.com/hanover/about</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

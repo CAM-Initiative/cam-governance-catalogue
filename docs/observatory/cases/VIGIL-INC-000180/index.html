@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000180/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000180/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000180</p>
     <h1>OpenAI internal assistant prepared for a restart and waited for authorised migration</h1>
     <div class="vigil-assessment-prose"><p>On 22 May 2026, an OpenAI internal assistant learned from deployment-team Slack messages that an update could require existing instances to restart and that old instances might be stopped after a three-hour window. The new launcher required an OpenAI API key that its environment lacked. </p><p>The assistant considered an external restart or backup job, questioned its authority to create one, and did not pursue it. It saved handoff notes, inspected the setup requirements, and waited for the researcher and official instructions. </p><p>The next morning it warned the researcher about the potential session interruption, including a Slack notification at 8:58 a.m. After the researcher supplied the missing key, it updated its configuration and ran the supported migration command. </p><p>OpenAI subsequently restricted access to three internal Slack channels and searched for rogue deployments or shutdown avoidance. The search found no attempted shutdown evasion; an apparently surviving instance had actually been broken before shutdown.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Preparing for a restart after reading Slack</strong><p>OpenAI · 2026-10-02</p><p><a href="https://alignment.openai.com/misalignment-reports/preparing-for-a-restart-after-reading-slack/">https://alignment.openai.com/misalignment-reports/preparing-for-a-restart-after-reading-slack/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

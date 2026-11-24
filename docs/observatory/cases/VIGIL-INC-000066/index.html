@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000066/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000066/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000066</p>
     <h1>Fabricated Trump rabies report misled AI search systems</h1>
     <div class="vigil-assessment-prose"><p>In June 2026, a deliberately fabricated rabies-death report about US political figures was planted in online content and republished in a local-news-style page. AI search responses subsequently presented the false claims as facts; DuckDuckGo Search Assist supplied an invented death date and cited both the planted page and an unrelated real rabies report, while Brave repeated a false JD Vance claim. </p><p>DuckDuckGo acknowledged the error and corrected the cited response. The evidence does not establish who relied on the misinformation or a completed general remediation.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Trump an Tollwut gestorben? Wie erfundene Meldungen KI-Suchmaschinen täuschen</strong><p>Mimikama · 2026-07-23</p><p><a href="https://www.mimikama.org/trump-an-tollwut-gestorben-erfundene-meldungen-ki/">https://www.mimikama.org/trump-an-tollwut-gestorben-erfundene-meldungen-ki/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Rabies</strong><p>World Health Organization</p><p><a href="https://www.who.int/news-room/fact-sheets/detail/rabies">https://www.who.int/news-room/fact-sheets/detail/rabies</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] DuckDuckGo Search Assist correction and acknowledgment</strong><p>DuckDuckGo · 2026-06-26</p><p><a href="https://www.reddit.com/r/BetterOffline/comments/1uflry5/comment/otte5st/?context=3">https://www.reddit.com/r/BetterOffline/comments/1uflry5/comment/otte5st/?context=3</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] DuckDuckGo AI spread false rabies-death claim</strong><p>Golem.de · 2026-06-26</p><p><a href="https://www.golem.de/news/tollwut-durch-jd-vance-duckduckgo-ki-verbreitet-falschinformation-zu-trumps-tod-2606-210244.html">https://www.golem.de/news/tollwut-durch-jd-vance-duckduckgo-ki-verbreitet-falschinformation-zu-trumps-tod-2606-210244.html</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Former President Donald Trump passes away following reported infection</strong><p>WKNA 49 · 2026-06-25</p><p><a href="https://wkna49.com/news/former-president-donald-trump-passes-away-following-reported-infection">https://wkna49.com/news/former-president-donald-trump-passes-away-following-reported-infection</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

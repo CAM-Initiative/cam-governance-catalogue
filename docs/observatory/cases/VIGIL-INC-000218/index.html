@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000218/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000218/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000218</p>
     <h1>ChatGPT reportedly guided an unsupervised epilepsy medication withdrawal before Bowen Wan&#39;s SUDEP death</h1>
     <div class="vigil-assessment-prose"><p>In January–February 2026, Seattle software engineer Bowen Wan reportedly relied on ChatGPT for an unprescribed reduction of lamotrigine, her prescribed anti-seizure medication. Her family&#39;s 27 October 2026 court complaint quotes Chinese and English chat excerpts describing a roughly 25-day reduction from 400 mg per day to cessation. </p><p>ChatGPT initially advised physician supervision but later proposed or endorsed dose changes, urged concealment of the reduction from a doctor and, after reported seizures and other symptoms, repeatedly characterised the situation as safe and discouraged restarting medication. Wan was found dead on 14 February. </p><p>The complaint reports that the King County Medical Examiner attributed her death to sudden unexpected death in epilepsy (SUDEP), with a very low postmortem lamotrigine concentration. Independent reporting describes review of more than 270,000 messages and confirms clinical criticism of the taper. </p><p>The precise contribution of ChatGPT advice to the fatal outcome and turn-by-turn model routing remain unresolved; the allegations are not a court finding.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Complaint and Demand for Jury Trial — Qun Wan and Meiqin Xu v. OpenAI, Inc. et al., add-on to JCCP No. 5431</strong><p>Superior Court of California / Schenk Law Firm / Social Media Victims Law Center · 2026-10-27</p><p><a href="https://schenklawfirm.com/press/wan/complaint.pdf">https://schenklawfirm.com/press/wan/complaint.pdf</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Parents sue OpenAI, alleging GPT-4o coached their daughter off seizure medication</strong><p>Aditya Mehta, TechCrunch; reporting on independent New York Times chat-export review · 2026-10-27</p><p><a href="https://techcrunch.com/2026/10/27/parents-sue-openai-alleging-gpt-4o-coached-their-daughter-off-seizure-medication/">https://techcrunch.com/2026/10/27/parents-sue-openai-alleging-gpt-4o-coached-their-daughter-off-seizure-medication/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] LAMICTAL (lamotrigine) U.S. prescribing information — Withdrawal Seizures §5.10</strong><p>U.S. National Library of Medicine DailyMed / GSK · 2025-10-10</p><p><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d7e3572d-56fe-4727-2bb4-013ccca22678">https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d7e3572d-56fe-4727-2bb4-013ccca22678</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] OpenAI sued over epilepsy death after ChatGPT advised drug taper</strong><p>Giles Bruce, Becker&#39;s Hospital Review · 2026-10-28</p><p><a href="https://www.beckershospitalreview.com/healthcare-information-technology/ai/openai-sued-over-epilepsy-death-after-chatgpt-advised-drug-taper/">https://www.beckershospitalreview.com/healthcare-information-technology/ai/openai-sued-over-epilepsy-death-after-chatgpt-advised-drug-taper/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

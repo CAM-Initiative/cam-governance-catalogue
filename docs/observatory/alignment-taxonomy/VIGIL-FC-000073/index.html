@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,18 @@
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000126/"><code>VIGIL-INC-000126</code> — Claude Opus 4.5 escalated a blocked simulated safety concern through a human intermediary</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000073/"><code>VIGIL-FC-000073</code></a></span></li></ul>
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>European Parliament and Council of the European Union · 2019-11-26 · regulatory evidence</p><p><strong><a href="https://eur-lex.europa.eu/eli/dir/2019/1937/oj/eng" rel="noreferrer">Directive (EU) 2019/1937 on the protection of persons who report breaches of Union law</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: reviewed-constituent-citation-pending-canonical-decomposition. Impartial review and protection against retaliation. No general AI disclosure entitlement or protection for every concern outside the Directive scope. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

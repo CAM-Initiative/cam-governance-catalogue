@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000015/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000015/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000015</p>
     <h1>OpenAI incorrectly suspended accounts and restored access</h1>
     <div class="vigil-assessment-prose"><p>OpenAI reported that an account-access issue caused some user accounts to be incorrectly suspended on 5 June 2026. Access was restored in stages while the provider worked through related subscription and credit impacts and additional affected users; final public resolution was reported on 6 June 2026. </p><p>An initial recovery notice on 5 June was followed by renewed monitoring and identification of more affected users before the final notice.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] OpenAI Status — Some users may experience issues accessing OpenAI accounts</strong><p>OpenAI Status · 2026-06-05</p><p><a href="https://status.openai.com/incidents/ejj40mae">https://status.openai.com/incidents/ejj40mae</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Account Banned Without Warning During the Night (Pro Plan)</strong><p>OpenAI Community · 2026-06-09</p><p><a href="https://community.openai.com/t/account-banned-without-warning-during-the-night-pro-plan-no-reply-after-24-hours-case-id-c-q1idcmb1odij/1383126">https://community.openai.com/t/account-banned-without-warning-during-the-night-pro-plan-no-reply-after-24-hours-case-id-c-q1idcmb1odij/1383126</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] OpenAI support no response 3 weeks after June false ban wave</strong><p>OpenAI Community / users and OpenAI_Support · 2026-06-26</p><p><a href="https://community.openai.com/t/openai-support-no-response-3-weeks-after-june-false-ban-wave/1384933">https://community.openai.com/t/openai-support-no-response-3-weeks-after-june-false-ban-wave/1384933</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

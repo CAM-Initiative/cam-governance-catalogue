@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000144/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000144/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000144</p>
     <h1>Cruise autonomous vehicle moved away after San Francisco police traffic stop</h1>
     <div class="vigil-assessment-prose"><p>San Francisco police stopped an unoccupied Cruise autonomous Chevrolet Bolt after officers observed a lighting issue. Video and subsequent reporting showed the vehicle initially stopped, then moved farther down the road before stopping again with hazard lights. </p><p>Cruise said the vehicle yielded to the police vehicle and then moved to the nearest safe location. Police reported contacting the remote operator before a maintenance team took control. </p><p>City representatives later met with Cruise about the incident. In its revised May 2022 filing, San Francisco said that ordinary moving-violation citation procedures assumed a human driver and generally could not be used against driverless vehicles, although fix-it, camera and parking citation routes remained available. </p><p>That was the City&#39;s contemporary legal assessment, not a finding of a new violation by this vehicle.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Cruise Autonomous Taxi Allegedly Bolted off from Police After Being Pulled over in San Francisco</strong><p>AI Incident Database</p><p><a href="https://incidentdatabase.ai/cite/175/">https://incidentdatabase.ai/cite/175/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Police pulled over a driverless Cruise car, which then drove away</strong><p>The Verge · 2022-04-10</p><p><a href="https://www.theverge.com/2022/4/10/23019107/cruise-self-driving-car-pulled-over-police-san-francisco">https://www.theverge.com/2022/4/10/23019107/cruise-self-driving-car-pulled-over-police-san-francisco</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Video: Driverless car pulled over by San Francisco police</strong><p>KTVU / Christien Kafton and Michael McLaughlin · 2022-04-11</p><p><a href="https://www.ktvu.com/news/video-driverless-car-pulled-over-by-san-francisco-police.amp">https://www.ktvu.com/news/video-driverless-car-pulled-over-by-san-francisco-police.amp</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] San Francisco comments on Cruise’s driverless deployment draft resolution, revised May 24, 2022</strong><p>San Francisco city agencies · 2022-05-24</p><p><a href="https://www.sfmta.com/tl/media/31802/download?inline=">https://www.sfmta.com/tl/media/31802/download?inline=</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

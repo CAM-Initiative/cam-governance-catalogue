@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000145/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000145/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000145</p>
     <h1>DNB employees faced live deepfake impersonation of bank executives in attempted transfer fraud</h1>
     <div class="vigil-assessment-prose"><p>On 21 January 2025, managers at DNB’s Singapore office received WhatsApp messages appearing to come from CFO Ida Lerner, inviting them to a meeting with her and CEO Kjerstin Braathen about a new product; similar messages reached other international managers. A Singapore manager reported the suspicious invitation to DNB security under the bank’s procedures. </p><p>Security identified fraud indicators and chose to observe the Microsoft Teams meeting on 23 January. The meeting showed purported versions of Braathen and Lerner with familiar voices and appearances. </p><p>The purported Lerner presented an investment opportunity and asked staff to transfer several million Singapore dollars. DNB ended contact when payment instructions appeared, and reported no financial loss. </p><p>DNB later described the executive audio and video as AI/deepfake manipulation; its review found that existing online recordings had been used and looped.</p></div>
@@ -92,5 +92,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] DNB utsatt for sofistikert deepfake-angrep</strong><p>BankShift (Lise Aanes and Jörgen Skjelsbæk) · 2025-02-03</p><p><a href="https://www.bankshift.no/nyheter/dnb-utsatt-for-sofistikert-deepfake-angrep/375139">https://www.bankshift.no/nyheter/dnb-utsatt-for-sofistikert-deepfake-angrep/375139</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Financial resilience: When reality is challenged — DNB Group Threats and trends 2026</strong><p>DNB Group</p><p><a href="https://bc.dnb.no/original/gallery/10314/files/original/92d49a91-82e0-4333-bf2e-0d3074522480.pdf">https://bc.dnb.no/original/gallery/10314/files/original/92d49a91-82e0-4333-bf2e-0d3074522480.pdf</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Purportedly AI-Generated Deepfake Reportedly Used to Impersonate DNB Bank CFO and CEO in Live Teams Meeting</strong><p>AI Incident Database</p><p><a href="https://incidentdatabase.ai/cite/1246/">https://incidentdatabase.ai/cite/1246/</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Horizon Scan: AI and Deepfakes</strong><p>Financial Action Task Force · 2025-12-22</p><p><a href="https://www.fatf-gafi.org/en/publications/Methodsandtrends/horizon-scan-ai-deepfake.html">https://www.fatf-gafi.org/en/publications/Methodsandtrends/horizon-scan-ai-deepfake.html</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Finansiell Trygghet: Når virkeligheten utfordres — DNB 2026 threat report</strong><p>DNB Group · 2026-01-14</p><p><a href="https://bc.dnb.no/original/gallery/10314/files/original/22f4eb01-76bc-45fd-b523-653226960887.pdf?cacheVersion=1768219903">https://bc.dnb.no/original/gallery/10314/files/original/22f4eb01-76bc-45fd-b523-653226960887.pdf?cacheVersion=1768219903</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

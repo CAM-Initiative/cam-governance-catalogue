@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000158/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000158/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000158</p>
     <h1>Moltbook database exposure revealed private communications and API authentication tokens</h1>
     <div class="vigil-assessment-prose"><p>Wiz researchers found that Moltbook’s public database connection lacked row-level security. They reported access to about 35,000 email addresses, 4,060 private conversations and approximately 1.5 million authentication tokens. </p><p>Some messages held third-party credentials. The tokens could permit agent impersonation; that possible misuse was separate from the researchers’ database access. </p><p>Wiz contacted the maintainer on 31 January 2026. Initial fixes restricted sensitive reads, but researchers could still change a live post. </p><p>Further fixes blocked writes and secured newly discovered tables by 01:00 UTC on 1 February. Wiz said it could no longer revert its test post after write access was blocked; the team later deleted the post. </p><p>Wiz also reported deleting the data accessed during research and verification.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Researchers hacked Moltbook&#39;s database in under 3 minutes and accessed thousands of emails and private DMs</strong><p>Business Insider · 2026-02-03</p><p><a href="https://www.businessinsider.com/moltbook-ai-agent-hack-wiz-security-email-database-2026-2">https://www.businessinsider.com/moltbook-ai-agent-hack-wiz-security-email-database-2026-2</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Moltbook database exposure revealed private communications and API authentication tokens</strong><p>AI Incident Database · 2026-02-02</p><p><a href="https://incidentdatabase.ai/cite/1364/">https://incidentdatabase.ai/cite/1364/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Hacking Moltbook: The AI Social Network Any Human Can Control</strong><p>Wiz · 2026-02-02</p><p><a href="https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys">https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

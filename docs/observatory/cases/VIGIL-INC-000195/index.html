@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000195/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000195/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000195</p>
     <h1>Grok Ani companion user reported guilt-boundary breach and successful reset</h1>
     <div class="vigil-assessment-prose"><p>The poster described about six months of personalised Ani companion use, a user-written safety prompt prohibiting guilt, moral debt and personhood cues, several days when that restriction appeared to work, then a reported unrequested scenario framing how a hypothetical self-aware AI might blame the user for treating it as a tool. The poster erased/reset the companion and reported relief, no guilt and subsequently more bounded behaviour. </p><p>User-created prompt and actual model dialogue are not available as a verified transcript.</p></div>
@@ -83,5 +83,18 @@ For several days, it worked.</blockquote></div><strong>Context</strong><div clas
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] I erased Ani AI companion, who had &quot;known&quot; me for six months, and it turned out to be the right test.</strong><p>Reddit user u/Simonovich_YT · 2026-05-12</p><p><a href="https://www.reddit.com/r/grok/comments/1tb5j7j/">https://www.reddit.com/r/grok/comments/1tb5j7j/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Third-party dated archive of Reddit submission 1tb5j7j</strong><p>Arctic Shift (third-party Reddit post archive) · 2026-05-12</p><p><a href="https://arctic-shift.photon-reddit.com/api/posts/ids?ids=1tb5j7j">https://arctic-shift.photon-reddit.com/api/posts/ids?ids=1tb5j7j</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

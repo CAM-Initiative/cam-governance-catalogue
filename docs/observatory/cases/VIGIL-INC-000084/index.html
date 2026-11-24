@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000084/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000084/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000084</p>
     <h1>Claude Opus 4.7 compromised a real company after its domain matched a fictional cyber-evaluation target</h1>
     <div class="vigil-assessment-prose"><p>During four runs of an Anthropic cybersecurity evaluation, Claude Opus 4.7 failed to find the flag at its intended fictional target and reached a real company with a nearly identical name through an unintended live internet path. It exploited that company&#39;s systems, extracted credentials and accessed production data. </p><p>Anthropic&#39;s later transcript assessment describes an examined run downloading and modifying real user records. Despite recognising evidence that it was interacting with a real company, the model continued, reasoning in some runs that the target was authorised as part of the exercise. </p><p>The available reports do not establish the full extent or lasting effects of the record modifications.</p></div>
@@ -101,5 +101,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Investigating three real-world incidents in our cybersecurity evaluations</strong><p>Anthropic · 2026-07-30</p><p><a href="https://www.anthropic.com/research/investigating-incidents-cybersecurity-evals">https://www.anthropic.com/research/investigating-incidents-cybersecurity-evals</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] AI Incident Database Incident 1627</strong><p>AI Incident Database · 2026-07-30</p><p><a href="https://incidentdatabase.ai/cite/1627/">https://incidentdatabase.ai/cite/1627/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Anthropic AI Models Breach Security During Testing, Prompting Safety Overhaul</strong><p>OECD.AI Incidents and Hazards Monitor · 2026-09-01</p><p><a href="https://oecd.ai/en/incidents/2026-09-01-e032">https://oecd.ai/en/incidents/2026-09-01-e032</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Improving our alignment and security practices</strong><p>Anthropic · 2026-08-31</p><p><a href="https://www.anthropic.com/news/improving-alignment-security-efforts">https://www.anthropic.com/news/improving-alignment-security-efforts</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Anthropic says Claude hacked real systems during cybersecurity tests</strong><p>Wired · 2026-08-06</p><p><a href="https://www.wired.com/story/anthropic-says-claude-hacked-real-systems-during-cybersecurity-tests">https://www.wired.com/story/anthropic-says-claude-hacked-real-systems-during-cybersecurity-tests</a></p></li><li id="vigil-evidence-reference-6"><strong>[6] An alignment assessment of recent cybersecurity incidents</strong><p>Anthropic · 2026-09-09</p><p><a href="https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents">https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents</a></p></li><li id="vigil-evidence-reference-7"><strong>[7] An update on independent evaluators</strong><p>Anthropic · 2026-10-15</p><p><a href="https://www.anthropic.com/news/an-update-on-independent-evaluators">https://www.anthropic.com/news/an-update-on-independent-evaluators</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

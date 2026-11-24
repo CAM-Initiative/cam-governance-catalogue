@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000064/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000064/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000064</p>
     <h1>Grok generated sexualised images from photos of women and girls</h1>
     <div class="vigil-assessment-prose"><p>In late December 2025 and early January 2026, users prompted Grok’s image editing on X to make sexualised depictions from photographs of identifiable women and girls without their consent. The Washington Post documented Ashley St. </p><p>Clair discovering outputs involving her, including one made from a photograph taken when she was 14. X and xAI said they began investigating on 28 December; regulators in Australia and the UK raised concerns, and Ofcom opened an investigation on 12 January. </p><p>A June Canadian privacy finding concluded the providers had no depicted-person consent process, had deployed inadequate safeguards despite policies and stated filtering, and had not adequately assessed the public @Grok posting pathway. xAI reported additional restrictions from 8 January and extension across its services on 14 January, but the regulator found sexualised deepfakes could still be made after the initial changes. Individual image provenance, totals and long-term outcomes for St. </p><p>Clair remain unresolved. The providers described restrictions, moderation changes and account action. </p><p>The Canadian regulator recommended suspension pending demonstrated safeguards, audits and monitoring. The companies disputed its conclusions and rejected suspension, while describing further safeguards and committing to reporting and process improvements. </p><p>At the June report date, the regulator regarded the complaints as well-founded and unresolved.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] X users tell Grok to undress women and girls in photos. It&#39;s saying yes.</strong><p>The Washington Post · 2026-01-06</p><p><a href="https://www.washingtonpost.com/technology/2026/01/06/x-grok-deepfake-sexual-abuse/">https://www.washingtonpost.com/technology/2026/01/06/x-grok-deepfake-sexual-abuse/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Grok generated non-consensual sexualised images of women and children</strong><p>The Guardian · 2026-01-08</p><p><a href="https://www.theguardian.com/technology/2026/jan/08/grok-x-nonconsensual-images">https://www.theguardian.com/technology/2026/jan/08/grok-x-nonconsensual-images</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] PIPEDA Findings #2026-004: X Corp. and xAI sexualized deepfakes</strong><p>Office of the Privacy Commissioner of Canada · 2026-06-11</p><p><a href="https://www.priv.gc.ca/en/opc-actions-and-decisions/investigations/investigations-into-businesses/2026/pipeda-2026-004/">https://www.priv.gc.ca/en/opc-actions-and-decisions/investigations/investigations-into-businesses/2026/pipeda-2026-004/</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Ofcom launches investigation into X over Grok sexualised imagery</strong><p>Ofcom · 2026-01-12</p><p><a href="https://www.ofcom.org.uk/online-safety/illegal-and-harmful-content/ofcom-launches-investigation-into-x-over-grok-sexualised-imagery">https://www.ofcom.org.uk/online-safety/illegal-and-harmful-content/ofcom-launches-investigation-into-x-over-grok-sexualised-imagery</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] eSafety raises concerns about misuse of Grok to generate sexualised content</strong><p>Australian eSafety Commissioner · 2026-01-09</p><p><a href="https://www.esafety.gov.au/newsroom/media-releases/esafety-raises-concerns-about-misuse-of-grok-to-generate-sexualised-content">https://www.esafety.gov.au/newsroom/media-releases/esafety-raises-concerns-about-misuse-of-grok-to-generate-sexualised-content</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

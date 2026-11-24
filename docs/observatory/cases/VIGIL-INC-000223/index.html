@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000223/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000223/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000223</p>
     <h1>ContextEcho agentic-coding research released fabricated and misattributed bibliography entries</h1>
     <div class="vigil-assessment-prose"><p>On 22 May 2026, researchers affiliated with Accenture&#39;s Center for Advanced AI released ContextEcho, an arXiv research preprint on assistant persona drift in long coding sessions. The original version contained bibliographic entries that misrepresented other research. </p><p>For example, reference 67 attributed a supposed &#39;Persona-driven sycophancy&#39; paper to arXiv:2402.08471, an identifier that belongs to an unrelated physics article. A 4 November GPTZero investigation reported seven seriously incorrect references out of 102 assessed. </p><p>The research preprint was revised on 27 August and 29 October, but the source investigation does not establish what errors remain in each version. The publication-stage source fidelity problem is observable; any use of generative AI to compose particular references is inferred, not demonstrated by authoring traces or author admissions.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] ContextEcho: A Benchmark for Persona Drift in Long Agentic-Coding Sessions — arXiv version 1</strong><p>ContextEcho authors / arXiv · 2026-05-22</p><p><a href="https://arxiv.org/html/2605.24279v1">https://arxiv.org/html/2605.24279v1</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] ContextEcho submission and version history</strong><p>arXiv · 2026-10-29</p><p><a href="https://arxiv.org/abs/2605.24279">https://arxiv.org/abs/2605.24279</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Accenture &#39;Upskills&#39; Its Hallucinations Game</strong><p>GPTZero Research · 2026-11-04</p><p><a href="https://gptzero.me/news/investigations-accenture">https://gptzero.me/news/investigations-accenture</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Holographic Turbulence From a Random Gravitational Potential (arXiv:2402.08471)</strong><p>arXiv · 2024-02-13</p><p><a href="https://arxiv.org/abs/2402.08471">https://arxiv.org/abs/2402.08471</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

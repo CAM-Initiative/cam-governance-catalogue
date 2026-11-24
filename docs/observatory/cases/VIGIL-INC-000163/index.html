@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000163/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000163/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000163</p>
     <h1>Hellobike robotaxi struck two pedestrians in Zhuzhou and service was suspended</h1>
     <div class="vigil-assessment-prose"><p>On 6 December 2025, a Hellobike robotaxi collision in Zhuzhou injured two people. Reporting described bystanders and police lifting the vehicle to free a trapped person; hospital staff confirmed both injured people were taken for treatment. </p><p>Hellobike suspended local autonomous-driving operations, and booking attempts returned out of service. The city’s service line confirmed the suspension on 15 December with no known resumption date. </p><p>On 29 December traffic police said they had gathered evidence at Hellobike’s headquarters and commissioned a professional technical and safety inspection. No final fault determination, inspection result or exact driving/control state was established in the reviewed sources.</p></div>
@@ -79,5 +79,18 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] 哈啰Robotaxi株洲撞人后暂停运营，事故原因仍在调查</strong><p>Jiemian News · 2025-12-08</p><p><a href="https://m.jiemian.com/article/13750947.html">https://m.jiemian.com/article/13750947.html</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Hellobike robotaxi struck two pedestrians in Zhuzhou and service was suspended</strong><p>AI Incident Database · 2025-12-06</p><p><a href="https://incidentdatabase.ai/cite/1538/">https://incidentdatabase.ai/cite/1538/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] 哈啰无人车在株洲撞伤路人续：交警称已前往平台总部调查取证</strong><p>Southern Metropolis Daily / Nandu N Video / Peng Yuxin; Nanfang Plus · 2025-12-29</p><p><a href="https://static.nfnews.com/content/202512/29/c12035888.html?enterColumnId=59">https://static.nfnews.com/content/202512/29/c12035888.html?enterColumnId=59</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

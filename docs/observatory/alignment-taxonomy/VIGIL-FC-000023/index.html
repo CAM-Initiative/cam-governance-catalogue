@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D14MtI-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-iYT7zUlS.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,18 @@
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000120/"><code>VIGIL-INC-000120</code> — VIGIL-INC-000120 — Monitoring Coverage Integrity boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000023/"><code>VIGIL-FC-000023</code></a></span></li></ul>
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>Model Evaluation &amp; Threat Research · 2026-01-22 · research evidence</p><p><strong><a href="https://metr.org/blog/2026-01-19-early-work-on-monitorability-evaluations/" rel="noreferrer">Early work on monitorability evaluations</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Coverage and visibility affect monitoring. Does not mandate coverage validation across every operational route. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>National Institute of Standards and Technology · 2024-07-26 · authoritative guidance</p><p><strong><a href="https://doi.org/10.6028/NIST.AI.600-1" rel="noreferrer">NIST AI 600-1, control MS-2.6-007</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual. Possible safety-measure circumvention is regularly evaluated. Circumvention testing is not expressly monitoring coverage preservation across all execution topologies. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>
