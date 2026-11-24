@@ -34,9 +34,15 @@ function isObject(value: unknown): value is UnknownRecord {
 }
 
 async function fetchJson(fetcher: FetchLike, url: string) {
-  const response = await fetcher(url, { cache: "no-store" });
-  if (!response.ok) throw new Error(`Unable to load ${url} (${response.status})`);
-  return response.json() as Promise<unknown>;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  try {
+    const response = await fetcher(url, { cache: "no-store", signal: controller.signal });
+    if (!response.ok) throw new Error(`Unable to load ${url} (${response.status})`);
+    return await response.json() as unknown;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function incidentRecords(payload: unknown): UnknownRecord[] {
