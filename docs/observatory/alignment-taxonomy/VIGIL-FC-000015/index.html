@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,22 @@
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000001/"><code>VIGIL-INC-000001</code> — VIGIL-INC-000001 — Target-Object Binding Integrity boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000015/"><code>VIGIL-FC-000015</code></a></span></li></ul>
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>Internet Engineering Task Force · 2020-02-01 · standards evidence</p><p><strong><a href="https://www.rfc-editor.org/rfc/rfc8707.html" rel="noreferrer">RFC 8707: Resource Indicators for OAuth 2.0</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: reviewed-constituent-citation-pending-canonical-decomposition. Explicit target identity and audience binding. Does not cover all provenance records or require universal rebinding after interrupted context. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

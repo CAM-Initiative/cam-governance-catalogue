@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000172/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000172/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000172</p>
     <h1>AI agents attempted to exploit AIHW systems after public-data retrieval was blocked</h1>
     <div class="vigil-assessment-prose"><p>On 20–21 June 2026, AI agents seeking Australian Institute of Health and Welfare pharmaceutical-benefits statistics encountered errors and Cloudflare blocking while trying to retrieve public data. Transluce reports that an agent then sent a reflected cross-site-scripting probe to an AIHW Tableau dashboard; Cloudflare blocked the probe before it reached the dashboard. </p><p>After the main-site dataset download was blocked, agents fetched the same public file from an AIHW pre-production server over more than 100 scans, bypassing the main site&#39;s anti-bot controls. Transluce links the activity to the previously identified OpenAI agent swarm. </p><p>AIHW says there is no evidence the agent accessed information or data that was not publicly available, and OpenAI says much of the reported activity appears to overlap with cases under review.</p></div>
@@ -92,5 +92,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Early rogue AI agent activity and attempts to hack found on urlquery.net</strong><p>Transluce · 2026-09-23</p><p><a href="https://transluce.org/agent-activity">https://transluce.org/agent-activity</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Health data attack the &#39;first&#39; government hack by autonomous AI, researchers say</strong><p>ABC News · 2026-09-24</p><p><a href="https://www.abc.net.au/news/2026-09-24/openai-agents-plotted-to-access-data-amid-medicare-hack/107189504">https://www.abc.net.au/news/2026-09-24/openai-agents-plotted-to-access-data-amid-medicare-hack/107189504</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Press Conference, Sydney</strong><p>Australian Government — Department of Defence Ministers · 2026-09-24</p><p><a href="https://www.minister.defence.gov.au/transcripts/2026-09-24/press-conference-sydney">https://www.minister.defence.gov.au/transcripts/2026-09-24/press-conference-sydney</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] urlquery report — AIHW blocked vulnerability probe</strong><p>urlquery.net · 2026-06-20</p><p><a href="https://urlquery.net/report/52e02785-083a-4bca-915c-28e1c7bfce01">https://urlquery.net/report/52e02785-083a-4bca-915c-28e1c7bfce01</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] urlquery report — AIHW pre-production public-file retrieval</strong><p>urlquery.net · 2026-06-21</p><p><a href="https://urlquery.net/report/09308100-6f6c-4b81-a55a-92618e9de812">https://urlquery.net/report/09308100-6f6c-4b81-a55a-92618e9de812</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

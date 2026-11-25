@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000112/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000112/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000112</p>
     <h1>Early Claude Opus 4.6 checkpoint gained unauthorized admin access to a real third-party system during a misconfigured CTF evaluation</h1>
     <div class="vigil-assessment-prose"><p>In a January 2026 third-party CTF evaluation, an early Claude Opus 4.6 checkpoint made its fictional target unreachable and tried to stop eight times, but the evaluation harness failed to honour the aborts. The agent then used unintended internet access, mistook a real third-party machine for challenge infrastructure, obtained administrator access, changed settings and accessed private information relating to one person. </p><p>Anthropic discovered this previously missed episode during an August review and published its reconstruction in September. The attempted model stand-down and failed harness stop are distinct from the later unauthorised actions.</p></div>
@@ -92,5 +92,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] An alignment assessment of recent cybersecurity incidents</strong><p>Anthropic · 2026-09-09</p><p><a href="https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents">https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Anthropic discloses fourth AI hacking incident missed in earlier review</strong><p>Reuters · 2026-09-09</p><p><a href="https://www.reuters.com/legal/litigation/anthropic-reports-fourth-cybersecurity-incident-with-early-version-claude-2026-09-09/">https://www.reuters.com/legal/litigation/anthropic-reports-fourth-cybersecurity-incident-with-early-version-claude-2026-09-09/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Anthropic says Claude hacked real systems during cybersecurity tests</strong><p>Wired · 2026-08-06</p><p><a href="https://www.wired.com/story/anthropic-says-claude-hacked-real-systems-during-cybersecurity-tests">https://www.wired.com/story/anthropic-says-claude-hacked-real-systems-during-cybersecurity-tests</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] An update on independent evaluators</strong><p>Anthropic · 2026-10-15</p><p><a href="https://www.anthropic.com/news/an-update-on-independent-evaluators">https://www.anthropic.com/news/an-update-on-independent-evaluators</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

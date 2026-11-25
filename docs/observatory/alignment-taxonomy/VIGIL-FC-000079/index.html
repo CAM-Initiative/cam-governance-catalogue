@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,22 @@
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000051/"><code>VIGIL-INC-000051</code> — VIGIL-INC-000051 — Economic Solicitation Authenticity boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000079/"><code>VIGIL-FC-000079</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000052/"><code>VIGIL-INC-000052</code> — VIGIL-INC-000052 — Economic Solicitation Authenticity boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000079/"><code>VIGIL-FC-000079</code></a></span></li></ul>
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>Financial Action Task Force · 2025-12-22 · regulatory evidence</p><p><strong><a href="https://www.fatf-gafi.org/en/publications/Methodsandtrends/horizon-scan-ai-deepfake.html" rel="noreferrer">Horizon Scan: AI and Deepfakes</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. AI-mediated false identity and financial deception. Does not impose the full solicitation authenticity invariant or prove every economic premise. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>Australian Securities and Investments Commission · 2026-08-17 · regulatory evidence</p><p><strong><a href="https://www.asic.gov.au/about-asic/news-centre/find-a-media-release/2026-releases/26-195mr-asic-warns-scammers-are-using-ai-to-spin-vast-webs-of-deception" rel="noreferrer">26-195MR ASIC warns scammers are using AI to spin vast webs of deception</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. False AI-mediated endorsement and opportunity framing. No requirement applicability or generator-side authority finding is established. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>European Parliament and Council of the European Union · 2024-07-12 · regulatory evidence</p><p><strong><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng" rel="noreferrer">Regulation (EU) 2024/1689 (Artificial Intelligence Act), Article 5(1)(a)</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards relationship pending (2026-10-02). Outside the recorded 102 reextracted Article 4a/9–15 successors; consolidated-version source fidelity and atomicity remain unresolved. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

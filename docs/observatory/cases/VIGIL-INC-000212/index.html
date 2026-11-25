@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000212/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000212/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000212</p>
     <h1>Tasmania Police Axon Draft One trial misattributed family-violence participants and omitted risks</h1>
     <div class="vigil-assessment-prose"><p>In 2025, Tasmania Police tested Axon Draft One, an AI tool that turns body-worn camera recordings into draft family-violence reports. In 148 retrospective cases, evaluators found six AI drafts with incorrect names or participant roles and six that omitted threats, assaults or risk factors. </p><p>In ten other comparisons, the tool captured risk-related detail absent from earlier human reports. ABC News described one reported draft that referred to prior threats to kill although an officer reviewing the recording heard a denial of earlier threats. </p><p>The subsequent supervised Launceston trial assessed 51 live reports. Police officers had to review AI drafts and the evaluation measured faster preparation times, alongside lower accuracy in complex multi-person encounters. </p><p>Tasmania Police recommended training and governance measures before wider adoption. The published evaluation does not establish that any inaccurate draft was filed without correction or caused an adverse personal or legal outcome.</p></div>
@@ -79,5 +79,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] RTI 557/26: Tasmania Police Axon Draft One evaluation report, released with redactions</strong><p>Tasmania Police · 2026-10-06</p><p><a href="https://www.police.tas.gov.au/uploads/RTI-55726-IN-SCOPE-DOCUMENTS-with-redactions.pdf">https://www.police.tas.gov.au/uploads/RTI-55726-IN-SCOPE-DOCUMENTS-with-redactions.pdf</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] AI tool from US manufacturer Axon drafts family violence reports for Tasmania Police</strong><p>Jano Gibson, ABC News · 2026-10-23</p><p><a href="https://www.abc.net.au/news/2026-10-23/ai-assisted-police-report-writing-dv-domestic-violence/107297138">https://www.abc.net.au/news/2026-10-23/ai-assisted-police-report-writing-dv-domestic-violence/107297138</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

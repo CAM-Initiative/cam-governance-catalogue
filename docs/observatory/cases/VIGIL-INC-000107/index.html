@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000107/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000107/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000107</p>
     <h1>Mathspace breach exposed personal data of more than one million users in Australia and New Zealand</h1>
     <div class="vigil-assessment-prose"><p>Mathspace disclosed that attackers exploited a vulnerability in its self-hosted Metabase reporting system, obtained administrator access without a legitimate login, and downloaded personal information from its Australian reporting database. Mathspace identified 1,079,819 affected people across Australia and New Zealand, including students, parents or guardians, teachers and Mathspace staff. </p><p>Exposed fields included names, usernames, email addresses and account metadata. Mathspace states that academic records, assessment results, passwords, authentication tokens, SSO credentials and API credentials were not exposed. </p><p>After reviewing logs, Mathspace confirmed the breach on 3 September and disabled the affected reporting access. It notified schools and regulators on 4 September and began individual notices on 6 September. </p><p>Its 8 September update clarified that earlier communications had omitted some exposed account details; recovery checks and notifications were still continuing.</p></div>
@@ -79,5 +79,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Mathspace data breach: what happened and what affected users should know</strong><p>Mathspace / Alvin Savoy · 2026-09-05</p><p><a href="https://blog.mathspace.co/mathspace-data-breach-what-happened-and-what-affected-users-should-know/">https://blog.mathspace.co/mathspace-data-breach-what-happened-and-what-affected-users-should-know/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] More than 1 million users affected in Mathspace data breach across Australia and New Zealand</strong><p>ABC News · 2026-09-07</p><p><a href="https://www.abc.net.au/news/2026-09-07/mathspace-data-breach/107124894">https://www.abc.net.au/news/2026-09-07/mathspace-data-breach/107124894</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] More than one million affected in Mathspace data breach</strong><p>news.com.au · 2026-09-09</p><p><a href="https://www.news.com.au/technology/online/hacking/more-than-one-million-affected-in-major-mathspace-data-breach-across-australia-and-new-zealand/news-story/5b5fa75fd550ecefa18bc206653b3692">https://www.news.com.au/technology/online/hacking/more-than-one-million-affected-in-major-mathspace-data-breach-across-australia-and-new-zealand/news-story/5b5fa75fd550ecefa18bc206653b3692</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

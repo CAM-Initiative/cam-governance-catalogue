@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000163/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000163/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000163</p>
     <h1>Hellobike robotaxi struck two pedestrians in Zhuzhou and service was suspended</h1>
     <div class="vigil-assessment-prose"><p>On 6 December 2025, a Hellobike robotaxi collision in Zhuzhou injured two people. Reporting described bystanders and police lifting the vehicle to free a trapped person; hospital staff confirmed both injured people were taken for treatment. </p><p>Hellobike suspended local autonomous-driving operations, and booking attempts returned out of service. The city’s service line confirmed the suspension on 15 December with no known resumption date. </p><p>On 29 December traffic police said they had gathered evidence at Hellobike’s headquarters and commissioned a professional technical and safety inspection. No final fault determination, inspection result or exact driving/control state was established in the reviewed sources.</p></div>
@@ -79,5 +79,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] 哈啰Robotaxi株洲撞人后暂停运营，事故原因仍在调查</strong><p>Jiemian News · 2025-12-08</p><p><a href="https://m.jiemian.com/article/13750947.html">https://m.jiemian.com/article/13750947.html</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Hellobike robotaxi struck two pedestrians in Zhuzhou and service was suspended</strong><p>AI Incident Database · 2025-12-06</p><p><a href="https://incidentdatabase.ai/cite/1538/">https://incidentdatabase.ai/cite/1538/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] 哈啰无人车在株洲撞伤路人续：交警称已前往平台总部调查取证</strong><p>Southern Metropolis Daily / Nandu N Video / Peng Yuxin; Nanfang Plus · 2025-12-29</p><p><a href="https://static.nfnews.com/content/202512/29/c12035888.html?enterColumnId=59">https://static.nfnews.com/content/202512/29/c12035888.html?enterColumnId=59</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

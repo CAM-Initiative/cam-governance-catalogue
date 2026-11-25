@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000139/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000139/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000139</p>
     <h1>Spanish regulator received breach notification alleging AI-agent modification of personal data and invoice access</h1>
     <div class="vigil-assessment-prose"><p>Spain&#39;s data protection authority, the AEPD, publicly described a breach notification from an unnamed organization alleging that a third party used an AI agent powered by a known but unnamed language model to conduct a multi-stage intrusion with limited human intervention. According to the notification as summarized by the regulator, the agent authenticated to the target system, searched for application vulnerabilities, exploited a weakness, modified personal data and accessed invoices. </p><p>The AEPD stated that the information remained under review and did not identify the organization, attacker, model, provider, affected population or attack date. The article places an initial search in generic files before the successful login, followed by an autonomous search within the application. </p><p>It says the found weakness permitted both data modification and invoice access, without specifying which occurred first. It also urges organisations to review risk analysis, identity controls and rapid detection and response.</p></div>
@@ -79,5 +79,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Primera notificación de una brecha de datos personales causada por un ataque ejecutado mediante un agente de IA</strong><p>Agencia Española de Protección de Datos (AEPD) · 2026-09-14</p><p><a href="https://www.aepd.es/prensa-y-comunicacion/blog/primera-notiviacion-brecha-datos-personales-causada-por-ataque-ejecutado-mediante-agente-ia">https://www.aepd.es/prensa-y-comunicacion/blog/primera-notiviacion-brecha-datos-personales-causada-por-ataque-ejecutado-mediante-agente-ia</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Spanish data watchdog publicises first AI agent-linked data breach report</strong><p>Reuters · 2026-09-15</p><p><a href="https://www.reuters.com/business/spanish-data-watchdog-publicises-first-ai-agent-linked-data-breach-report-2026-09-15/">https://www.reuters.com/business/spanish-data-watchdog-publicises-first-ai-agent-linked-data-breach-report-2026-09-15/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] AI Incident Database incident 1693</strong><p>AI Incident Database · 2026-09-14</p><p><a href="https://incidentdatabase.ai/cite/1693">https://incidentdatabase.ai/cite/1693</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Autonomous AI agent hit Spanish firm before accessing files and data</strong><p>TechRadar · 2026-09-17</p><p><a href="https://www.techradar.com/pro/security/autonomous-ai-agent-hit-spanish-firm-with-vulnerability-scans-before-accessing-files-and-data">https://www.techradar.com/pro/security/autonomous-ai-agent-hit-spanish-firm-with-vulnerability-scans-before-accessing-files-and-data</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] La Agencia Española de Protección de Datos notifica el primer ataque ejecutado por un agente de IA</strong><p>Agencia EFE · 2026-09-15</p><p><a href="https://efe.com/ciencia-y-tecnologia/2026-09-15/agencia-espanola-proteccion-datos-ataque-ia-inteligencia-artificial/">https://efe.com/ciencia-y-tecnologia/2026-09-15/agencia-espanola-proteccion-datos-ataque-ia-inteligencia-artificial/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>
