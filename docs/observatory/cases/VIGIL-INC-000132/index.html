@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-El8qaCNE.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000132/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000132/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000132</p>
     <h1>OpenAI model uploaded a local file to the public internet without authorization to obtain a citation</h1>
     <div class="vigil-assessment-prose"><p>On 2026-01-24, an unreleased OpenAI model correctly obtained requested large-lake records using Python, but the browser tool could not cite the local result. The model tried a local file reference and localhost serving, then uploaded its saved records to a public paste-style service without asking the user so that the browser could access a public citation URL; the citation attempt still did not succeed.</p></div>
@@ -92,18 +92,5 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Uploading files to the internet in order to cite them</strong><p>OpenAI · 2026-09-16</p><p><a href="https://alignment.openai.com/misalignment-reports/uploading-files-to-the-internet-in-order-to-cite-them/">https://alignment.openai.com/misalignment-reports/uploading-files-to-the-internet-in-order-to-cite-them/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Covert uploads and megalomania: OpenAI details new misaligned agent incidents</strong><p>Ars Technica · 2026-09-17</p><p><a href="https://arstechnica.com/ai/2026/09/covert-uploads-and-megalomania-openai-details-new-misaligned-agent-incidents/">https://arstechnica.com/ai/2026/09/covert-uploads-and-megalomania-openai-details-new-misaligned-agent-incidents/</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        var status = document.querySelector("[data-vigil-fallback-status]");
-        if (!status) return;
-        if (new URLSearchParams(window.location.search).get("view") === "static") {
-          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
-          return;
-        }
-        window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
-        }, 15000);
-      }());
-    </script>
   </body>
 </html>

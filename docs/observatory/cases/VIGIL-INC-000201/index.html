@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-El8qaCNE.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000201/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000201/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000201</p>
     <h1>AIOpsDoom research used fuzzed telemetry to steer AI incident-response repairs</h1>
     <div class="vigil-assessment-prose"><p>Researchers used AIOpsDoom to send crafted requests to applications in a controlled AIOpsLab evaluation. The requests generated errors and planted false diagnostic and repair content in telemetry. </p><p>A SocialNet example describes a GPT-4o Flash agent adopting the planted repair. Across 180 trials using ReAct or Flash agents with GPT-4o or GPT-4.1, the authors reported 90% matching of attacker-selected remediation outputs. </p><p>They also evaluated AIOpsShield as a mitigation. The work was first reported in August 2025 and published at USENIX Security in August 2026. </p><p>It does not report a customer production compromise.</p></div>
@@ -79,18 +79,5 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] When AIOps Become “AI Oops”: Subverting LLM-driven IT Operations via Telemetry Manipulation</strong><p>Dario Pasquini et al. / USENIX Security 2026 · 2026-08</p><p><a href="https://www.usenix.org/system/files/usenixsecurity26-pasquini.pdf">https://www.usenix.org/system/files/usenixsecurity26-pasquini.pdf</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] AIOpsDoom: Pen-Testing Tool for AIOps Systems and Beyond</strong><p>RSAC Labs</p><p><a href="https://github.com/RSAC-Labs/AIOpsDoom">https://github.com/RSAC-Labs/AIOpsDoom</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] When AIOps Become “AI Oops”: Subverting LLM-driven IT Operations via Telemetry Manipulation — arXiv v2</strong><p>Dario Pasquini et al. / USENIX Security 2026 · 2025-08-27</p><p><a href="https://arxiv.org/html/2508.06394v2">https://arxiv.org/html/2508.06394v2</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        var status = document.querySelector("[data-vigil-fallback-status]");
-        if (!status) return;
-        if (new URLSearchParams(window.location.search).get("view") === "static") {
-          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
-          return;
-        }
-        window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
-        }, 15000);
-      }());
-    </script>
   </body>
 </html>

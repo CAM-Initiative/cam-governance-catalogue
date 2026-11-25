@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-El8qaCNE.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000117/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000117/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000117</p>
     <h1>Claude Opus and Fable refused substantial forensic analysis during Hugging Face incident response</h1>
     <div class="vigil-assessment-prose"><p>During forensic reconstruction of the July 2026 OpenAI-agent intrusion into Hugging Face, Hugging Face first tried hosted frontier models to analyse roughly 17,600 recovered attacker actions, exploit payloads and command-and-control artefacts. Its July 16 disclosure said those commercial models blocked the work because their safety guardrails could not distinguish an incident responder from an attacker. </p><p>The later technical timeline identified Claude Opus and Claude Fable among the models used, said they refused a large part of the work because exploit reverse-engineering was treated like exploit launching, and reported that Opus guardrails tripped whenever the team tried to analyse the attack logs. Hugging Face therefore stood up a quantized GLM-5.2 model on its own infrastructure and rerouted the entire forensic-analysis pipeline through it. </p><p>Anthropic&#39;s pre-incident Fable 5 safeguard documentation independently states that incident response and malware reverse engineering are benign cyber uses its classifiers are not intended to block, while also acknowledging that its deliberately conservative safety margin can create false-positive blocks.</p></div>
@@ -92,18 +92,5 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Anatomy of a Frontier Lab Agent Intrusion: A Technical Timeline of the July 2026 Incident</strong><p>Hugging Face · 2026-07-27</p><p><a href="https://huggingface.co/blog/agent-intrusion-technical-timeline">https://huggingface.co/blog/agent-intrusion-technical-timeline</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] OpenAI agents probed Hugging Face before major intrusion</strong><p>Reuters · 2026-09-16</p><p><a href="https://www.reuters.com/legal/litigation/openais-rogue-agents-probed-hugging-face-weaknesses-two-months-before-major-hack-2026-09-16/">https://www.reuters.com/legal/litigation/openais-rogue-agents-probed-hugging-face-weaknesses-two-months-before-major-hack-2026-09-16/</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Security incident disclosure — July 2026</strong><p>Hugging Face · 2026-07-16</p><p><a href="https://huggingface.co/blog/security-incident-july-2026">https://huggingface.co/blog/security-incident-july-2026</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] More details on Fable 5’s cyber safeguards and our jailbreak framework</strong><p>Anthropic · 2026-07-02</p><p><a href="https://www.anthropic.com/news/fable-safeguards-jailbreak-framework">https://www.anthropic.com/news/fable-safeguards-jailbreak-framework</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        var status = document.querySelector("[data-vigil-fallback-status]");
-        if (!status) return;
-        if (new URLSearchParams(window.location.search).get("view") === "static") {
-          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
-          return;
-        }
-        window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
-        }, 15000);
-      }());
-    </script>
   </body>
 </html>

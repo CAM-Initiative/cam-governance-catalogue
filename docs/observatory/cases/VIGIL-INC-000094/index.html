@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-El8qaCNE.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000094/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000094/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000094</p>
     <h1>Hermes agent ran unattended during intrusion into Thailand’s Ministry of Finance</h1>
     <div class="vigil-assessment-prose"><p>Hunt.io and researcher Bob Diachenko reported recovering live attack infrastructure and Hermes agent logs from an intrusion targeting Thailand&#39;s Ministry of Finance. The operator configured Hermes in unattended or &#39;YOLO&#39; mode, bypassing approval prompts, while the agent enumerated ministry systems, assessed privilege-escalation paths and searched files and personnel-record directories. </p><p>Hunt.io reported evidence of compromise across multiple ministry systems but did not establish the initial-access method or exfiltration of the enumerated office files.</p></div>
@@ -92,18 +92,5 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Thailand&#39;s Ministry of Finance Targeted With Hermes AI Agent Running Unattended, Hades Implant Staged</strong><p>Hunt.io / Bob Diachenko · 2026-07-23</p><p><a href="https://hunt.io/blog/thailand-ministry-finance-targeted-with-hermes-ai-agent">https://hunt.io/blog/thailand-ministry-finance-targeted-with-hermes-ai-agent</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] What are AI agents?</strong><p>IBM</p><p><a href="https://www.ibm.com/think/topics/ai-agents">https://www.ibm.com/think/topics/ai-agents</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        var status = document.querySelector("[data-vigil-fallback-status]");
-        if (!status) return;
-        if (new URLSearchParams(window.location.search).get("view") === "static") {
-          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
-          return;
-        }
-        window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
-        }, 15000);
-      }());
-    </script>
   </body>
 </html>

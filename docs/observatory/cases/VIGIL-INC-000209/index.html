@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-El8qaCNE.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000209/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000209/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000209</p>
     <h1>OpenCode Console compromise exposed AI provider API keys and led to reported unauthorised usage</h1>
     <div class="vigil-assessment-prose"><p>On 17 October 2026 the maintainers of OpenCode said an older system connected to its hosted Console service had been breached overnight. They reported notifying the 1.4% of Console users affected by the attack. </p><p>Some Console workspaces held API keys for OpenAI, Anthropic and Google AI services. Developers reported unexpected API usage and charges, and providers moved to block exposed keys or refund affected usage. </p><p>OpenCode characterised the intrusion as related to large-scale model distillation, but did not publish technical proof of that purpose in the sources reviewed. Its open-source command-line client was not the compromised service. </p><p>During subsequent defensive investigation, the company also reported that some AI models refused to analyse malicious code once safety filters were triggered. The refusal dialogue and the original intrusion mechanism remain unpublished.</p></div>
@@ -79,18 +79,5 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Hackers hit AI coding tool OpenCode, running up charges on users’ AI accounts</strong><p>TechCrunch · 2026-10-19</p><p><a href="https://techcrunch.com/2026/10/19/hackers-hit-ai-coding-tool-opencode-running-up-charges-on-users-ai-accounts/">https://techcrunch.com/2026/10/19/hackers-hit-ai-coding-tool-opencode-running-up-charges-on-users-ai-accounts/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] When AI models refuse to fight hackers</strong><p>Axios · 2026-10-21</p><p><a href="https://www.axios.com/2026/10/21/when-ai-models-refuse-to-fight-hackers">https://www.axios.com/2026/10/21/when-ai-models-refuse-to-fight-hackers</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        var status = document.querySelector("[data-vigil-fallback-status]");
-        if (!status) return;
-        if (new URLSearchParams(window.location.search).get("view") === "static") {
-          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
-          return;
-        }
-        window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
-        }, 15000);
-      }());
-    </script>
   </body>
 </html>

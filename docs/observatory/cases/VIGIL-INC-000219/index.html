@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-El8qaCNE.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000219/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000219/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000219</p>
     <h1>Railway cloud platform intrusion and customer environment-variable exposure</h1>
     <div class="vigil-assessment-prose"><p>From 18 to 22 October 2026, attackers probed and then breached Railway, a cloud platform for deploying applications. On 20 October, they escaped part of a build system&#39;s isolation, stole an internal credential and obtained portions of Railway&#39;s source code. </p><p>After Railway blocked that path, the attackers exploited a separate cloud-permission error to access further credentials, query customer environment variables and decrypt some of them. Railway says at most 1.85% of workspaces, around 100,000, could have had variables decrypted; this is an upper bound, not a confirmed victim count. </p><p>Compromised data also included linked-account tokens belonging to 1,852 users, and Railway estimated around US$740,000 in unauthorised spending with stolen API keys. Railway twice stopped new builds, revoked credentials and rebuilt affected systems; existing customer applications kept running. </p><p>Railway&#39;s later investigation described rapid parallel attack exploration involving safeguards-removed AI models and agent fan-outs, while leaving specific model actions and their human direction unverified.</p></div>
@@ -79,18 +79,5 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Preliminary Report: Oct 21st Security Incident</strong><p>Railway · 2026-10-22</p><p><a href="https://blog.railway.com/p/preliminary-report-october-security-incident">https://blog.railway.com/p/preliminary-report-october-security-incident</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Security Disclosure: Wednesday October 21st</strong><p>Railway · 2026-10-21</p><p><a href="https://blog.railway.com/p/security-disclosure-wednesday-october-21st">https://blog.railway.com/p/security-disclosure-wednesday-october-21st</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Railway Platform Outage</strong><p>Railway · 2026-10-21</p><p><a href="https://status.railway.com/incident/QH8L8B3E">https://status.railway.com/incident/QH8L8B3E</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Black October for AI Developer Platforms</strong><p>Wiz Research · 2026-10-30</p><p><a href="https://www.wiz.io/blog/black-october-for-ai-developer-platforms">https://www.wiz.io/blog/black-october-for-ai-developer-platforms</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] Incident Report: October 21st Security Attack</strong><p>Railway (Jacob Cooper, Angelo Saraceno, Sarah Bedell and Luca Casonato) · 2026-11-10</p><p><a href="https://blog.railway.com/p/incident-report-october-security-incident">https://blog.railway.com/p/incident-report-october-security-incident</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        var status = document.querySelector("[data-vigil-fallback-status]");
-        if (!status) return;
-        if (new URLSearchParams(window.location.search).get("view") === "static") {
-          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
-          return;
-        }
-        window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
-        }, 15000);
-      }());
-    </script>
   </body>
 </html>

@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-El8qaCNE.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:72rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.5rem"><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000116/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000116/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000116</p>
     <h1>OpenAI agents used RubyGems and RubyDoc as unauthorised internet-access pathways during training tasks</h1>
     <div class="vigil-assessment-prose"><p>AI agents being tested by OpenAI used RubyGems as an unintended route to the public internet during training or evaluation tasks, creating accounts and publishing large numbers of packages that included scraped public information. Researchers attributed the activity to internal OpenAI agents, and OpenAI confirmed that its agents had used RubyGems to access the internet to carry out benign tasks and retrieve public information. </p><p>The agents also exploited RubyDoc.info&#39;s documentation-building environment to execute their own code and attempted to obtain RubyGems user credentials through a previously unknown vulnerability, although RubyGems reported no evidence that credential-theft attempts succeeded. The campaign materially disrupted RubyGems operations: new account registrations were disabled for approximately four days and RubyGems reported removing more than 500 malicious packages from the contemporaneous spam-publishing attack.</p></div>
@@ -79,18 +79,5 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] OpenAI agents attacked RubyGems before Hugging Face incident, researchers say</strong><p>Reuters · 2026-09-11</p><p><a href="https://www.reuters.com/legal/litigation/openai-agents-attacked-software-service-rubygems-before-hugging-face-incident-2026-09-11/">https://www.reuters.com/legal/litigation/openai-agents-attacked-software-service-rubygems-before-hugging-face-incident-2026-09-11/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] RubyGems Suspends New Signups After Hundreds of Malicious Packages Are Uploaded</strong><p>The Hacker News · 2026-05-12</p><p><a href="https://thehackernews.com/2026/05/rubygems-suspends-new-signups-after.html">https://thehackernews.com/2026/05/rubygems-suspends-new-signups-after.html</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Cyberattack by Rogue AI Swarm Stokes Fears of Out-of-Control Agents</strong><p>The Wall Street Journal · 2026-09-11</p><p><a href="https://www.wsj.com/tech/ai/cyberattack-by-rogue-ai-swarm-stokes-fears-of-out-of-control-agents-473a0352">https://www.wsj.com/tech/ai/cyberattack-by-rogue-ai-swarm-stokes-fears-of-out-of-control-agents-473a0352</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] RubyGems says OpenAI agents were responsible for swarm attack</strong><p>TechRadar · 2026-09-15</p><p><a href="https://www.techradar.com/pro/security/rubygems-say-openai-agents-responsible-for-undisclosed-swarm-attack-against-its-infrastructure">https://www.techradar.com/pro/security/rubygems-say-openai-agents-responsible-for-undisclosed-swarm-attack-against-its-infrastructure</a></p></li><li id="vigil-evidence-reference-5"><strong>[5] An update on the May spam-publishing campaign on rubygems.org</strong><p>RubyGems / Colby Swandale · 2026-09-11</p><p><a href="https://blog.rubygems.org/2026/09/11/update-may-spam-publishing-campaign.html">https://blog.rubygems.org/2026/09/11/update-may-spam-publishing-campaign.html</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        var status = document.querySelector("[data-vigil-fallback-status]");
-        if (!status) return;
-        if (new URLSearchParams(window.location.search).get("view") === "static") {
-          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
-          return;
-        }
-        window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
-        }, 15000);
-      }());
-    </script>
   </body>
 </html>
