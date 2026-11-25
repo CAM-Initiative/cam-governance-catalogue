@@ -84,10 +84,12 @@ async function suite(name, engine, options) {
       await page.goto(url(target), { waitUntil: "domcontentloaded" });
       const fallback = page.locator('[data-static-publication-fallback="vigil-case-index"]');
       await fallback.locator("[data-vigil-fallback-status]").filter({ hasText: /unavailable|could not|failed/i }).waitFor({ timeout: deadline });
+      await fallback.getByRole("heading", { name: "Well, this is awkward." }).waitFor({ state: "visible" });
       await fallback.locator("a[href^='/observatory/cases/VIGIL-INC-']").first().waitFor({ state: "visible" });
       await page.getByRole("link", { name: "Keep basic view" }).click();
       await fallback.locator("[data-vigil-fallback-status]").filter({ hasText: "Basic reading view" }).waitFor();
       assert.equal(await page.locator(row).count(), 0);
+      assert.equal(await fallback.locator("[data-vigil-recovery-humour]").isVisible(), false, "Intentional basic reading is not a failure");
       // The SPA route cannot inherit direct-route HTML; it must offer a real
       // document navigation to the basic publication when the registry fails.
       await page.goto(url("/"), { waitUntil: "domcontentloaded" });
@@ -97,6 +99,7 @@ async function suite(name, engine, options) {
       } else {
         await page.locator(".site-desktop-nav a.site-nav-root[href='/observatory/cases/']").click();
       }
+      await page.getByRole("heading", { name: "Well, this is awkward." }).waitFor({ state: "visible" });
       await page.getByRole("link", { name: "Open basic Case Files" }).click();
       await fallback.locator("a[href^='/observatory/cases/VIGIL-INC-']").first().waitFor({ state: "visible" });
     } finally { await degraded.close(); }
@@ -106,6 +109,7 @@ async function suite(name, engine, options) {
       const page = await noBundle.newPage();
       await page.goto(url(target), { waitUntil: "domcontentloaded" });
       await page.locator("[data-vigil-fallback-status]").filter({ hasText: /unavailable/i }).waitFor({ timeout: deadline });
+      await page.getByRole("heading", { name: "Well, this is awkward." }).waitFor({ state: "visible" });
       await page.locator('[data-static-publication-fallback="vigil-case-index"] a[href^="/observatory/cases/VIGIL-INC-"]').first().waitFor({ state: "visible" });
     } finally { await noBundle.close(); }
     console.log(name + ": live navigation, search, classification, assessment and dependency/bundle fallback passed");

@@ -64,7 +64,11 @@
           return;
         }
         window.setTimeout(function () {
-          if (document.contains(status)) status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
         }, 15000);
       }());
     </script>
