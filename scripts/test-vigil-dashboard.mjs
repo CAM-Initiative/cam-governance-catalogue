@@ -59,11 +59,11 @@ test("classification role filters match any evidenced role, not only the inciden
   assert.equal(matchesClassificationSelection(["failuresfound"], []), true);
 });
 
-test("the Case Files dashboard reports each class role and overlapping outcome filters", async () => {
+test("the Case Files dashboard retains overlapping outcome filters without the aggregate outcome summary", async () => {
   const page = await source("src/pages/vigil-cases.tsx");
   assert.match(page, /classificationOutcomeLabels\(record\)/);
-  assert.match(page, /classOutcomeCounts\(filtered\)/);
-  assert.match(page, /Each Incident and Fidelity Class is counted once per outcome/);
+  assert.match(page, /One Case File can have more than one mapped outcome/);
+  assert.doesNotMatch(page, /Mapped class outcomes:|vigil-dashboard-role-counts|mappedOutcomeCounts/);
 });
 
 test("Case Files row renderer imports the classification label helper it calls", async () => {

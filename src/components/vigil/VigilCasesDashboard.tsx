@@ -10,6 +10,7 @@ import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "@/lib/vigilDonutCallou
 import { countryFromJurisdictionString } from "@/lib/vigilCountryMatching.mjs";
 import { AdSenseRail } from "@/components/advertising/AdSenseRail";
 import "./VigilCasesDashboard.css";
+import { PublicationErrorBoundary } from "@/components/PublicationErrorBoundary";
 
 const EarthGlobe3D = lazy(() => import("./EarthGlobe3D"));
 
@@ -236,9 +237,12 @@ function Globe({ locations, selected, onSelect }: { locations: Location[]; selec
 function GlobeView({ locations, selected, onSelect }: { locations: Location[]; selected: string[]; onSelect: (id: string) => void }) {
   const [unavailable, setUnavailable] = useState(false);
   if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} />;
-  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} />}>
-    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onUnavailable={() => setUnavailable(true)} />
-  </Suspense>;
+  const fallback = <Globe locations={locations} selected={selected} onSelect={onSelect} />;
+  return <PublicationErrorBoundary fallback={<><p role="status">3D globe unavailable; using basic map.</p>{fallback}</>}>
+    <Suspense fallback={fallback}>
+      <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onUnavailable={() => setUnavailable(true)} />
+    </Suspense>
+  </PublicationErrorBoundary>;
 }
 
 const SEVERITIES = [

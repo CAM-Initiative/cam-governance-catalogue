@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000063/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000063/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000063</p>
     <h1>Google AI reportedly produced inaccurate cancer guidance</h1>
     <div class="vigil-assessment-prose"><p>In January 2026, a Guardian investigation found Google AI Overviews at the top of health-search results giving inaccurate or misleading medical information. Examples included telling people with pancreatic cancer to avoid high-fat food, presenting liver-test reference numbers without patient context, and confusing cervical screening with vaginal-cancer testing; specialist charities described the potential for missed care or compromised treatment. </p><p>Google disputed the breadth of the examples and said many summaries cited reputable sources and advised professional help. It removed AI Overviews for two liver-test queries after the report, but query variants and other criticised summaries still appeared. </p><p>A February follow-up found that the general medical caution was absent from the initial summary and appeared only after “Show more,” beneath extra advice in less prominent text. No specific patient decision or clinical injury is established.</p></div>
@@ -79,5 +79,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] AIAAIC 2256 — inaccurate Google AI cancer guidance</strong><p>AIAAIC</p><p><a href="https://www.aiaaic.org/aiaaic-repository">https://www.aiaaic.org/aiaaic-repository</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Google AI Overviews put people at risk of harm with misleading health advice</strong><p>The Guardian · 2026-01-02</p><p><a href="https://www.theguardian.com/technology/2026/jan/02/google-ai-overviews-risk-harm-misleading-health-information">https://www.theguardian.com/technology/2026/jan/02/google-ai-overviews-risk-harm-misleading-health-information</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Google removes some AI health summaries after investigation</strong><p>The Guardian · 2026-01-11</p><p><a href="https://www.theguardian.com/technology/2026/jan/11/google-ai-overviews-health-guardian-investigation">https://www.theguardian.com/technology/2026/jan/11/google-ai-overviews-health-guardian-investigation</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Google puts users at risk by downplaying health disclaimers under AI Overviews</strong><p>Andrew Gregory / The Guardian · 2026-02-16</p><p><a href="https://www.theguardian.com/technology/2026/feb/16/google-puts-users-at-risk-downplaying-disclaimers-ai-overviews">https://www.theguardian.com/technology/2026/feb/16/google-puts-users-at-risk-downplaying-disclaimers-ai-overviews</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

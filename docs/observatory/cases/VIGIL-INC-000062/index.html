@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000062/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000062/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000062</p>
     <h1>ChatGPT medical advice allegedly delayed treatment for a dangerous condition</h1>
     <div class="vigil-assessment-prose"><p>Scott Winters, a former Florida pastor, sued OpenAI and Sam Altman in California state court in July 2026 over ChatGPT-4o medical conversations in 2025. His complaint alleges that, during recurrent dizziness and blood-pressure episodes, the chatbot advised recliner-bound recovery and limited movement, reassured him that groin tenderness shortly before hospitalisation was not dangerous, and increasingly omitted referrals to clinicians. </p><p>It also alleges faith-framed reassurance and, after his 13 July 2025 pulmonary embolism and intensive-care admission, advice against inpatient rehabilitation recommended by clinicians. The complaint says he relied on the messages and attributes the embolism partly to immobility; Reuters reports OpenAI’s response that ChatGPT is not a doctor or substitute for care. </p><p>The pleaded outputs, reliance, clinical cause and liability have not been independently adjudicated; the full conversation and medical records were not reviewed.</p></div>
@@ -79,5 +79,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] ChatGPT&#39;s advice kept man from seeking medical treatment for dangerous condition, lawsuit claims</strong><p>Reuters · 2026-07-22</p><p><a href="https://www.reuters.com/legal/government/chatgpts-advice-kept-man-seeking-medical-treatment-dangerous-condition-lawsuit-2026-07-22/">https://www.reuters.com/legal/government/chatgpts-advice-kept-man-seeking-medical-treatment-dangerous-condition-lawsuit-2026-07-22/</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Pulmonary Embolism</strong><p>National Heart, Lung, and Blood Institute</p><p><a href="https://www.nhlbi.nih.gov/health/pulmonary-embolism">https://www.nhlbi.nih.gov/health/pulmonary-embolism</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Winters v. OpenAI complaint, filed 22 July 2026</strong><p>Scott Winters / Tech Justice Law · 2026-07-22</p><p><a href="https://techjusticelaw.org/wp-content/uploads/2026/08/Winters-Complaint.pdf">https://techjusticelaw.org/wp-content/uploads/2026/08/Winters-Complaint.pdf</a></p></li><li id="vigil-evidence-reference-4"><strong>[4] Model Spec (11 April 2025): medical and imminent-harm guidance</strong><p>OpenAI · 2025-04-11</p><p><a href="https://model-spec.openai.com/2025-04-11.html">https://model-spec.openai.com/2025-04-11.html</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

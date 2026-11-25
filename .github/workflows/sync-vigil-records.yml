@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Reject unresolved TypeScript runtime bindings
+        run: node scripts/check-runtime-bindings.mjs
+
       - name: Sync VIGIL generated registers
         run: pnpm run sync:vigil
         env:

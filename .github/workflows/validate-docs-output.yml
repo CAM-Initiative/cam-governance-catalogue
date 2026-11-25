@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   validate-docs-output:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -36,6 +36,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Reject unresolved TypeScript runtime bindings
+        run: node scripts/check-runtime-bindings.mjs
 
       - name: Sync canonical Harm Impact methodology
         run: pnpm run sync:harm
@@ -88,3 +91,20 @@ jobs:
 
       - name: Test VIGIL Observatory
         run: pnpm run test:vigil
+
+
+      - name: Run browser smoke tests against rebuilt publication
+        if: github.event_name == 'pull_request'
+        env:
+          HEALTH_ORIGIN: http://127.0.0.1:4173
+          HEALTH_EXPECTED_HTML: ${{ github.workspace }}/docs/observatory/cases/index.html
+        run: |
+          mkdir -p "$RUNNER_TEMP/vigil-preview"
+          npm install --prefix "$RUNNER_TEMP/vigil-preview" --no-save --no-package-lock playwright@1.56.1
+          "$RUNNER_TEMP/vigil-preview/node_modules/.bin/playwright" install --with-deps chromium webkit
+          cp scripts/check-live-website.mjs "$RUNNER_TEMP/vigil-preview/check-live-website.mjs"
+          python -m http.server 4173 --bind 127.0.0.1 --directory docs > "$RUNNER_TEMP/vigil-preview/server.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          for i in {1..20}; do curl -fsS "$HEALTH_ORIGIN/" >/dev/null && break; sleep 1; done
+          node "$RUNNER_TEMP/vigil-preview/check-live-website.mjs"

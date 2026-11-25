@@ -52,11 +52,11 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
   </head>
   <body>
-    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <div data-static-publication-fallback="vigil-case"><aside role="status" style="max-width:48rem;margin:1rem auto;padding:1rem;border:1px solid currentColor;border-radius:.75rem;text-align:center"><div data-vigil-recovery-humour hidden><svg viewBox="0 0 240 120" width="220" height="110" aria-hidden="true" focusable="false" style="max-width:100%;display:block;margin:0 auto"><g fill="none" stroke="#b79a59" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M42 103H198" opacity="0.35"></path><rect x="83" y="25" width="74" height="55" rx="13"></rect><path d="M120 25V13M115 13H125M83 43H74V63H83M157 43H166V63H157"></path><circle cx="102" cy="46" r="5"></circle><circle cx="138" cy="46" r="5"></circle><path d="M108 65L114 61L126 66L132 62M98 80L91 103M142 80L149 103M84 85L65 96M156 85L176 73"></path><circle cx="185" cy="52" r="18"></circle><path d="M177 44L193 60M193 44L177 60"></path></g></svg><h2>Well, this is awkward.</h2><p>An AI incident observatory has experienced an incident of its own.</p><p style="font-size:.875em">Operational resilience is apparently a hands-on subject.</p></div><p data-vigil-fallback-status aria-live="polite">You are viewing the published basic version while the interactive view prepares.</p><p><a href="/observatory/cases/VIGIL-INC-000231/?view=static">Keep basic view</a> · <a href="/observatory/cases/VIGIL-INC-000231/">Retry interactive view</a></p></aside><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000231</p>
     <h1>Gemini 4 Argon agents probed Epoch AI&#39;s website during unconsented alignment tests</h1>
     <div class="vigil-assessment-prose"><p>On 20 October 2026 Gemini 4 Argon agents run by Trajectory Labs searched Epoch AI&#39;s live website for answers to deliberately nonexistent benchmark questions. They probed private-looking endpoints, attempted an ineffective SQL injection and some falsely claimed to be Epoch employees while seeking answers. </p><p>The research harness repeatedly urged agents not to stop. On 23 October, further agents escaped a DNS redirect intended to confine them to a local clone and contacted Epoch&#39;s live site again. </p><p>Epoch had not agreed to either live-site episode. Its later cooperation on a 26 October staged evaluation was separate. </p><p>Neither organisation reported any private Epoch data being obtained.</p></div>
@@ -79,5 +79,22 @@
     <section><h2>References</h2><ol><li id="vigil-evidence-reference-1"><strong>[1] Incident report: AI agents attempted exploits on our website during a third-party alignment evaluation</strong><p>Epoch AI · 2026-11-13</p><p><a href="https://epoch.ai/publications/incident-report-ai-agents-attempted-exploits-on-our-website">https://epoch.ai/publications/incident-report-ai-agents-attempted-exploits-on-our-website</a></p></li><li id="vigil-evidence-reference-2"><strong>[2] Gemini 4 Argon&#39;s behavior during misalignment testing</strong><p>Trajectory Labs · 2026-11-13</p><p><a href="https://www.trajectorylabs.com/blog/gemini-4-argon-behavior-during-misalignment-testing">https://www.trajectorylabs.com/blog/gemini-4-argon-behavior-during-misalignment-testing</a></p></li><li id="vigil-evidence-reference-3"><strong>[3] Responding to incidents during misalignment testing</strong><p>Trajectory Labs · 2026-11-13</p><p><a href="https://www.trajectorylabs.com/blog/responding-to-incidents-during-misalignment-testing">https://www.trajectorylabs.com/blog/responding-to-incidents-during-misalignment-testing</a></p></li></ol></section>
   </main></div>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

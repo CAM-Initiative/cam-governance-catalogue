@@ -52,7 +52,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Bt-MAgIu.js"></script>
+    <script type="module" crossorigin src="/assets/index-GQCfUEaX.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-npBmHbD-.css">
       <meta name="robots" content="noindex, follow" />
   </head>
@@ -78,5 +78,22 @@
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000004/"><code>VIGIL-INC-000004</code> — VIGIL-INC-000004 — Required Governance Routing boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000041/"><code>VIGIL-FC-000041</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000120/"><code>VIGIL-INC-000120</code> — VIGIL-INC-000120 — Required Governance Routing boundary case</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000041/"><code>VIGIL-FC-000041</code></a></span></li></ul>
       <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>AAM Cyber · 2026-05-12 · authoritative guidance</p><p><strong><a href="https://aamcyber.com/sdos/reference/v1/" rel="noreferrer">SDOS Runtime Governance Framework v1.10, control SDOS-EN-01</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-strong-supporting. Governed outbound operations must pass operative current-policy enforcement before execution. The public control does not prescribe every alternate-route equivalence proof or all activation predicates. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>Infocomm Media Development Authority of Singapore · 2026-05-20 · authoritative guidance</p><p><strong><a href="https://www.imda.gov.sg/resources/press-releases-factsheets-and-speeches/factsheets/2026/updated-model-ai-governance-framework-for-agentic-ai" rel="noreferrer">Model AI Governance Framework for Agentic AI, section 2.2.2</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards relationship pending (2026-10-02). Current official landing-page access does not expose the substantive framework body; represented source fidelity cannot be freshly established. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>European Parliament and Council of the European Union · 2026-07-27 · regulatory evidence</p><p><strong><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02024R1689-20260727" rel="noreferrer">Regulation (EU) 2024/1689 (Artificial Intelligence Act) — consolidated 27 July 2026</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: no-mapping-remove-from-active-relationship. Human interruption to a safe state supports control activation/effectiveness, not traversal of required routes or alternate-route equivalence. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
   </body>
 </html>

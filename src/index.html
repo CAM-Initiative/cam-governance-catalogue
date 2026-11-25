@@ -55,6 +55,23 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      (function () {
+        var status = document.querySelector("[data-vigil-fallback-status]");
+        if (!status) return;
+        if (new URLSearchParams(window.location.search).get("view") === "static") {
+          status.textContent = "Basic reading view. Interactive search, filters and charts are not loaded.";
+          return;
+        }
+        window.setTimeout(function () {
+          if (!document.contains(status) || status.getAttribute("data-recovery-state") === "failed") return;
+          status.textContent = "The interactive view is still unavailable. Continue with the published basic version below, or retry.";
+          status.setAttribute("data-recovery-state", "failed");
+          var panel = document.querySelector("[data-vigil-recovery-humour]");
+          if (panel) panel.hidden = false;
+        }, 15000);
+      }());
+    </script>
     <script type="module" src="/main.tsx"></script>
   </body>
 </html>

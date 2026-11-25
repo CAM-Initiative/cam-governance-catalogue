@@ -23,7 +23,8 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
-import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
+import { PublicationRecoveryNotice } from "@/components/PublicationErrorBoundary";
+import { hasStaticPublicationFallback, reportStaticPublicationFailure, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { IncidentContextSection, IncidentContextLimitations } from "@/components/vigil/IncidentContextSection";
@@ -527,6 +528,7 @@ export default function VigilCaseFile() {
   const staticPublicationFallbackAvailable = hasStaticPublicationFallback("vigil-case");
   useEffect(() => {
     if (state.status === "ready") retireStaticPublicationFallback("vigil-case");
+    else if (state.status === "error") reportStaticPublicationFailure("vigil-case");
   }, [sourceId, state.status]);
 
   if (state.status === "loading") {
@@ -535,7 +537,7 @@ export default function VigilCaseFile() {
   }
   if (state.status === "error") {
     if (staticPublicationFallbackAvailable) return null;
-    return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
+    return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><PublicationRecoveryNotice basicPath={window.location.pathname} /></main></Shell>;
   }
 
   const sourceRecord = state.records[0];
