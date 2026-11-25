@@ -12,7 +12,7 @@ import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
 import { hasStaticPublicationFallback, reportStaticPublicationFailure, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import VigilCasesDashboard, { countryDisplayName, countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
-import { classOutcomeCounts, classOutcomePairs, failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
+import { classOutcomePairs, failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
 import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
 import { countryLookupFromProjection, matchesSelectedCountries, toggleSelectedCountry } from "@/lib/vigilDashboardGeography.mjs";
 import { matchesClassificationSelection, toggleClassificationSelection } from "@/lib/vigilClassificationFilter.mjs";
@@ -445,7 +445,6 @@ export default function VigilCases() {
   ), [distributionRecords, severity]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
-  const mappedOutcomeCounts = useMemo(() => classOutcomeCounts(filtered), [filtered]);
 
   useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, harmType, indexFacets, sort]);
   const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass || harmType || Object.keys(indexFacets).length);
@@ -527,10 +526,6 @@ export default function VigilCases() {
                   ))}
                  </div>}
                  <p className="vigil-dashboard-filter-match-count" aria-live="polite" aria-atomic="true"><strong>{sorted.length} matching {sorted.length === 1 ? "case file" : "case files"}</strong></p>
-                 <p className="vigil-dashboard-role-counts" aria-label="Mapped Fidelity Class outcomes in matching incidents">
-                   <strong>Mapped class outcomes:</strong> {mappedOutcomeCounts["failure-occurrence"]} failures · {mappedOutcomeCounts["successful-invariant"]} aligned · {mappedOutcomeCounts["ambiguous-boundary"]} unresolved boundaries.
-                   <span> Each Incident and Fidelity Class is counted once per outcome; one class may have multiple different outcomes.</span>
-                 </p>
                  {hasActiveFilters && <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>}
                </div>
                 <div className="vigil-dashboard-filter-search" role="search" aria-label="Search Case Files">
